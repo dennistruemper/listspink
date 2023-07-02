@@ -10,7 +10,7 @@
 </script>
 
 <div
-	class="flex grow flex-col gap-y-5 overflow-y-auto bg-primary-500 dark:bg-primaryDark-900 px-6 pb-4"
+	class="flex grow flex-col gap-y-5 overflow-y-auto bg-primary-500 dark:bg-primaryDark-700 px-6 pb-4"
 >
 	<div class="flex h-16 shrink-0 items-center">
 		<House />
@@ -31,7 +31,7 @@
 			<li class="mt-auto">
 				<a
 					href="#"
-					class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-800 hover:text-gray-200 hover:bg-primary-800"
+					class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-800 dark:text-gray-200 hover:text-gray-200 hover:bg-primary-800 dark:hover:bg-secondary-900"
 				>
 					<Gear />
 					Settings
