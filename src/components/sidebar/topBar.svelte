@@ -4,10 +4,11 @@
 	import Bell from '../../svg/bell.svelte';
 	import BurgerMenu from '../../svg/burgerMenu.svelte';
 	import Gear from '../../svg/gear.svelte';
+	import { textColor } from '../../theme';
 	import Separator from '../separator.svelte';
 </script>
 
-<button type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden" on:click={sidebarStore.toggle}>
+<button type="button" class="-m-2.5 p-2.5 lg:hidden" on:click={sidebarStore.toggle}>
 	<span class="sr-only">Open sidebar</span>
 	<BurgerMenu />
 </button>
@@ -16,18 +17,15 @@
 <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6 justify-between items-center">
 	<div />
 	<!-- head -->
-	<div class="text-2xl">{$titleStore}</div>
+	<div class="text-2xl {textColor}">{$titleStore}</div>
 	<div class="flex items-center gap-x-4 lg:gap-x-6">
-		<button
-			type="button"
-			class="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500 hover:animate-bounce"
-		>
+		<button type="button" class="-m-2.5 p-2.5">
 			<span class="sr-only">View notifications</span>
 			<Bell />
 		</button>
 
 		<!-- Separator -->
-		<div class="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-900/10" aria-hidden="true" />
+		<Separator />
 
 		<!-- Profile -->
 		<div class="relative">
