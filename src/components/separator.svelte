@@ -1,5 +1,5 @@
 <script>
-	import { contastBackground } from '../theme';
+	import { contrastBackground } from '../theme';
 </script>
 
-<div class="h-8 w-px {contastBackground} lg:hidden" aria-hidden="true" />
+<div class="h-8 w-px {contrastBackground} lg:hidden" aria-hidden="true" />
