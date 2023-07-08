@@ -25,7 +25,7 @@
 					on:click={sidebarStore.toggle}
 				>
 					<Gear />
-					Settings
+					App Settings
 				</a>
 			</li>
 		</ul>

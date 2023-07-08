@@ -101,6 +101,9 @@ export function createTimetraveStore<Model, Event>(
 				logDev(newValue);
 				return newValue;
 			});
+		},
+		reset: () => {
+			set(initialData);
 		}
 	};
 }
