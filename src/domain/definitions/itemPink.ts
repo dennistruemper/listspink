@@ -1,14 +1,15 @@
 import { z } from 'zod';
 
-const itemSchema = z.object({
+export const itemSchema = z.object({
+	id: z.string().uuid(),
 	name: z.string(),
 	description: z.string().optional(),
 	completed: z.string().datetime({ offset: false }).optional()
 });
 
-export type Item = z.infer<typeof itemSchema>;
+export type ItemPink = z.infer<typeof itemSchema>;
 
-function checkItem(item: Item): string | undefined {
+function checkItem(item: ItemPink): string | undefined {
 	const parsed = itemSchema.safeParse(item);
 	if (parsed.success === false) {
 		return parsed.error.message;

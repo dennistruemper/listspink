@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { Item } from '../domain/definitions/item';
+	import type { ItemPink } from '../domain/definitions/itemPink';
 	import { background, textFadedHoverColor, textHoverColor, textSecondaryColor } from '../theme';
 
-	export let item: Item;
+	export let item: ItemPink;
 </script>
 
 <div class="relative flex items-start min-w-full">

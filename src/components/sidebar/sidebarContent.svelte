@@ -1,4 +1,5 @@
 <script>
+	import { sidebarStore } from '../../stores/sidebarStore';
 	import Gear from '../../svg/gear.svelte';
 	import House from '../../svg/house.svelte';
 	import { itemBackground, itemHoverBackground, textColor } from '../../theme';
@@ -21,6 +22,7 @@
 				<a
 					href="/settings"
 					class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 {textColor}  {itemHoverBackground}"
+					on:click={sidebarStore.toggle}
 				>
 					<Gear />
 					Settings

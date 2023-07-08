@@ -1,9 +1,8 @@
-import { PUBLIC_DEV } from '$env/static/public';
 import { writable } from 'svelte/store';
 
 // time travel store definition
 
-interface TimeTravelStore<T> {
+export interface TimeTravelStore<T> {
 	version: number;
 	history: T[];
 	current: T;
@@ -16,20 +15,30 @@ function logDev<T>(store: TimeTravelStore<T>) {
 	}
 }
 
+export interface TimeTravelStorage<T> {
+	save: (data: T) => void;
+	load: () => T | undefined;
+}
+
 export function createTimetraveStore<Model, Event>(
 	updateModel: (model: Model, event: Event) => Model,
-	init: Model
+	init: Model,
+	storage?: TimeTravelStorage<TimeTravelStore<Model>>
 ) {
 	const initialData: TimeTravelStore<Model> = {
 		version: 0,
 		history: [init],
 		current: init,
-		debugMode: PUBLIC_DEV === 'true'
+		debugMode: false
 	};
 
-	console.log(PUBLIC_DEV + 'droch');
+	const loadedData = storage?.load();
 
-	const { subscribe, set, update } = writable(initialData);
+	const { subscribe, set, update } = writable(loadedData ?? initialData);
+
+	subscribe((data) => {
+		storage?.save(data);
+	});
 
 	return {
 		subscribe,

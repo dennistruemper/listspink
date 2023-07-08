@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { appStore } from '../../stores/appStore';
-	$: checked = 'checked'; //$appStore.debugMode;
+	import { titleStore } from '../../stores/titleStore';
+	titleStore.set({ title: 'Settings', listChooseMode: false });
 </script>
 
 <p>Debug mode:</p>
