@@ -5,8 +5,10 @@
 	import { titleStore } from '../stores/titleStore';
 
 	$: currentList = $appStore.current.currentList;
-	titleStore.set({
-		title: currentList !== undefined ? currentList.name : 'Create List',
+	$: currentListName = currentList?.name;
+	$: console.log('droch', currentListName);
+	$: titleStore.set({
+		title: currentListName ?? 'Create List',
 		listChooseMode: true
 	});
 	$: items = $appStore.current.currentList?.items;
