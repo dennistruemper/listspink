@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { appStore } from '../../stores/appStore';
 	import { titleStore } from '../../stores/titleStore';
 	import {
@@ -41,8 +42,10 @@
 			{#if list.id !== $appStore.current.currentList?.id}
 				<button
 					class="p-2 rounded-lg {itemHoveredBackground + textHoveredColr}"
-					on:click={() => appStore.dispatch({ type: 'choose_list_by_id', listId: list.id })}
-					>Choose</button
+					on:click={() => {
+						appStore.dispatch({ type: 'choose_list_by_id', listId: list.id });
+						goto('/');
+					}}>Choose</button
 				>
 			{/if}
 		</li>

@@ -1,16 +1,17 @@
 <script lang="ts">
+	import { Toaster } from 'svelte-french-toast';
 	import '../app.css';
 	import SidebarContent from '../components/sidebar/sidebarContent.svelte';
 	import TopBar from '../components/sidebar/topBar.svelte';
 	import { sidebarStore } from '../stores/sidebarStore';
 	import Cross from '../svg/cross.svelte';
-	import { backgroundBlur } from '../theme';
+	import { backgroundBlur, itemBackground } from '../theme';
 </script>
 
 <div class=" min-h-screen">
 	<!-- Off-canvas menu for mobile, show/hide based on off-canvas menu state. -->
 	<div
-		class="relative z-50 {$sidebarStore.visible === true ? 'lg:hidden' : 'hidden'}"
+		class="relative z-50 {$sidebarStore.visible === true ? 'lg:hidden' : 'hidden'} "
 		role="dialog"
 		aria-modal="true"
 	>
@@ -40,15 +41,17 @@
 
 	<div class="lg:pl-72">
 		<div
-			class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8"
+			class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8 {itemBackground}"
 		>
 			<TopBar />
 		</div>
 
 		<main class="py-4 lg:py-10 h-full">
-			<div class="px-4 sm:px-6 lg:px-8">
+			<div class="px-4 sm:px-6 lg:px-8 h-full">
 				<slot />
 			</div>
 		</main>
 	</div>
 </div>
+
+<Toaster />

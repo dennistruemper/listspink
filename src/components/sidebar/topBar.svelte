@@ -16,16 +16,18 @@
 <Separator />
 <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6 justify-between items-center">
 	<div class="" />
-	<a class="text-2xl {textColor}  flex items-center gap-x-1 px-8" href="/listChooser">
+	<div class="text-xs sm:text-2xl {textColor} text-lg flex items-center gap-x-1 px-8">
 		{#if $titleStore.listChooseMode}
-			{$titleStore.title}
-			<div class="">
-				<BurgerMenu />
-			</div>
+			<a href="/listChooser" class="flex items-center gap-x-2">
+				{$titleStore.title}
+				<div class="">
+					<BurgerMenu />
+				</div>
+			</a>
 		{:else}
-			{$titleStore.title}
+			<h1>{$titleStore.title}</h1>
 		{/if}
-	</a>
+	</div>
 	<div class="flex items-center gap-x-4 lg:gap-x-6">
 		<button type="button" class="-m-2.5 p-2.5">
 			<span class="sr-only">View notifications</span>

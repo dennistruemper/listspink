@@ -15,3 +15,15 @@ function checkItem(item: ItemPink): string | undefined {
 		return parsed.error.message;
 	}
 }
+
+export function createItemPink(input: {
+	name: string;
+	uuidGenerator: () => string;
+	description?: string;
+}): ItemPink {
+	return {
+		id: input.uuidGenerator(),
+		name: input.name,
+		description: input.description
+	};
+}

@@ -1,8 +1,6 @@
-import type { ItemPink } from './itemPink';
-
 export type Event =
 	| AddItemToListEvent
-	| CreateItemAndAddToListEvent
+	| CreateItemAndAddToListsEvent
 	| CreateListEvent
 	| ChooseListByIdEvent
 	| RemoveListEvent;
@@ -17,10 +15,11 @@ interface AddItemToListEvent extends EventBase {
 	itemId: string;
 }
 
-interface CreateItemAndAddToListEvent extends EventBase {
-	type: 'create_item_and_add_to_list';
-	listId: string;
-	item: ItemPink;
+interface CreateItemAndAddToListsEvent extends EventBase {
+	type: 'create_item_and_add_to_lists';
+	listIds: string[];
+	name: string;
+	description?: string;
 }
 
 interface CreateListEvent extends EventBase {

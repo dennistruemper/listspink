@@ -6,6 +6,8 @@ export const itemBackground = ' bg-pink-300 dark:bg-purple-700';
 export const itemHoverBackground =
 	itemBackground + ' lg:hover:bg-purple-900 lg:dark:hover:bg-pink-100'; // lg:hover:bg-pink-500 lg:dark:hover:bg-purple-800';
 export const itemHoveredBackground = ' bg-purple-900 dark:bg-pink-100';
+export const placeholderTextColor =
+	' placeholder:font-bold placeholder:text-gray-500 dark:placeholder:text-gray-500';
 export const textColor = ' text-gray-900 dark:text-gray-300';
 export const textHoverColor =
 	textColor + ' lg:group-hover:text-gray-300 lg:group-hover:dark:text-gray-900';

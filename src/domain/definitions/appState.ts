@@ -6,7 +6,6 @@ import type { ListPink } from './listPink';
 export type AppState = {
 	lists: ListPink[];
 	items: ItemPink[];
-	activeList?: number;
 	currentList?: CurrentListPink;
 };
 
@@ -18,7 +17,7 @@ export function initialAppState(deps: Dependencies): AppState {
 	};
 	const defaultList = {
 		id: deps.uuidGenerator(),
-		itemsIds: [defaultItem.id],
+		itemIds: [defaultItem.id],
 		name: 'Pink List'
 	};
 	return {

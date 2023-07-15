@@ -6,16 +6,16 @@
 	import SidebarItem from './sidebarItem.svelte';
 </script>
 
-<div class="flex grow flex-col gap-y-5 overflow-y-auto {itemBackground} px-6 pb-4">
+<div
+	class="flex grow flex-col gap-y-5 overflow-y-auto {itemBackground} px-6 pb-4 rounded-r-3xl sm:rounded-none"
+>
 	<div class="flex h-4 shrink-0 items-center">
 		<!-- Logo? <House /> -->
 	</div>
 	<nav class="flex flex-1 flex-col">
 		<ul role="list" class="flex flex-1 flex-col gap-y-7">
 			<li>
-				<ul role="list" class="-mx-2 space-y-1">
-					<SidebarItem name="Dashboard"><House /></SidebarItem>
-				</ul>
+				<SidebarItem name="Home" href="/"><House /></SidebarItem>
 			</li>
 
 			<li class="mt-auto">

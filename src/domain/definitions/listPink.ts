@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const listPinkSchema = z.object({
 	name: z.string(),
-	itemsIds: z.string().uuid().array(),
+	itemIds: z.string().uuid().array(),
 	id: z.string().uuid()
 });
 
@@ -12,6 +12,6 @@ export function createListPink(name: string, uuidGenerator: () => string): ListP
 	return {
 		id: uuidGenerator(),
 		name: name,
-		itemsIds: []
+		itemIds: []
 	};
 }
