@@ -91,7 +91,9 @@
 					itemName = undefined;
 					description = undefined;
 				} else {
-					alert('invalid data');
+					toast.error(`Please enter a name`, {
+						position: 'bottom-center'
+					});
 				}
 			}}
 		>

@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import ActionBar from '../../components/actionBar.svelte';
+	import ActionBarButton from '../../components/buttons/actionBarButton.svelte';
 	import { appStore } from '../../stores/appStore';
 	import { titleStore } from '../../stores/titleStore';
+	import Plus from '../../svg/plus.svelte';
 	import {
 		divideWithBackground,
 		itemBackground,
@@ -51,3 +54,15 @@
 		</li>
 	{/each}
 </ul>
+
+<ActionBar>
+	<div class="w-full h-full flex items-center justify-between px-4 sm:px-16">
+		<!-- occupy left spot, move btton to right side -->
+		<div />
+		<ActionBarButton
+			onClick={() => {
+				goto(`/createList`);
+			}}><Plus /> Create List</ActionBarButton
+		>
+	</div>
+</ActionBar>
