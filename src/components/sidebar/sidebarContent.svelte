@@ -1,5 +1,8 @@
 <script>
+	import {} from '$app/paths';
+	import { Routes } from '../../routes/routes';
 	import { sidebarStore } from '../../stores/sidebarStore';
+	import BurgerMenu from '../../svg/burgerMenu.svelte';
 	import Gear from '../../svg/gear.svelte';
 	import House from '../../svg/house.svelte';
 	import { itemBackground, itemHoverBackground, textColor } from '../../theme';
@@ -15,7 +18,9 @@
 	<nav class="flex flex-1 flex-col">
 		<ul role="list" class="flex flex-1 flex-col gap-y-7">
 			<li>
-				<SidebarItem name="Home" href="/"><House /></SidebarItem>
+				<SidebarItem name="Home" href={Routes.home}><House /></SidebarItem>
+				<SidebarItem name="Lists" href={Routes.listChooser}><BurgerMenu /></SidebarItem>
+				<SidebarItem name="Items" href={Routes.items}><BurgerMenu /></SidebarItem>
 			</li>
 
 			<li class="mt-auto">

@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import ActionBar from '../../components/actionBar.svelte';
 	import FadeIn from '../../components/animation/fadeIn.svelte';
+	import ActionBarBackButton from '../../components/buttons/actionBarBackButton.svelte';
 	import ActionBarButton from '../../components/buttons/actionBarButton.svelte';
 	import { appStore } from '../../stores/appStore';
 	import { titleStore } from '../../stores/titleStore';
@@ -59,8 +60,7 @@
 </FadeIn>
 <ActionBar>
 	<div class="w-full h-full flex items-center justify-between px-4 sm:px-16">
-		<!-- occupy left spot, move btton to right side -->
-		<div />
+		<ActionBarBackButton />
 		<ActionBarButton
 			onClick={() => {
 				goto(`/createList`);
