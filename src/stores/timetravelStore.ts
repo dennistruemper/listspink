@@ -61,7 +61,7 @@ export function createTimetraveStore<Model, Event>(
 						history: newHistory,
 						debugMode: store.debugMode
 					};
-					console.log(JSON.stringify(newValue));
+					logDev(newValue);
 					return newValue;
 				} else {
 					// delete newer states and start new future
@@ -75,7 +75,7 @@ export function createTimetraveStore<Model, Event>(
 						history: newHistory,
 						debugMode: store.debugMode
 					};
-					console.log(JSON.stringify(newValue));
+					logDev(newValue);
 					return newValue;
 				}
 			}),

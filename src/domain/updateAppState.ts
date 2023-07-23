@@ -40,6 +40,12 @@ function calculateCurrentList(
 export function createUpdateFunction(deps: Dependencies) {
 	return function updateAppState(previousState: AppState, event: Event): AppState {
 		switch (event.type) {
+			case 'refresh_data': {
+				return {
+					...previousState,
+					currentList: calculateCurrentList(previousState, previousState.currentList?.id)
+				};
+			}
 			case 'add_item_to_list_event': {
 				const intermediateState2: AppState = {
 					...previousState,

@@ -1,4 +1,5 @@
 export type Event =
+	| RefreshDataEvent
 	| AddItemToListEvent
 	| CreateItemAndAddToListsEvent
 	| ToggleItemDoneEvent
@@ -8,6 +9,10 @@ export type Event =
 
 interface EventBase {
 	type: string;
+}
+
+interface RefreshDataEvent extends EventBase {
+	type: 'refresh_data';
 }
 
 interface AddItemToListEvent extends EventBase {
