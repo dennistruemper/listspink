@@ -70,4 +70,29 @@ describe('itemManagement', () => {
 
 		expect(newState.lists[2].itemIds).to.include(state.items[0].id);
 	});
+
+	it('toggle item completed state to done', () => {
+		const now = new Date();
+		const state = initialAppState(defaultTestDependencies);
+		const newState = updateAppState(state, {
+			type: 'toggle_item_done_event',
+			itemId: state.items[0].id,
+			time: now
+		});
+
+		expect(newState.items[0].completed).toBe(now.toISOString());
+	});
+
+	it('toggle item completed state to undone', () => {
+		const now = new Date();
+		const state = initialAppState(defaultTestDependencies);
+		state.items[0].completed = now.toISOString();
+		const newState = updateAppState(state, {
+			type: 'toggle_item_done_event',
+			itemId: state.items[0].id,
+			time: now
+		});
+
+		expect(newState.items[0].completed).toBe(undefined);
+	});
 });

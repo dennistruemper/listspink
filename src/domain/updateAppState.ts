@@ -3,10 +3,13 @@ import type { AppState } from './definitions/appState';
 import type { CurrentListPink } from './definitions/currentList';
 import type { Dependencies } from './definitions/dependencies';
 import type { Event } from './definitions/events';
-import { createItemPink } from './definitions/itemPink';
+import { createItemPink, type ItemPink } from './definitions/itemPink';
 import { createListPink } from './definitions/listPink';
 
-function calculatCurrentList(state: AppState, currentListId?: string): CurrentListPink | undefined {
+function calculateCurrentList(
+	state: AppState,
+	currentListId?: string
+): CurrentListPink | undefined {
 	if (currentListId === undefined) {
 		return undefined;
 	}
@@ -45,7 +48,7 @@ export function createUpdateFunction(deps: Dependencies) {
 
 				return {
 					...intermediateState2,
-					currentList: calculatCurrentList(intermediateState2, intermediateState2.currentList?.id)
+					currentList: calculateCurrentList(intermediateState2, intermediateState2.currentList?.id)
 				};
 			case 'create_item_and_add_to_lists':
 				const newItem = createItemPink({
@@ -66,7 +69,7 @@ export function createUpdateFunction(deps: Dependencies) {
 				};
 				return {
 					...intermediateState,
-					currentList: calculatCurrentList(intermediateState, intermediateState.currentList?.id)
+					currentList: calculateCurrentList(intermediateState, intermediateState.currentList?.id)
 				};
 
 			case 'create_list':
@@ -76,7 +79,7 @@ export function createUpdateFunction(deps: Dependencies) {
 					lists: [...previousState.lists, newList],
 					currentList:
 						previousState.lists.length === 0
-							? calculatCurrentList(previousState, newList.id)
+							? calculateCurrentList(previousState, newList.id)
 							: previousState.currentList
 				};
 			case 'remove_list':
@@ -89,9 +92,38 @@ export function createUpdateFunction(deps: Dependencies) {
 			case 'choose_list_by_id':
 				return {
 					...previousState,
-					currentList: calculatCurrentList(previousState, event.listId)
+					currentList: calculateCurrentList(previousState, event.listId)
+				};
+			case 'toggle_item_done_event':
+				const intermediateState3 = {
+					...previousState,
+					items: previousState.items.map((item) =>
+						toggleMatchingItemCompleted(item, event.itemId, event.time)
+					)
+				};
+				return {
+					...intermediateState3,
+					currentList: calculateCurrentList(intermediateState3, previousState.currentList?.id)
 				};
 		}
 		forceExhaust(event);
 	};
+}
+
+function toggleMatchingItemCompleted(item: ItemPink, itemId: string, time: Date): ItemPink {
+	if (item.id !== itemId) {
+		return item;
+	}
+
+	if (item.completed === undefined) {
+		return {
+			...item,
+			completed: time.toISOString()
+		};
+	} else {
+		return {
+			...item,
+			completed: undefined
+		};
+	}
 }

@@ -1,6 +1,7 @@
 export type Event =
 	| AddItemToListEvent
 	| CreateItemAndAddToListsEvent
+	| ToggleItemDoneEvent
 	| CreateListEvent
 	| ChooseListByIdEvent
 	| RemoveListEvent;
@@ -15,6 +16,11 @@ interface AddItemToListEvent extends EventBase {
 	itemId: string;
 }
 
+interface ToggleItemDoneEvent extends EventBase {
+	type: 'toggle_item_done_event';
+	itemId: string;
+	time: Date;
+}
 interface CreateItemAndAddToListsEvent extends EventBase {
 	type: 'create_item_and_add_to_lists';
 	listIds: string[];

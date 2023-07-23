@@ -10,6 +10,6 @@ import { createTimetraveStore } from './timetravelStore';
 // creation of detail instance
 export const appStore = createTimetraveStore(
 	createUpdateFunction(prodDependencies),
-	initialAppState(prodDependencies),
+	() => initialAppState(prodDependencies),
 	new LocalStorage<TimeTravelStore<AppState>>()
 );

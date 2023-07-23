@@ -22,19 +22,23 @@ export interface TimeTravelStorage<T> {
 
 export function createTimetraveStore<Model, Event>(
 	updateModel: (model: Model, event: Event) => Model,
-	init: Model,
+	init: () => Model,
 	storage?: TimeTravelStorage<TimeTravelStore<Model>>
 ) {
-	const initialData: TimeTravelStore<Model> = {
-		version: 0,
-		history: [init],
-		current: init,
-		debugMode: false
-	};
+	function initialData(): TimeTravelStore<Model> {
+		const initial = init();
+		return {
+			version: 0,
+			history: [initial],
+			current: initial,
+			debugMode: false
+		};
+	}
 
-	const loadedData = storage?.load();
+	console.log('droch');
+	const loadedData = storage?.load() ?? initialData();
 
-	const { subscribe, set, update } = writable(loadedData ?? initialData);
+	const { subscribe, set, update } = writable(loadedData ?? initialData());
 
 	subscribe((data) => {
 		storage?.save(data);
@@ -103,7 +107,7 @@ export function createTimetraveStore<Model, Event>(
 			});
 		},
 		reset: () => {
-			set(initialData);
+			set(initialData());
 		}
 	};
 }
