@@ -16,17 +16,42 @@
 		title: currentListName ?? 'Create List',
 		listChooseMode: true
 	});
-	$: items = $appStore.current.currentList?.items ?? [];
+	let showCompleted = false;
+	$: activeItems = $appStore.current.currentList?.activeItems ?? [];
+	$: completedItems = $appStore.current.currentList?.completedItems ?? [];
 </script>
 
 <FadeIn>
-	{#if items !== undefined}
-		<List {items} let:item>
+	{#if activeItems !== undefined && activeItems.length > 0}
+		<div class="flex flex-row justify-between">
+			<h2 class="text-2xl font-semibold">Active Items</h2>
+
+			{#if completedItems !== undefined && completedItems.length > 0}
+				<div class="flex flex-row items-center gap-2 px-1">
+					<p>Show Completed</p>
+					<input
+						type="checkbox"
+						checked={showCompleted}
+						on:change={() => {
+							showCompleted = !showCompleted;
+						}}
+					/>
+				</div>
+			{/if}
+		</div>
+		<List items={activeItems} let:item>
 			<ListItem itemId={item.id} />
 		</List>
 	{:else}
-		<p>no Lists found</p>
+		<p>no Items found</p>
 		<button on:click={() => appStore.dispatch({ type: 'create_list', name: 'New List' })} />
+	{/if}
+	{#if completedItems !== undefined && showCompleted}
+		<div class="h-4" />
+		<h2 class="text-2xl font-semibold">Completed Items</h2>
+		<List items={completedItems} let:item>
+			<ListItem itemId={item.id} />
+		</List>
 	{/if}
 </FadeIn>
 <ActionBar>

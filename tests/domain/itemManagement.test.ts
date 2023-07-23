@@ -57,7 +57,7 @@ describe('itemManagement', () => {
 		});
 
 		const newItemId = newState.items[1].id;
-		expect(newState.currentList?.items.map((item) => item.id)).to.include(newItemId);
+		expect(newState.currentList?.activeItems.map((item) => item.id)).to.include(newItemId);
 	});
 
 	it('add item to current list', () => {

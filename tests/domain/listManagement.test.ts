@@ -63,6 +63,8 @@ describe('listManagement', () => {
 	it('remove current list will have no current list', () => {
 		const state = stateWith3Lists();
 
+		// it is ok, we know that there is a current list in this test
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-non-null-asserted-optional-chain
 		const newState = updateAppState(state, { type: 'remove_list', listId: state.currentList?.id! });
 
 		expect(newState.currentList).toBeUndefined();

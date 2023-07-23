@@ -9,13 +9,6 @@ export const itemSchema = z.object({
 
 export type ItemPink = z.infer<typeof itemSchema>;
 
-function checkItem(item: ItemPink): string | undefined {
-	const parsed = itemSchema.safeParse(item);
-	if (parsed.success === false) {
-		return parsed.error.message;
-	}
-}
-
 export function createItemPink(input: {
 	name: string;
 	uuidGenerator: () => string;

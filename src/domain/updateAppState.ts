@@ -17,9 +17,20 @@ function calculateCurrentList(
 	const listCandidates = state.lists.filter((list) => list.id === currentListId);
 	if (listCandidates.length > 0) {
 		const list = listCandidates[0];
+		const items = list.itemIds.map((itemId) => state.items.filter((item) => item.id === itemId)[0]);
+
+		const activeItems = items.filter((item) => item.completed === undefined);
+
+		const completedItems = items.filter((item) => item.completed !== undefined);
+		completedItems.sort((a, b) => {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			return -(new Date(a.completed!).getTime() - new Date(b.completed!).getTime());
+		});
+
 		return {
 			...list,
-			items: list.itemIds.map((itemId) => state.items.filter((item) => item.id === itemId)[0])
+			activeItems: activeItems,
+			completedItems: completedItems
 		};
 	}
 	// todo handle error for two?
@@ -29,7 +40,7 @@ function calculateCurrentList(
 export function createUpdateFunction(deps: Dependencies) {
 	return function updateAppState(previousState: AppState, event: Event): AppState {
 		switch (event.type) {
-			case 'add_item_to_list_event':
+			case 'add_item_to_list_event': {
 				const intermediateState2: AppState = {
 					...previousState,
 					lists: previousState.lists.map((list) => {
@@ -50,7 +61,8 @@ export function createUpdateFunction(deps: Dependencies) {
 					...intermediateState2,
 					currentList: calculateCurrentList(intermediateState2, intermediateState2.currentList?.id)
 				};
-			case 'create_item_and_add_to_lists':
+			}
+			case 'create_item_and_add_to_lists': {
 				const newItem = createItemPink({
 					name: event.name,
 					uuidGenerator: deps.uuidGenerator,
@@ -71,8 +83,8 @@ export function createUpdateFunction(deps: Dependencies) {
 					...intermediateState,
 					currentList: calculateCurrentList(intermediateState, intermediateState.currentList?.id)
 				};
-
-			case 'create_list':
+			}
+			case 'create_list': {
 				const newList = createListPink(event.name, deps.uuidGenerator);
 				return {
 					...previousState,
@@ -82,19 +94,22 @@ export function createUpdateFunction(deps: Dependencies) {
 							? calculateCurrentList(previousState, newList.id)
 							: previousState.currentList
 				};
-			case 'remove_list':
+			}
+			case 'remove_list': {
 				return {
 					...previousState,
 					lists: previousState.lists.filter((list) => list.id !== event.listId),
 					currentList:
 						previousState.currentList?.id !== event.listId ? previousState.currentList : undefined
 				};
-			case 'choose_list_by_id':
+			}
+			case 'choose_list_by_id': {
 				return {
 					...previousState,
 					currentList: calculateCurrentList(previousState, event.listId)
 				};
-			case 'toggle_item_done_event':
+			}
+			case 'toggle_item_done_event': {
 				const intermediateState3 = {
 					...previousState,
 					items: previousState.items.map((item) =>
@@ -105,6 +120,7 @@ export function createUpdateFunction(deps: Dependencies) {
 					...intermediateState3,
 					currentList: calculateCurrentList(intermediateState3, previousState.currentList?.id)
 				};
+			}
 		}
 		forceExhaust(event);
 	};

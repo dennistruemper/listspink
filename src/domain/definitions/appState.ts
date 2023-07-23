@@ -25,7 +25,8 @@ export function initialAppState(deps: Dependencies): AppState {
 		items: [defaultItem],
 		currentList: {
 			id: defaultList.id,
-			items: [defaultItem],
+			completedItems: [],
+			activeItems: [defaultItem],
 			name: defaultList.name
 		}
 	};

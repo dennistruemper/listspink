@@ -1,7 +1,8 @@
 import type { ItemPink } from './itemPink';
 
 export type CurrentListPink = {
-	items: ItemPink[];
+	activeItems: ItemPink[];
+	completedItems: ItemPink[];
 	name: string;
 	id: string;
 };

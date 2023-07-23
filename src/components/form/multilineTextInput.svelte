@@ -4,7 +4,7 @@
 	import FormBase from './formBase.svelte';
 	export let id: string = UuidGenerator.v4();
 	export let name: string;
-	export let rows: number = 3;
+	export let rows = 3;
 	export let caption: string;
 	export let value: string | undefined;
 </script>

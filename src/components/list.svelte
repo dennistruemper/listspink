@@ -1,13 +1,10 @@
 <script lang="ts">
 	import { divideWithBackground, itemBackground, itemHoverBackground } from '../theme';
 
+	// eslint-disable-next-line no-undef
 	type T = $$Generic;
 
 	export let items: T[];
-
-	interface $$Slots {
-		default: { item: T };
-	}
 </script>
 
 <ul
