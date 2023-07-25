@@ -1,0 +1,30 @@
+{
+	"extends": ["config:base", ":semanticCommitTypeAll(chore)"],
+	"rebaseStalePrs": true,
+	"branchPrefix": "r/",
+	"branchTopic": "{{{depNameSanitized}}}",
+	"automerge": true,
+	"labels": ["dependencies"],
+	"packageRules": [
+		{
+			"matchPackageNames": ["aws-sdk"],
+			"extends": ["schedule:monthly"]
+		},
+		{
+			"matchPackagePatterns": ["^eslint"],
+			"groupName": "eslint packages",
+			"extends": ["schedule:monthly"]
+		},
+		{
+			"matchPackagePatterns": ["^semantic-release"],
+			"groupName": "semantic-release",
+			"extends": ["schedule:monthly"]
+		},
+		{
+			"matchPackagePatterns": ["^@types"],
+			"groupName": "types",
+			"extends": ["schedule:monthly"]
+		}
+	],
+	"prHourlyLimit": 1
+}
