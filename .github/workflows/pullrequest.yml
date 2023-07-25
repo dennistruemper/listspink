@@ -1,5 +1,8 @@
 name: CI for feature branches on pullrequest
 
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 on:
   pull_request:
     branches: [main]
@@ -29,3 +32,14 @@ jobs:
         run: npm run build
       - name: unit-test
         run: npm run test:unit
+      - name: Pull Vercel Environment Information
+        run: npx vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Build Project Artifacts
+        run: npx vercel build --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Deploy Project Artifacts to Vercel
+        id: deploy-frontend
+        run: |
+          url=$(npx vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+          echo "FRONTEND_URL=$url" >> "$GITHUB_OUTPUT"
+      - name: check variable
+        run: echo $FRONTEND_URL
