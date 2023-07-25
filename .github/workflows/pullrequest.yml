@@ -3,6 +3,7 @@ name: CI for feature branches on pullrequest
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  CI: true
 on:
   pull_request:
     branches: [main]
@@ -41,5 +42,5 @@ jobs:
         run: |
           url=$(npx vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
           echo "FRONTEND_URL=$url" >> "$GITHUB_OUTPUT"
-      - name: check variable
-        run: echo "The url is ${{ steps.deploy-frontend.outputs.FRONTEND_URL}}"
+      - name: run end to end tests
+        run: FRONTEND_URL=${{ steps.deploy-frontend.outputs.FRONTEND_URL}} npm run test:e2e
