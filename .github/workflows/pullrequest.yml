@@ -1,0 +1,31 @@
+name: CI for feature branches on pullrequest
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-front-end:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3.3.1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Use Node.js
+        uses: actions/setup-node@v3.6.0
+        with:
+          node-version-file: .nvmrc
+      - name: npm install
+        if: steps.cache-node_modules.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: lint
+        run: npm run lint
+      - name: build
+        run: npm run build
+      - name: unit-test
+        run: npm run test-unit
