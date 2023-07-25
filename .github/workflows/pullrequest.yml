@@ -42,4 +42,4 @@ jobs:
           url=$(npx vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
           echo "FRONTEND_URL=$url" >> "$GITHUB_OUTPUT"
       - name: check variable
-        run: echo $FRONTEND_URL
+        run: echo "The url is ${{ steps.deploy-frontend.outputs.FRONTEND_URL}}"
