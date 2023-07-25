@@ -22,36 +22,41 @@
 </script>
 
 <FadeIn>
-	{#if activeItems !== undefined && activeItems.length > 0}
-		<div class="flex flex-row justify-between">
-			<h2 class="text-2xl font-semibold">Active Items</h2>
+	<div class="flex flex-row justify-between">
+		<h2 class="text-2xl font-semibold">Active Items</h2>
 
-			{#if completedItems !== undefined && completedItems.length > 0}
-				<div class="flex flex-row items-center gap-2 px-1">
-					<p>Show Completed</p>
-					<input
-						type="checkbox"
-						checked={showCompleted}
-						on:change={() => {
-							showCompleted = !showCompleted;
-						}}
-					/>
-				</div>
-			{/if}
+		{#if completedItems !== undefined && completedItems.length > 0}
+			<div class="flex flex-row items-center gap-2 px-1">
+				<p>Show Completed</p>
+				<input
+					type="checkbox"
+					checked={showCompleted}
+					on:change={() => {
+						showCompleted = !showCompleted;
+					}}
+				/>
+			</div>
+		{/if}
+	</div>
+	{#if activeItems.length === 0}
+		<div class="p-8 w-full">
+			<p>no Items found</p>
 		</div>
-		<List items={activeItems} let:item>
-			<ListItem itemId={item.id} />
-		</List>
-	{:else}
-		<p>no Items found</p>
-		<button on:click={() => appStore.dispatch({ type: 'create_list', name: 'New List' })} />
 	{/if}
-	{#if completedItems !== undefined && showCompleted}
+
+	<List items={activeItems} let:item>
+		<ListItem itemId={item.id} />
+	</List>
+	{#if completedItems !== undefined && (showCompleted || activeItems.length === 0)}
 		<div class="h-4" />
 		<h2 class="text-2xl font-semibold">Completed Items</h2>
 		<List items={completedItems} let:item>
 			<ListItem itemId={item.id} />
 		</List>
+	{/if}
+	{#if (completedItems === undefined || completedItems.length === 0) && (activeItems === undefined || activeItems.length === 0)}
+		<p>no Items found</p>
+		<button on:click={() => appStore.dispatch({ type: 'create_list', name: 'New List' })} />
 	{/if}
 </FadeIn>
 <ActionBar>
