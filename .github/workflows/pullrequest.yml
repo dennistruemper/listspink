@@ -9,7 +9,7 @@ on:
     branches: [main]
 
 jobs:
-  test-front-end:
+  pullrequest-job:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -42,5 +42,7 @@ jobs:
         run: |
           url=$(npx vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
           echo "FRONTEND_URL=$url" >> "$GITHUB_OUTPUT"
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
       - name: run end to end tests
         run: FRONTEND_URL=${{ steps.deploy-frontend.outputs.FRONTEND_URL}} npm run test:e2e
