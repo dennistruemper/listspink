@@ -37,7 +37,6 @@ jobs:
           path: |
             ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-          run: npm ci
 
       - name: lint
         run: npm run lint
