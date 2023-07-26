@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { dev } from '$app/environment';
 	import { Toaster } from 'svelte-french-toast';
 	import '../app.css';
 	import SidebarContent from '../components/sidebar/sidebarContent.svelte';
@@ -6,6 +7,10 @@
 	import { sidebarStore } from '../stores/sidebarStore';
 	import Cross from '../svg/cross.svelte';
 	import { backgroundBlur, itemBackground } from '../theme';
+
+	navigator.serviceWorker.register('/service-worker.js', {
+		type: dev ? 'module' : 'classic'
+	});
 </script>
 
 <div class=" min-h-screen">
