@@ -127,6 +127,42 @@ export function createUpdateFunction(deps: Dependencies) {
 					currentList: calculateCurrentList(intermediateState3, previousState.currentList?.id)
 				};
 			}
+			case 'edit_list': {
+				const intermediateState4 = {
+					...previousState,
+					lists: previousState.lists.map((list) => {
+						if (list.id !== event.listId) {
+							return list;
+						}
+
+						return { ...list, name: event.name ?? list.name };
+					})
+				};
+				return {
+					...intermediateState4,
+					currentList: calculateCurrentList(intermediateState4, previousState.currentList?.id)
+				};
+			}
+			case 'edit_item': {
+				const intermediateState5 = {
+					...previousState,
+					items: previousState.items.map((item) => {
+						if (item.id !== event.itemId) {
+							return item;
+						}
+
+						return {
+							...item,
+							name: event.name ?? item.name,
+							description: event.description ?? item.description
+						};
+					})
+				};
+				return {
+					...intermediateState5,
+					currentList: calculateCurrentList(intermediateState5, previousState.currentList?.id)
+				};
+			}
 		}
 		forceExhaust(event);
 	};

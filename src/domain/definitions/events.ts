@@ -1,10 +1,12 @@
 export type Event =
 	| RefreshDataEvent
 	| AddItemToListEvent
+	| EditItemEvent
 	| CreateItemAndAddToListsEvent
 	| ToggleItemDoneEvent
 	| CreateListEvent
 	| ChooseListByIdEvent
+	| EditListEvent
 	| RemoveListEvent;
 
 interface EventBase {
@@ -19,6 +21,13 @@ interface AddItemToListEvent extends EventBase {
 	type: 'add_item_to_list_event';
 	listId: string;
 	itemId: string;
+}
+
+interface EditItemEvent extends EventBase {
+	type: 'edit_item';
+	itemId: string;
+	name?: string;
+	description?: string;
 }
 
 interface ToggleItemDoneEvent extends EventBase {
@@ -42,6 +51,11 @@ interface ChooseListByIdEvent extends EventBase {
 	listId: string;
 }
 
+interface EditListEvent extends EventBase {
+	type: 'edit_list';
+	listId: string;
+	name?: string;
+}
 interface RemoveListEvent extends EventBase {
 	type: 'remove_list';
 	listId: string;
