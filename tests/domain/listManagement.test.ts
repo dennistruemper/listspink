@@ -88,4 +88,55 @@ describe('listManagement', () => {
 
 		expect(listToBeChoosen.id).toBe(newState.currentList?.id);
 	});
+
+	it('edit a list', () => {
+		const state = stateWith3Lists();
+		const listToBeEdited = state.lists[2];
+
+		const newState = updateAppState(state, {
+			type: 'edit_list',
+			listId: listToBeEdited.id,
+			name: 'newName'
+		});
+
+		expect(newState.lists[2].name).toBe('newName');
+	});
+
+	it('edit the current list will change current lists name', () => {
+		const state = stateWith3Lists();
+		const listToBeEdited = state.currentList!;
+
+		const newState = updateAppState(state, {
+			type: 'edit_list',
+			listId: listToBeEdited.id,
+			name: 'newName'
+		});
+
+		expect(newState.currentList?.name).toBe('newName');
+	});
+
+	it('edit an item', () => {
+		const state = stateWith3Lists();
+		const itemToBeEdited = state.items[0];
+
+		const newState = updateAppState(state, {
+			type: 'edit_item',
+			itemId: itemToBeEdited.id,
+			name: 'newName'
+		});
+
+		expect(newState.items[0].name).toBe('newName');
+	});
+	it('edit an item will change current list', () => {
+		const state = stateWith3Lists();
+		const itemToBeEdited = state.items[0];
+
+		const newState = updateAppState(state, {
+			type: 'edit_item',
+			itemId: itemToBeEdited.id,
+			name: 'newName'
+		});
+
+		expect(newState.currentList?.activeItems[0].name).toBe('newName');
+	});
 });
