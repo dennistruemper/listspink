@@ -16,7 +16,7 @@
 		<!-- Logo? <House /> -->
 	</div>
 	<nav class="flex flex-1 flex-col">
-		<ul role="list" class="flex flex-1 flex-col gap-y-7">
+		<ul class="flex flex-1 flex-col gap-y-7">
 			<li>
 				<SidebarItem name="Home" href={Routes.home}><House /></SidebarItem>
 				<SidebarItem name="Lists" href={Routes.listChooser}><BurgerMenu /></SidebarItem>
