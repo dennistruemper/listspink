@@ -1,6 +1,15 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { Routes } from '../routes/routes';
 	import { appStore } from '../stores/appStore';
-	import { background, textFadedHoverColor, textHoverColor, textSecondaryColor } from '../theme';
+	import {
+		background,
+		itemHoveredBackground,
+		textFadedHoverColor,
+		textHoverColor,
+		textHoveredColr,
+		textSecondaryColor
+	} from '../theme';
 
 	export let itemId: string;
 	$: item = $appStore.current.items.filter((i) => i.id === itemId)[0];
@@ -8,6 +17,12 @@
 </script>
 
 <div class="relative flex items-start min-w-full">
+	<button
+		class="p-2 mr-3 rounded-lg {itemHoveredBackground + textHoveredColr}"
+		on:click={() => {
+			goto(Routes.editItem({ itemId: item.id }));
+		}}>Edit</button
+	>
 	<div class="min-w-0 flex-1 text-sm leading-6 {completed ? 'line-through' : ''}">
 		<label for="done{item.name}" class="font-medium {textHoverColor}">{item.name}</label>
 		{#if item.description !== undefined}
