@@ -6,7 +6,7 @@
 	let previousPage: string = base;
 
 	afterNavigate((input) => {
-		previousPage = input.from?.url.pathname ?? base;
+		previousPage = input.from?.url?.pathname ?? base;
 	});
 </script>
 
