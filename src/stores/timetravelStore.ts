@@ -35,7 +35,6 @@ export function createTimetraveStore<Model, Event>(
 		};
 	}
 
-	console.log('droch');
 	const loadedData = storage?.load() ?? initialData();
 
 	const { subscribe, set, update } = writable(loadedData ?? initialData());
@@ -48,7 +47,6 @@ export function createTimetraveStore<Model, Event>(
 		subscribe,
 		dispatch: (event: Event) =>
 			update((store) => {
-				console.log('dispatch');
 				// create new future if event occures in history
 				if (store.version === store.history.length - 1) {
 					//append to history
