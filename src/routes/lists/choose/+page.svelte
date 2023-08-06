@@ -72,7 +72,6 @@
 						>
 						<button
 							class="p-2 rounded-lg {itemDisabled + textColor}"
-							disabled={true}
 							on:click={() => {
 								appStore.dispatch({ type: 'choose_list_by_id', listId: list.id });
 								goto('/');
