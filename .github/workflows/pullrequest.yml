@@ -48,10 +48,20 @@ jobs:
         run: npm run build
       - name: unit-test
         run: npm run test:unit
+
+      - name: deploy backend
+        env:
+          AMPT_API_KEY: ${{ secrets.AMPT_API_KEY }}
+        id: deploy-backend
+        run: |
+          cd ../backend
+          url=$(npx ampt preview)
+          echo "BACKEND_URL=$url" >> "$GITHUB_OUTPUT"
+
       - name: Pull Vercel Environment Information
         run: npx vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
       - name: Build Project Artifacts
-        run: npx vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        run: PUBLIC_BACKEND_URL=${{ steps.deploy-backend.outputs.BACKEND_URL}} npx vercel build --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy Project Artifacts to Vercel
         id: deploy-frontend
         run: |

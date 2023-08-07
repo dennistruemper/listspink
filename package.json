@@ -1,13 +1,13 @@
 {
-  "name": "listspink",
-  "version": "0.0.5",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "cd"
-  },
-  "author": "",
-  "workspaces": [
-    "packages/frontend"
-  ]
+	"name": "listspink",
+	"version": "0.0.5",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"format": "prettier --write ."
+	},
+	"author": "",
+	"workspaces": [
+		"packages/*"
+	]
 }
