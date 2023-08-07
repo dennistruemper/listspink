@@ -58,7 +58,7 @@ jobs:
         working-directory: packages/backend
         run: |
           cd ../backend
-          url=$(npx ampt preview)
+          url=$(npx ampt share)
           echo "BACKEND_URL=$url" >> "$GITHUB_OUTPUT"
 
       - name: Pull Vercel Environment Information
