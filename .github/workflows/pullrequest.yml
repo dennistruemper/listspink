@@ -44,6 +44,7 @@ jobs:
 
       - name: lint
         run: npm run lint
+        working-directory: . # use the root directory
       - name: build
         run: npm run build
       - name: unit-test
@@ -53,6 +54,7 @@ jobs:
         env:
           AMPT_API_KEY: ${{ secrets.AMPT_API_KEY }}
         id: deploy-backend
+        working-directory: packages/backend
         run: |
           cd ../backend
           url=$(npx ampt preview)
