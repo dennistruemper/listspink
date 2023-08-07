@@ -4,9 +4,17 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
+		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write ."
 	},
 	"author": "",
+	"devDependencies": {
+		"prettier": "3.0.1",
+		"prettier-plugin-svelte": "3.0.3",
+		"eslint": "^8.28.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-svelte": "^2.30.0"
+	},
 	"workspaces": [
 		"packages/*"
 	]
