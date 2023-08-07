@@ -58,6 +58,7 @@ jobs:
         working-directory: packages/backend
         run: |
           cd ../backend
+          npx ampt share
           url=$(npx ampt share)
           echo "BACKEND_URL=$url" >> "$GITHUB_OUTPUT"
 
