@@ -55,7 +55,7 @@ jobs:
         env:
           AMPT_API_KEY: ${{ secrets.AMPT_API_KEY }}
         id: deploy-backend
-        working-directory: packages/backend
+        working-directory: . # use the root directory
         run: |
           npx ampt deploy ci
           url=$(./scripts/deployAndGetUrl.sh)
