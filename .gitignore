@@ -3,3 +3,4 @@ packages/backend/.ampt
 packages/backend/url.txt
 
 .ampt
+.DS_Store
