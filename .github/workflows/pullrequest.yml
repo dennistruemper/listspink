@@ -58,8 +58,7 @@ jobs:
         working-directory: packages/backend
         run: |
           cd ../backend
-          npx ampt deploy ci
-          url=$(npx ampt deploy ci)
+          url=$(./scripts/deployAndGetUrl.sh)
           echo aha $url
           echo "BACKEND_URL=$url" >> "$GITHUB_OUTPUT"
 
