@@ -5,4 +5,4 @@
 	const showVersion = isNaN(versionAsInt) ? version : `dev-${new Date(versionAsInt).toISOString()}`;
 </script>
 
-Version : {showVersion}
+App Version : {showVersion}
