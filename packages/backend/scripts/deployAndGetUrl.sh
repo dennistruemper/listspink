@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 npx ampt deploy ci
 set +e
 (npx ampt deploy ci || true) |
