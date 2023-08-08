@@ -13,16 +13,16 @@
 		<br /><button on:click={appStore.reset}>Reset State</button>
 		<br /><br />
 		<p></p>
+		<br />
+		<br />
+		<p>
+			{#if PUBLIC_BACKEND_URL}
+				{PUBLIC_BACKEND_URL}
+			{:else}
+				no backend url configured
+			{/if}
+		</p>
 	{/if}
-	<br />
-	<br />
-	<p>
-		{#if PUBLIC_BACKEND_URL}
-			PUBLIC_BACKEND_URL
-		{:else}
-			no backend url configured
-		{/if}
-	</p>
 
 	<Version></Version>
 </FadeIn>
