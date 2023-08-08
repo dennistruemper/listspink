@@ -6,7 +6,8 @@
 	"main": "index.ts",
 	"type": "module",
 	"scripts": {
-		"start": "ampt",
+		"dev-be": "ampt",
+		"dev-fe": "export BACKEND_URL=$(./scripts/getSandboxUrl.sh) && cd packages/frontend && echo PUBLIC_BACKEND_URL $BACKEND_URL && PUBLIC_BACKEND_URL=$BACKEND_URL npm run dev",
 		"lint": "cd packages/frontend && npm run lint && cd -",
 		"format": "prettier --write ."
 	},

@@ -1,6 +1,7 @@
 node_modules
-packages/backend/.ampt
-packages/backend/url.txt
+
+url.txt
+urlSandbox.txt
 
 .ampt
 .DS_Store
