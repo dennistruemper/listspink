@@ -57,7 +57,6 @@ jobs:
         id: deploy-backend
         working-directory: packages/backend
         run: |
-          cd ../backend
           url=$(./scripts/deployAndGetUrl.sh)
           echo aha $url
           echo "BACKEND_URL=$url" >> "$GITHUB_OUTPUT"
