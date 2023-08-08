@@ -1,13 +1,39 @@
 {
-  "name": "listspink",
-  "version": "0.0.5",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "cd"
-  },
-  "author": "",
-  "workspaces": [
-    "packages/frontend"
-  ]
+	"name": "listspink",
+	"version": "0.0.5",
+	"description": "",
+	"private": true,
+	"main": "packages/backend/index.ts",
+	"type": "module",
+	"scripts": {
+		"dev-be": "ampt",
+		"dev-fe": "export BACKEND_URL=$(./scripts/getSandboxUrl.sh) && cd packages/frontend && echo PUBLIC_BACKEND_URL $BACKEND_URL && PUBLIC_BACKEND_URL=$BACKEND_URL npm run dev",
+		"lint": "cd packages/frontend && npm run lint && cd -",
+		"format": "prettier --write ."
+	},
+	"dependencies": {
+		"@ampt/sdk": "latest",
+		"cors": "2.8.5",
+		"express": "^4.18.2",
+		"zod": "3.21.4"
+	},
+	"ampt": {
+		"app": "lists-pink-backend",
+		"org": "dennistruemper269889"
+	},
+	"devDependencies": {
+		"@ampt/cli": "0.0.1-beta.69",
+		"@types/express": "^4.17.17",
+		"eslint": "^8.28.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-svelte": "^2.30.0",
+		"prettier": "3.0.1",
+		"prettier-plugin-svelte": "3.0.3"
+	},
+	"workspaces": [
+		"packages/*"
+	],
+	"files": [
+		"*"
+	]
 }

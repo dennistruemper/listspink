@@ -104,6 +104,7 @@ describe('listManagement', () => {
 
 	it('edit the current list will change current lists name', () => {
 		const state = stateWith3Lists();
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const listToBeEdited = state.currentList!;
 
 		const newState = updateAppState(state, {
