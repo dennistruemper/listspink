@@ -7,7 +7,7 @@
 	"type": "module",
 	"scripts": {
 		"start": "ampt",
-		"lint": "prettier --check . && eslint .",
+		"lint": "cd packages/frontend && npm run lint && cd -",
 		"format": "prettier --write ."
 	},
 	"dependencies": {
