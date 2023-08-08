@@ -1,8 +1,10 @@
 import { http } from '@ampt/sdk';
+import cors from 'cors';
 import express, { Router } from 'express';
 
 const app = express();
 app.use(express.json());
+app.use(cors);
 
 const publicApi = Router();
 
