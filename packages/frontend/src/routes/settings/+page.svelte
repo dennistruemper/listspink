@@ -3,9 +3,9 @@
 	import FadeIn from '../../components/animation/fadeIn.svelte';
 	import Version from '../../components/version.svelte';
 	import { appStore } from '../../stores/appStore';
+	import type { PageData } from './$types';
 
-	// fetch data from google.de
-	const version: Promise<Response> = fetch(PUBLIC_BACKEND_URL + '/api/version');
+	export let data: PageData;
 </script>
 
 <FadeIn>
@@ -27,13 +27,7 @@
 		</p>
 	{/if}
 
-	{#await version}
-		<p>loading backendversion...</p>
-	{:then response}
-		<p>Version: {JSON.stringify(response)}</p>
-	{:catch error}
-		<p>error: {error.message}</p>
-	{/await}
+	<p>Version: {data.success === true ? data.data.version : 'could not load backend version'}</p>
 
 	<Version></Version>
 </FadeIn>
