@@ -2,3 +2,4 @@ node_modules
 packages/backend/.ampt
 packages/backend/url.txt
 
+.ampt
