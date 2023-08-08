@@ -30,7 +30,7 @@
 	{#await version}
 		<p>loading backendversion...</p>
 	{:then response}
-		<p>Version: {response.text()}</p>
+		<p>Version: {JSON.stringify(response)}</p>
 	{:catch error}
 		<p>error: {error.message}</p>
 	{/await}
