@@ -73,7 +73,7 @@ describe('listManagement', () => {
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-non-null-asserted-optional-chain
 		const newState = await updateAppState(state, {
 			type: 'remove_list',
-			listId: state.currentList?.id!
+			listId: state.currentList?.id ?? 'dummy'
 		});
 
 		expect(newState.currentList).toBeUndefined();
