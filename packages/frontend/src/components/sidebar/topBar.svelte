@@ -9,11 +9,14 @@
 	import { textColor } from '../../theme';
 	import Separator from '../separator.svelte';
 	$: listId = $appStore.current.currentList?.id;
+	$: isAuthenticated = $appStore.current.user !== undefined;
 </script>
 
 <button type="button" class="-m-2.5 p-2.5 lg:hidden" on:click={sidebarStore.toggle}>
 	<span class="sr-only">Open sidebar</span>
-	<BurgerMenu />
+	<div class={isAuthenticated ? '' : 'text-red-500'}>
+		<BurgerMenu />
+	</div>
 </button>
 
 <Separator />

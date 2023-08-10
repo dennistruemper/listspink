@@ -20,9 +20,9 @@ describe('itemManagement', () => {
 		};
 	};
 
-	it('add item but to no lits', () => {
+	it('add item but to no lits', async () => {
 		const state = initialAppState(defaultTestDependencies);
-		const newState = updateAppState(state, {
+		const newState = await updateAppState(state, {
 			type: 'create_item_and_add_to_lists',
 			name: 'new item',
 			listIds: []
@@ -32,9 +32,9 @@ describe('itemManagement', () => {
 		expect(newState.items[1].name).toBe('new item');
 	});
 
-	it('add item to first and third lists', () => {
+	it('add item to first and third lists', async () => {
 		const state = stateWith3Lists();
-		const newState = updateAppState(state, {
+		const newState = await updateAppState(state, {
 			type: 'create_item_and_add_to_lists',
 			name: 'new item',
 			listIds: [state.lists[0].id, state.lists[2].id]
@@ -48,9 +48,9 @@ describe('itemManagement', () => {
 		expect(newState.lists[2].itemIds).to.include(newItemId);
 	});
 
-	it('create and add item to current list', () => {
+	it('create and add item to current list', async () => {
 		const state = stateWith3Lists();
-		const newState = updateAppState(state, {
+		const newState = await updateAppState(state, {
 			type: 'create_item_and_add_to_lists',
 			name: 'new item',
 			listIds: [state.currentList?.id ?? '']
@@ -60,9 +60,9 @@ describe('itemManagement', () => {
 		expect(newState.currentList?.activeItems.map((item) => item.id)).to.include(newItemId);
 	});
 
-	it('add item to current list', () => {
+	it('add item to current list', async () => {
 		const state = stateWith3Lists();
-		const newState = updateAppState(state, {
+		const newState = await updateAppState(state, {
 			type: 'add_item_to_list_event',
 			itemId: state.items[0].id,
 			listId: state.lists[2].id
@@ -71,10 +71,10 @@ describe('itemManagement', () => {
 		expect(newState.lists[2].itemIds).to.include(state.items[0].id);
 	});
 
-	it('toggle item completed state to done', () => {
+	it('toggle item completed state to done', async () => {
 		const now = new Date();
 		const state = initialAppState(defaultTestDependencies);
-		const newState = updateAppState(state, {
+		const newState = await updateAppState(state, {
 			type: 'toggle_item_done_event',
 			itemId: state.items[0].id,
 			time: now
@@ -83,11 +83,11 @@ describe('itemManagement', () => {
 		expect(newState.items[0].completed).toBe(now.toISOString());
 	});
 
-	it('toggle item completed state to undone', () => {
+	it('toggle item completed state to undone', async () => {
 		const now = new Date();
 		const state = initialAppState(defaultTestDependencies);
 		state.items[0].completed = now.toISOString();
-		const newState = updateAppState(state, {
+		const newState = await updateAppState(state, {
 			type: 'toggle_item_done_event',
 			itemId: state.items[0].id,
 			time: now

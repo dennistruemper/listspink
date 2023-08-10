@@ -1,4 +1,7 @@
 export type Event =
+	| AuthLoginInitializedEvent
+	| AuthLogoutEvent
+	| AuthLoginCheckEvent
 	| RefreshDataEvent
 	| AddItemToListEvent
 	| EditItemEvent
@@ -11,6 +14,18 @@ export type Event =
 
 interface EventBase {
 	type: string;
+}
+
+interface AuthLoginCheckEvent extends EventBase {
+	type: 'login_check';
+	url: string;
+}
+interface AuthLoginInitializedEvent extends EventBase {
+	type: 'login_initialized';
+}
+
+interface AuthLogoutEvent extends EventBase {
+	type: 'logout';
 }
 
 interface RefreshDataEvent extends EventBase {

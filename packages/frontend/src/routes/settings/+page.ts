@@ -1,8 +1,8 @@
-import { prodDependencies } from '../../dependencies';
+import { getDependencies } from '../../dependencies';
 import type { PageLoad } from './$types';
 
 export const load = (async () => {
-	const versionRepository = prodDependencies.versionRepository;
+	const versionRepository = getDependencies().versionRepository;
 	const parsed = versionRepository.getVersion();
 	return parsed;
 }) satisfies PageLoad;

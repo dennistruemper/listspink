@@ -38,8 +38,27 @@ function calculateCurrentList(
 }
 
 export function createUpdateFunction(deps: Dependencies) {
-	return function updateAppState(previousState: AppState, event: Event): AppState {
+	return async function updateAppState(previousState: AppState, event: Event): Promise<AppState> {
 		switch (event.type) {
+			case 'login_initialized': {
+				await deps.authRepository.login();
+				return previousState;
+			}
+			case 'logout': {
+				await deps.authRepository.logout();
+				return {
+					...previousState,
+					user: undefined
+				};
+			}
+			case 'login_check': {
+				await deps.authRepository.handleRedirectCallback(event.url);
+				const user = await deps.authRepository.getUser();
+				return {
+					...previousState,
+					user: user
+				};
+			}
 			case 'refresh_data': {
 				return {
 					...previousState,
