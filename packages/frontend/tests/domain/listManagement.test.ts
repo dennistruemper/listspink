@@ -27,45 +27,54 @@ describe('listManagement', () => {
 		expect(state.lists[0].name).toBe('Pink List');
 	});
 
-	it('add list to new state', () => {
+	it('add list to new state', async () => {
 		const state = initialAppState(defaultTestDependencies);
-		const newState = updateAppState(state, { type: 'create_list', name: 'listName' });
+		const newState = await updateAppState(state, { type: 'create_list', name: 'listName' });
 
 		expect(newState.lists.length).toBe(2);
 		expect(newState.lists[1].name).toBe('listName');
 	});
 
-	it('add list to exiting lists', () => {
+	it('add list to exiting lists', async () => {
 		const state = stateWith3Lists();
-		const newState = updateAppState(state, { type: 'create_list', name: 'list4' });
+		const newState = await updateAppState(state, { type: 'create_list', name: 'list4' });
 
 		expect(newState.lists.length).toBe(4);
 		expect(newState.lists[0].name).toBe('Pink List');
 		expect(newState.lists[3].name).toBe('list4');
 	});
 
-	it('remove list with id matching first list', () => {
+	it('remove list with id matching first list', async () => {
 		const state = stateWith3Lists();
 
-		const newState = updateAppState(state, { type: 'remove_list', listId: state.lists[0].id });
+		const newState = await updateAppState(state, {
+			type: 'remove_list',
+			listId: state.lists[0].id
+		});
 
 		expect(2).toBe(newState.lists.length);
 	});
 
-	it('remove list with id matching second list does not chang current list', () => {
+	it('remove list with id matching second list does not chang current list', async () => {
 		const state = stateWith3Lists();
 
-		const newState = updateAppState(state, { type: 'remove_list', listId: state.lists[1].id });
+		const newState = await updateAppState(state, {
+			type: 'remove_list',
+			listId: state.lists[1].id
+		});
 
 		expect(state.currentList).toBe(newState.currentList);
 	});
 
-	it('remove current list will have no current list', () => {
+	it('remove current list will have no current list', async () => {
 		const state = stateWith3Lists();
 
 		// it is ok, we know that there is a current list in this test
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-non-null-asserted-optional-chain
-		const newState = updateAppState(state, { type: 'remove_list', listId: state.currentList?.id! });
+		const newState = await updateAppState(state, {
+			type: 'remove_list',
+			listId: state.currentList?.id ?? 'dummy'
+		});
 
 		expect(newState.currentList).toBeUndefined();
 	});
@@ -77,11 +86,11 @@ describe('listManagement', () => {
 		expect(state.lists[0].id).toBe(state.currentList?.id);
 	});
 
-	it('choose an other list', () => {
+	it('choose an other list', async () => {
 		const state = stateWith3Lists();
 		const listToBeChoosen = state.lists[2];
 
-		const newState = updateAppState(state, {
+		const newState = await updateAppState(state, {
 			type: 'choose_list_by_id',
 			listId: listToBeChoosen.id
 		});
@@ -89,11 +98,11 @@ describe('listManagement', () => {
 		expect(listToBeChoosen.id).toBe(newState.currentList?.id);
 	});
 
-	it('edit a list', () => {
+	it('edit a list', async () => {
 		const state = stateWith3Lists();
 		const listToBeEdited = state.lists[2];
 
-		const newState = updateAppState(state, {
+		const newState = await updateAppState(state, {
 			type: 'edit_list',
 			listId: listToBeEdited.id,
 			name: 'newName'
@@ -102,12 +111,12 @@ describe('listManagement', () => {
 		expect(newState.lists[2].name).toBe('newName');
 	});
 
-	it('edit the current list will change current lists name', () => {
+	it('edit the current list will change current lists name', async () => {
 		const state = stateWith3Lists();
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const listToBeEdited = state.currentList!;
 
-		const newState = updateAppState(state, {
+		const newState = await updateAppState(state, {
 			type: 'edit_list',
 			listId: listToBeEdited.id,
 			name: 'newName'
@@ -116,11 +125,11 @@ describe('listManagement', () => {
 		expect(newState.currentList?.name).toBe('newName');
 	});
 
-	it('edit an item', () => {
+	it('edit an item', async () => {
 		const state = stateWith3Lists();
 		const itemToBeEdited = state.items[0];
 
-		const newState = updateAppState(state, {
+		const newState = await updateAppState(state, {
 			type: 'edit_item',
 			itemId: itemToBeEdited.id,
 			name: 'newName'
@@ -128,11 +137,11 @@ describe('listManagement', () => {
 
 		expect(newState.items[0].name).toBe('newName');
 	});
-	it('edit an item will change current list', () => {
+	it('edit an item will change current list', async () => {
 		const state = stateWith3Lists();
 		const itemToBeEdited = state.items[0];
 
-		const newState = updateAppState(state, {
+		const newState = await updateAppState(state, {
 			type: 'edit_item',
 			itemId: itemToBeEdited.id,
 			name: 'newName'

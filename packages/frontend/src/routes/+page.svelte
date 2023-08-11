@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import ActionBar from '../components/actionBar.svelte';
 	import FadeIn from '../components/animation/fadeIn.svelte';
 	import ActionBarButton from '../components/buttons/actionBarButton.svelte';
@@ -9,6 +10,7 @@
 	import { titleStore } from '../stores/titleStore';
 	import Plus from '../svg/plus.svelte';
 
+	const url = $page.url;
 	$: currentList = $appStore.current.currentList;
 	$: currentListName = currentList?.name;
 
@@ -19,6 +21,12 @@
 	let showCompleted = false;
 	$: activeItems = $appStore.current.currentList?.activeItems ?? [];
 	$: completedItems = $appStore.current.currentList?.completedItems ?? [];
+
+	const code = url.searchParams.get('code');
+	const state = url.searchParams.get('state');
+	if (code && state && $appStore.current.user === undefined) {
+		appStore.dispatch({ type: 'login_check', url: url.toString() });
+	}
 </script>
 
 <FadeIn>

@@ -20,13 +20,13 @@ export interface TimeTravelStorage<T> {
 	load: () => T | undefined;
 }
 
-export function createTimetraveStore<Model, Event>(
-	updateModel: (model: Model, event: Event) => Model,
-	init: () => Model,
+export async function createTimetraveStore<Model, Event>(
+	updateModel: (model: Model, event: Event) => Promise<Model>,
+	init: () => Promise<Model>,
 	storage?: TimeTravelStorage<TimeTravelStore<Model>>
 ) {
-	function initialData(): TimeTravelStore<Model> {
-		const initial = init();
+	async function initialData(): Promise<TimeTravelStore<Model>> {
+		const initial = await init();
 		return {
 			version: 0,
 			history: [initial],
@@ -35,12 +35,12 @@ export function createTimetraveStore<Model, Event>(
 		};
 	}
 
-	const loadedData = storage?.load() ?? initialData();
+	const loadedData = storage?.load() ?? (await initialData());
 
-	const { subscribe, set, update } = writable(loadedData ?? initialData());
+	const { subscribe, set, update } = writable(loadedData ?? (await initialData()));
 
-	subscribe((data) => {
-		storage?.save(data);
+	subscribe(async (data) => {
+		storage?.save(await data);
 	});
 
 	return {
@@ -50,31 +50,35 @@ export function createTimetraveStore<Model, Event>(
 				// create new future if event occures in history
 				if (store.version === store.history.length - 1) {
 					//append to history
-					const newState = updateModel(store.current, event);
-					const newHistory = [...store.history, newState];
-					const newIndex = store.version + 1;
-					const newValue = {
-						version: newIndex,
-						current: newState,
-						history: newHistory,
-						debugMode: store.debugMode
-					};
-					logDev(newValue);
-					return newValue;
+					updateModel(store.current, event).then((newState) => {
+						const newHistory = [...store.history, newState];
+						const newIndex = store.version + 1;
+						const newValue = {
+							version: newIndex,
+							current: newState,
+							history: newHistory,
+							debugMode: store.debugMode
+						};
+						logDev(newValue);
+						set(newValue);
+					});
+					return store;
 				} else {
 					// delete newer states and start new future
-					const newState = updateModel(store.current, event);
-					const remainingHistory = store.history.slice(0, store.version);
-					const newHistory = [...remainingHistory, newState];
-					const newIndex = store.version + 1;
-					const newValue = {
-						version: newIndex,
-						current: newState,
-						history: newHistory,
-						debugMode: store.debugMode
-					};
-					logDev(newValue);
-					return newValue;
+					updateModel(store.current, event).then((newState) => {
+						const remainingHistory = store.history.slice(0, store.version);
+						const newHistory = [...remainingHistory, newState];
+						const newIndex = store.version + 1;
+						const newValue = {
+							version: newIndex,
+							current: newState,
+							history: newHistory,
+							debugMode: store.debugMode
+						};
+						logDev(newValue);
+						set(newValue);
+					});
+					return store;
 				}
 			}),
 
@@ -98,14 +102,15 @@ export function createTimetraveStore<Model, Event>(
 			});
 		},
 		toggleDebugMode: () => {
-			update((store) => {
+			update((storeInput) => {
+				const store = storeInput;
 				const newValue = { ...store, debugMode: !store.debugMode };
 				logDev(newValue);
 				return newValue;
 			});
 		},
-		reset: () => {
-			set(initialData());
+		reset: async () => {
+			set(await initialData());
 		}
 	};
 }

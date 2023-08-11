@@ -1,5 +1,6 @@
 export class Routes {
 	static home = '/';
+	static auth = '/auth';
 	static createItem = '/createItem';
 	static createList = '/lists/create';
 	static editItem(input: { itemId: string }) {
