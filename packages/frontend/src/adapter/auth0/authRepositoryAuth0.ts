@@ -4,8 +4,8 @@ import type { User } from '../../domain/definitions/user';
 
 export class AuthRepositoryAuth0 implements AuthRepository {
 	private client: Auth0Client;
-	constructor(cliet: Auth0Client) {
-		this.client = cliet;
+	constructor(client: Auth0Client) {
+		this.client = client;
 	}
 
 	static async create(input: { domain: string; clientId: string }): Promise<AuthRepositoryAuth0> {
@@ -23,7 +23,6 @@ export class AuthRepositoryAuth0 implements AuthRepository {
 		}
 
 		if (user.name === undefined || user.email === undefined) {
-			console.log('user.name === undefined || user.email === undefined');
 			return undefined;
 		}
 

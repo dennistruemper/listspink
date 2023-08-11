@@ -6,7 +6,6 @@
 	import { textColor } from '../../theme';
 
 	titleStore.set({ title: 'Account', listChooseMode: false });
-	console.log('user', $appStore.current.user);
 </script>
 
 {#if $appStore.current.user}
