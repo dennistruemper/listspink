@@ -48,8 +48,9 @@ jobs:
         working-directory: . # use the root directory
       - name: build
         run: npm run build
-      - name: unit-test
-        run: npm run test:unit
+      - name: unit-test all packages
+        run: npm run test-unit
+        working-directory: . # use the root directory
 
       - name: deploy backend
         env:
