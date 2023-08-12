@@ -48,8 +48,8 @@ jobs:
         working-directory: . # use the root directory
       - name: build
         run: npm run build
-      - name: unit-test all packages
-        run: npm run test-unit
+      - name: local test all packages
+        run: npm run test-local
         working-directory: . # use the root directory
 
       - name: deploy backend
