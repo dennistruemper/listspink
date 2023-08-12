@@ -48,8 +48,9 @@ jobs:
         working-directory: . # use the root directory
       - name: build
         run: npm run build
-      - name: unit-test
-        run: npm run test:unit
+      - name: local test all packages
+        run: npm run test-local
+        working-directory: . # use the root directory
 
       - name: deploy backend
         env:
@@ -60,6 +61,15 @@ jobs:
           url=$(./scripts/deployAndGetUrl.sh ci)
           echo aha $url
           echo "BACKEND_URL=$url" >> "$GITHUB_OUTPUT"
+
+      # TODO: uncomment when backend integration tests are ci ready
+      # - name: test backend integration
+      #   env:
+      #     AMPT_API_KEY: ${{ secrets.AMPT_API_KEY }}
+      #   id: backend-integration-test
+      #   working-directory: . # use the root directory
+      #   run: |
+      #     npm run ampt:test
 
       - name: Pull Vercel Environment Information
         run: npx vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
