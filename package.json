@@ -11,15 +11,16 @@
 		"lint": "cd packages/frontend && npm run lint && cd -",
 		"test-local": "BASE_PATH=** MODE=LOCAL vitest run",
 		"format": "prettier --write .",
+		"clean": "git checkout main && git pull && npm ci",
 		"ampt:test": "BASE_PATH=packages/backend MODE=SANDBOX vitest run",
 		"ampt:test-all": "BASE_PATH=packages/backend MODE=ALL vitest run",
 		"ampt:test-all-watch": "BASE_PATH=packages/backend MODE=ALL vitest"
 	},
 	"dependencies": {
 		"@ampt/data": "0.0.1-beta.18",
-		"@ampt/sdk": "latest",
+		"@ampt/sdk": "0.0.1-beta.58",
 		"cors": "2.8.5",
-		"express": "^4.18.2",
+		"express": "4.18.2",
 		"zod": "3.21.4"
 	},
 	"ampt": {
