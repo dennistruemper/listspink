@@ -1,10 +1,10 @@
-import { forceExhaust } from '../util/languageExtension';
+import { createItemPink, type ItemPink } from '../../../shared/src/definitions/itemPink';
+import { createListPink } from '../../../shared/src/definitions/listPink';
+import { forceExhaust } from '../../../shared/src/languageExtension';
 import type { AppState } from './definitions/appState';
 import type { CurrentListPink } from './definitions/currentList';
 import type { Dependencies } from './definitions/dependencies';
 import type { Event } from './definitions/events';
-import { createItemPink, type ItemPink } from './definitions/itemPink';
-import { createListPink } from './definitions/listPink';
 
 function calculateCurrentList(
 	state: AppState,
