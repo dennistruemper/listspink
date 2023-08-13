@@ -15,6 +15,6 @@ jobs:
       - name: pull-request-action
         uses: vsoch/pull-request-action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.AUTO_PR_GITHUB_TOKEN }}
           BRANCH_PREFIX: 'f/'
           PULL_REQUEST_BRANCH: 'main'
