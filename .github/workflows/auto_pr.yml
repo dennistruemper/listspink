@@ -7,8 +7,6 @@ on:
       - production
 jobs:
   auto-pull-request:
-    permissions:
-      pull-requests: write
     name: PullRequestAction
     runs-on: ubuntu-latest
     steps:
