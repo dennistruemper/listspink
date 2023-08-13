@@ -12,7 +12,7 @@
 		"test-local": "BASE_PATH=** MODE=LOCAL vitest run",
 		"format": "prettier --write .",
 		"clean": "git checkout main && git pull && npm ci",
-		"new-branch": "npm run clean && git checkout -b $1",
+		"new-branch": "npm run clean && git checkout -b f/$1",
 		"ampt:test": "BASE_PATH=packages/backend MODE=SANDBOX vitest run",
 		"ampt:test-all": "BASE_PATH=packages/backend MODE=ALL vitest run",
 		"ampt:test-all-watch": "BASE_PATH=packages/backend MODE=ALL vitest"
