@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
+import { createListPink } from '../../../shared/src/definitions/listPink';
 import { UuidGenerator } from '../../src/adapter/uuid';
 import { initialAppState } from '../../src/domain/definitions/appState';
-import { createListPink } from '../../src/domain/definitions/listPink';
 import { createUpdateFunction } from '../../src/domain/updateAppState';
 import { defaultTestDependencies } from '../testDependencies';
 
