@@ -1,15 +1,18 @@
+name: Pull Request on Branch Push
 on:
   push:
-    branches:
-      - 'f/*'
-
+    branches-ignore:
+      - staging
+      - launchpad
+      - production
 jobs:
-  pull-request:
+  auto-pull-request:
+    name: PullRequestAction
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: pull-request
-        uses: diillson/auto-pull-request@v1.0.1
-        with:
-          destination_branch: 'main'
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: pull-request-action
+        uses: vsoch/pull-request-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH_PREFIX: 'f/'
+          PULL_REQUEST_BRANCH: 'main'
