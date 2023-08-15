@@ -22,7 +22,7 @@
 		"@ampt/sdk": "0.0.1-beta.58",
 		"cors": "2.8.5",
 		"express": "4.18.2",
-		"zod": "3.21.4"
+		"zod": "3.22.0"
 	},
 	"ampt": {
 		"app": "lists-pink-backend",
