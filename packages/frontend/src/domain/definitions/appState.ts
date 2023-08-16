@@ -6,6 +6,7 @@ import type { User } from './user';
 
 export type AppState = {
 	user?: User;
+	accessToken?: string;
 	lists: ListPink[];
 	items: ItemPink[];
 	currentList?: CurrentListPink;

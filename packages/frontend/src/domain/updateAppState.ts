@@ -48,7 +48,8 @@ export function createUpdateFunction(deps: Dependencies) {
 				await deps.authRepository.logout();
 				return {
 					...previousState,
-					user: undefined
+					user: undefined,
+					accessToken: undefined
 				};
 			}
 			case 'login_check': {
@@ -56,7 +57,8 @@ export function createUpdateFunction(deps: Dependencies) {
 				const user = await deps.authRepository.getUser();
 				return {
 					...previousState,
-					user: user
+					user: user,
+					accessToken: await deps.authRepository.getAccessToken()
 				};
 			}
 			case 'refresh_data': {

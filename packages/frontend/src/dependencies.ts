@@ -21,7 +21,8 @@ async function prodDependencies(): Promise<Dependencies> {
 		versionRepository: new VersionRepositoryBackend(),
 		authRepository: await AuthRepositoryAuth0.create({
 			domain: 'listspink.eu.auth0.com',
-			clientId: '0gCuLyMdGyU31BbgPXdnmofNCWREJAlu'
+			clientId: '0gCuLyMdGyU31BbgPXdnmofNCWREJAlu',
+			audience: 'lists.pink'
 		})
 	};
 }
@@ -32,7 +33,8 @@ async function betaDependencies(): Promise<Dependencies> {
 		versionRepository: new VersionRepositoryBackend(),
 		authRepository: await AuthRepositoryAuth0.create({
 			domain: 'listspink-beta.eu.auth0.com',
-			clientId: 'ipLY3EN3zHzl4zj9d6o38mTDYtgPDPe4'
+			clientId: 'ipLY3EN3zHzl4zj9d6o38mTDYtgPDPe4',
+			audience: 'beta.lists.pink'
 		})
 	};
 }
@@ -43,7 +45,8 @@ async function devDependencies(): Promise<Dependencies> {
 		versionRepository: new VersionRepositoryBackend(),
 		authRepository: await AuthRepositoryAuth0.create({
 			domain: 'listspink-dev.eu.auth0.com',
-			clientId: 'WVvNpcV9Fzoj3EWiYXtsdkiKDGfa5sCu'
+			clientId: 'WVvNpcV9Fzoj3EWiYXtsdkiKDGfa5sCu',
+			audience: 'dev.lists.pink'
 		})
 	};
 }
