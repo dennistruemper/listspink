@@ -1,6 +1,5 @@
 import cors from 'cors';
-import express, { Express, Router } from 'express';
-import { auth } from 'express-oauth2-jwt-bearer';
+import express, { Express, Handler, Router } from 'express';
 import {
 	CreateListResponse,
 	createListRequestSchema
@@ -10,15 +9,7 @@ import { Dependencies } from '../../domain/definitions/dependencies';
 import { ListRepositoryAmpt } from '../ampt/data/ListRepositoryAmpt';
 
 export async function createApp(dependencies: Dependencies): Promise<Express> {
-	const config = dependencies.configRepository;
-	const audience = await config.getAuth0Audience();
-	const baseUrl = (await config.getAuth0TokenUrl()).slice(0, 'oauth/token'.length * -1);
-
-	const checkJwt = auth({
-		audience: audience,
-		issuerBaseURL: baseUrl,
-		tokenSigningAlg: 'RS256'
-	});
+	const authHandler: Handler = await dependencies.tokenChecker.getHandler();
 
 	const app = express();
 	app.use(express.json());
@@ -28,7 +19,7 @@ export async function createApp(dependencies: Dependencies): Promise<Express> {
 	app.use('/api', publicApi);
 	addPublicRoutes(publicApi, dependencies);
 	const privateApi = Router();
-	app.use('/api', checkJwt, privateApi);
+	app.use('/api', authHandler, privateApi);
 	addPrivateRoutes(privateApi, dependencies);
 
 	return app;
@@ -47,7 +38,7 @@ function addPrivateRoutes(router: Router, dependencies: Dependencies) {
 
 function addListRoutes(router: Router, dependencies: Dependencies) {
 	router.post('/list', async (req, res) => {
-		console.log(req.auth?.payload.sub);
+		console.log(req.auth?.payload.sub ?? 'no sub');
 		const parsedBody = createListRequestSchema.safeParse(req.body);
 		if (!parsedBody.success) {
 			res.status(400).send(parsedBody.error.errors);
