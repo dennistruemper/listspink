@@ -1,9 +1,13 @@
 import supertest from 'supertest';
 import { describe, it } from 'vitest';
-import { app } from '../../..';
+import { createApp } from '../../../src/adapter/http/createExpressApp';
+import { getDependencies } from '../../../src/stageDependencies';
 
 describe('list endpoint api/list', () => {
+	const dependencies = getDependencies('dev');
+
 	it('should get a 401 without authorization', async () => {
+		const app = await createApp(dependencies);
 		await supertest(app).post('/api/list').expect(401);
 	});
 
