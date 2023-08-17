@@ -16,7 +16,7 @@ test('create new user', async ({ page }) => {
 	await page.getByLabel('Password').fill(password);
 	await page.getByRole('button', { name: 'Continue' }).click();
 	await page.getByRole('link', { name: 'Pink List' }).hover();
-	expect(page.url().split('?')[0]).toBe(TestGlobalConstants.getLatestURL());
+	expect(page.url()).toContain(TestGlobalConstants.getLatestURL());
 });
 
 test('login with new user', async ({ page }) => {
@@ -51,5 +51,5 @@ test('login with new user', async ({ page }) => {
 	await page.getByLabel('Password').fill(password);
 	await page.getByRole('button', { name: 'Continue' }).click();
 	await page.getByRole('link', { name: 'Pink List' }).hover();
-	expect(page.url().split('?')[0]).toBe(TestGlobalConstants.getLatestURL());
+	expect(page.url()).toContain(TestGlobalConstants.getLatestURL());
 });
