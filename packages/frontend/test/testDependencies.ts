@@ -13,6 +13,9 @@ class VersionRepositoryFake implements VersionRepository {
 }
 
 class AuthRepositoryFake implements AuthRepository {
+	getAccessToken(): Promise<string | undefined> {
+		throw new Error('Method not implemented.');
+	}
 	handleRedirectCallback(url: string): Promise<void> {
 		throw new Error('Method not implemented.' + url);
 	}

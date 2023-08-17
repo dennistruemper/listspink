@@ -4,16 +4,35 @@ import type { User } from '../../domain/definitions/user';
 
 export class AuthRepositoryAuth0 implements AuthRepository {
 	private client: Auth0Client;
-	constructor(client: Auth0Client) {
+	private audience: string;
+
+	constructor(client: Auth0Client, audience: string) {
 		this.client = client;
+		this.audience = audience;
 	}
 
-	static async create(input: { domain: string; clientId: string }): Promise<AuthRepositoryAuth0> {
+	static async create(input: {
+		domain: string;
+		clientId: string;
+		audience: string;
+	}): Promise<AuthRepositoryAuth0> {
 		const client = await createAuth0Client({
 			domain: input.domain,
 			clientId: input.clientId
 		});
-		return new AuthRepositoryAuth0(client);
+		return new AuthRepositoryAuth0(client, input.audience);
+	}
+
+	async getAccessToken(): Promise<string | undefined> {
+		const token = await this.client.getTokenSilently({
+			authorizationParams: {
+				redirect_uri: window.origin,
+				audience: this.audience,
+				scope: 'openid profile email'
+			}
+		});
+
+		return token;
 	}
 
 	async getUser(): Promise<User | undefined> {
@@ -41,7 +60,7 @@ export class AuthRepositoryAuth0 implements AuthRepository {
 	}
 
 	async logout() {
-		await this.client.logout();
+		await this.client.logout({ logoutParams: { returnTo: window.origin } });
 	}
 
 	async isAuthenticated() {

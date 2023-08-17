@@ -2,8 +2,9 @@ import { z } from 'zod';
 
 export const listPinkSchema = z.object({
 	name: z.string(),
-	itemIds: z.string().uuid().array(),
-	id: z.string().uuid()
+	description: z.string().optional(),
+	itemIds: z.string().array(),
+	id: z.string()
 });
 
 export type ListPink = z.infer<typeof listPinkSchema>;

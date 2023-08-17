@@ -1,5 +1,4 @@
-import type { ItemPink } from './itemPink';
-
+import type { ItemPink } from '../../../../shared/src/definitions/itemPink';
 export type CurrentListPink = {
 	activeItems: ItemPink[];
 	completedItems: ItemPink[];

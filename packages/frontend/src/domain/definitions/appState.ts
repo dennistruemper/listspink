@@ -1,11 +1,12 @@
+import type { ItemPink } from '../../../../shared/src/definitions/itemPink';
+import type { ListPink } from '../../../../shared/src/definitions/listPink';
 import type { CurrentListPink } from './currentList';
 import type { Dependencies } from './dependencies';
-import type { ItemPink } from './itemPink';
-import type { ListPink } from './listPink';
 import type { User } from './user';
 
 export type AppState = {
 	user?: User;
+	accessToken?: string;
 	lists: ListPink[];
 	items: ItemPink[];
 	currentList?: CurrentListPink;

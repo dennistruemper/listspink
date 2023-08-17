@@ -1,10 +1,10 @@
-import { forceExhaust } from '../util/languageExtension';
+import { createItemPink, type ItemPink } from '../../../shared/src/definitions/itemPink';
+import { createListPink } from '../../../shared/src/definitions/listPink';
+import { forceExhaust } from '../../../shared/src/languageExtension';
 import type { AppState } from './definitions/appState';
 import type { CurrentListPink } from './definitions/currentList';
 import type { Dependencies } from './definitions/dependencies';
 import type { Event } from './definitions/events';
-import { createItemPink, type ItemPink } from './definitions/itemPink';
-import { createListPink } from './definitions/listPink';
 
 function calculateCurrentList(
 	state: AppState,
@@ -48,7 +48,8 @@ export function createUpdateFunction(deps: Dependencies) {
 				await deps.authRepository.logout();
 				return {
 					...previousState,
-					user: undefined
+					user: undefined,
+					accessToken: undefined
 				};
 			}
 			case 'login_check': {
@@ -56,7 +57,8 @@ export function createUpdateFunction(deps: Dependencies) {
 				const user = await deps.authRepository.getUser();
 				return {
 					...previousState,
-					user: user
+					user: user,
+					accessToken: await deps.authRepository.getAccessToken()
 				};
 			}
 			case 'refresh_data': {

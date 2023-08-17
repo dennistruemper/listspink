@@ -22,6 +22,8 @@
 		"@ampt/sdk": "0.0.1-beta.58",
 		"cors": "2.8.5",
 		"express": "4.18.2",
+		"express-oauth2-jwt-bearer": "1.5.0",
+		"ksuid": "3.0.0",
 		"zod": "3.22.1"
 	},
 	"ampt": {
@@ -31,11 +33,14 @@
 	"devDependencies": {
 		"@ampt/cli": "0.0.1-beta.69",
 		"@types/express": "^4.17.17",
+		"@types/node": "20.5.0",
+		"@types/supertest": "2.0.12",
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-svelte": "^2.30.0",
 		"prettier": "3.0.2",
 		"prettier-plugin-svelte": "3.0.3",
+		"supertest": "6.3.3",
 		"vite": "4.4.9",
 		"vitest": "0.34.2"
 	},
