@@ -14,28 +14,39 @@ export async function createApp(dependencies: Dependencies): Promise<Express> {
 	const audience = await config.getAuth0Audience();
 	const baseUrl = (await config.getAuth0TokenUrl()).slice(0, 'oauth/token'.length * -1);
 
-	const app = express();
-	app.use(express.json());
-	app.use(cors());
-
-	const publicApi = Router();
-
-	publicApi.get('/version', (req, res) => {
-		const result: VersionResponse = { version: 'v0.0.1' };
-		return res.status(200).send(result);
-	});
-	app.use('/api', publicApi);
-
 	const checkJwt = auth({
 		audience: audience,
 		issuerBaseURL: baseUrl,
 		tokenSigningAlg: 'RS256'
 	});
 
-	const privateApi = Router();
+	const app = express();
+	app.use(express.json());
+	app.use(cors());
 
+	const publicApi = Router();
+	app.use('/api', publicApi);
+	addPublicRoutes(publicApi, dependencies);
+	const privateApi = Router();
 	app.use('/api', checkJwt, privateApi);
-	privateApi.post('/list', async (req, res) => {
+	addPrivateRoutes(privateApi, dependencies);
+
+	return app;
+}
+
+function addPublicRoutes(router: Router, dependencies: Dependencies) {
+	router.get('/version', (req, res) => {
+		const result: VersionResponse = { version: 'v0.0.1' };
+		return res.status(200).send(result);
+	});
+}
+
+function addPrivateRoutes(router: Router, dependencies: Dependencies) {
+	addListRoutes(router, dependencies);
+}
+
+function addListRoutes(router: Router, dependencies: Dependencies) {
+	router.post('/list', async (req, res) => {
 		console.log(req.auth?.payload.sub);
 		const parsedBody = createListRequestSchema.safeParse(req.body);
 		if (!parsedBody.success) {
@@ -63,6 +74,4 @@ export async function createApp(dependencies: Dependencies): Promise<Express> {
 
 		return res.status(200).send(result);
 	});
-
-	return app;
 }
