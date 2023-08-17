@@ -60,7 +60,7 @@ export class AuthRepositoryAuth0 implements AuthRepository {
 	}
 
 	async logout() {
-		await this.client.logout();
+		await this.client.logout({ logoutParams: { returnTo: window.origin } });
 	}
 
 	async isAuthenticated() {
