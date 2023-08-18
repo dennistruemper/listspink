@@ -6,7 +6,7 @@ import {
 } from '../../../../shared/src/definitions/communication/createListRequestResponse';
 import { VersionResponse } from '../../../../shared/src/definitions/versionRequestResponse';
 import { Dependencies } from '../../domain/definitions/dependencies';
-import { ListRepositoryAmpt } from '../ampt/data/ListRepositoryAmpt';
+import { CreateListUsecase } from '../../domain/usecases/lists/createListUsecase';
 
 export async function createApp(dependencies: Dependencies): Promise<Express> {
 	const authHandler: Handler = await dependencies.tokenChecker.getHandler();
@@ -47,20 +47,19 @@ function addListRoutes(router: Router, dependencies: Dependencies) {
 
 		const data = parsedBody.data;
 
-		const listRepository = new ListRepositoryAmpt(dependencies.idGenerator);
-		const created = await listRepository.create({
-			name: data.name,
-			itemIds: [],
-			description: data.description
-		});
-		if (created === undefined) {
-			res.status(500).send('Failed to create list');
+		const created = await new CreateListUsecase(dependencies.listRepository).execute(data);
+
+		if (created.success === false) {
+			res.status(500).send('Failed to create list. ErrorCode: ' + created.code);
 			return;
 		}
+
+		const list = created.value.list;
+
 		const result: CreateListResponse = {
-			id: created.id,
-			name: created.name,
-			description: created.description
+			id: list.id,
+			name: list.name,
+			description: list.description
 		};
 
 		return res.status(200).send(result);

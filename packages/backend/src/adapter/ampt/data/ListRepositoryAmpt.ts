@@ -2,10 +2,12 @@ import { data, GetBatchResponse } from '@ampt/data';
 import { IdGenerator } from '../../../../../shared/src/definitions/idGenerator';
 import { ListPink, listPinkSchema } from '../../../../../shared/src/definitions/listPink';
 import { amptDelimiter, delimiter } from '../../../../../shared/src/globalConstants';
+import { failure, Result, success } from '../../../../../shared/src/languageExtension';
 import {
 	CreateListInput,
 	ListRepository
 } from '../../../domain/definitions/repositories/ListRepository';
+import { ErrorCodes } from '../../../domain/errorCodes';
 import { batchResultSchema } from './batchResultSchema';
 
 const getItemsSchema = batchResultSchema(listPinkSchema);
@@ -23,35 +25,35 @@ export class ListRepositoryAmpt implements ListRepository {
 		return `${idPart}${amptDelimiter}${idPart}}`;
 	}
 
-	async getList(id: string): Promise<ListPink | undefined> {
+	async getList(id: string): Promise<Result<ListPink | undefined>> {
 		const result = await data.get(this.storageId(id));
-		const parsed = listPinkSchema.safeParse(result);
+
+		// it is ok to not find a list
+		const optionalListSchema = listPinkSchema.optional();
+		const parsed = optionalListSchema.safeParse(result);
 		if (parsed.success) {
-			return parsed.data;
+			return success(parsed.data);
 		}
-		return undefined;
+		return failure('unknown data shape', ErrorCodes.UNKNOWN_DATA_SHAPE);
 	}
-	public async create(list: CreateListInput): Promise<ListPink | undefined> {
+	public async create(list: CreateListInput): Promise<Result<ListPink>> {
 		const id = list.id ?? this.idGenerator.generate();
 		const storageId = this.storageId(id);
 
 		const result = await data.set(
 			storageId,
 			{ ...list, id },
-			{ label5: `${this.storageName}S${amptDelimiter}${storageId.replace(':', ':')}` }
+			{ label5: `${this.storageName}S${amptDelimiter}${storageId}` }
 		);
-
-		const resultA = await data.get(this.storageId(id), { meta: true });
-		console.log(JSON.stringify(resultA));
 
 		const parsed = listPinkSchema.safeParse(result);
 		if (parsed.success) {
-			return parsed.data;
+			return success(parsed.data);
 		}
-		return undefined;
+		return failure('unknown data shape', ErrorCodes.UNKNOWN_DATA_SHAPE);
 	}
 
-	async getAllLists(): Promise<ListPink[] | undefined> {
+	async getAllLists(): Promise<Result<ListPink[]>> {
 		let loaded: GetBatchResponse<unknown> | undefined = await data.getByLabel(
 			'label5',
 			`${this.storageName}S${amptDelimiter}*`
@@ -64,12 +66,12 @@ export class ListRepositoryAmpt implements ListRepository {
 				result.push(...parsed.data.items.map((item) => item.value));
 			} else {
 				console.log('parsing failed with errors:', JSON.stringify(parsed.error));
-				return undefined;
+				return failure('unknown data shape', ErrorCodes.UNKNOWN_DATA_SHAPE);
 			}
 
 			loaded = loaded.next ? ((await loaded.next()) as GetBatchResponse<unknown>) : undefined;
 		}
 
-		return result;
+		return success(result);
 	}
 }
