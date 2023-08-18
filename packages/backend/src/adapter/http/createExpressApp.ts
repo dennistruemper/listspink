@@ -9,7 +9,9 @@ import {
 	getListDetailsRequestSchema
 } from '../../../../shared/src/definitions/communication/getListDetailsRequestResponse';
 import { VersionResponse } from '../../../../shared/src/definitions/versionRequestResponse';
+import { forceExhaust } from '../../../../shared/src/languageExtension';
 import { Dependencies } from '../../domain/definitions/dependencies';
+import { DATA_MISSING_CODE, UNKNOWN_DATA_SHAPE_CODE } from '../../domain/errorCodes';
 import { CreateListUsecase } from '../../domain/usecases/lists/createListUsecase';
 import { GetListUsecase } from '../../domain/usecases/lists/getListUsecase';
 
@@ -61,8 +63,16 @@ function addListRoutes(router: Router, dependencies: Dependencies) {
 		});
 
 		if (created.success === false) {
-			res.status(500).send('Failed to create list. ErrorCode: ' + created.code);
-			return;
+			switch (created.code) {
+				case UNKNOWN_DATA_SHAPE_CODE:
+					res.status(500).send(created.message + created.code);
+					return
+				case DATA_MISSING_CODE:
+					res.status(500).send(created.message + created.code);
+					return
+				default:
+					forceExhaust(created.code);
+			}
 		}
 
 		const list = created.value.list;
@@ -84,22 +94,27 @@ function addListRoutes(router: Router, dependencies: Dependencies) {
 		}
 
 		const data = parsedBody.data;
-		const loded = await new GetListUsecase(dependencies.listRepository).execute({ id: data.id });
+		const loaded = await new GetListUsecase(dependencies.listRepository).execute({ id: data.id });
 
-		if (loded.success === false) {
-			res.status(500).send('Failed to load list. ErrorCode: ' + loded.code);
-			return;
+		if (loaded.success === false) {
+			switch (loaded.code) {
+				case UNKNOWN_DATA_SHAPE_CODE:
+					res.status(500).send('Failed to load list. ErrorCode: ' + loaded.code);
+					return
+				default:
+					forceExhaust(loaded.code);
+			}
 		}
 
-		if (loded.value.list === undefined) {
+		if (loaded.value.list === undefined) {
 			res.status(404).send('List not found');
 			return;
 		}
 
 		const response: GetListDetailsResponse = {
-			id: loded.value.list.id,
-			name: loded.value.list.name,
-			description: loded.value.list.description
+			id: loaded.value.list.id,
+			name: loaded.value.list.name,
+			description: loaded.value.list.description
 		};
 
 		return res.status(200).send(response);
