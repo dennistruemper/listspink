@@ -14,6 +14,7 @@ import { Dependencies } from '../../domain/definitions/dependencies';
 import { DATA_MISSING_CODE, UNKNOWN_DATA_SHAPE_CODE } from '../../domain/errorCodes';
 import { CreateListUsecase } from '../../domain/usecases/lists/createListUsecase';
 import { GetListUsecase } from '../../domain/usecases/lists/getListUsecase';
+import { getUserIdFromRequest } from './expressHelper';
 
 export async function createApp(dependencies: Dependencies): Promise<Express> {
 	const authHandler: Handler = await dependencies.tokenChecker.getHandler();
@@ -45,7 +46,8 @@ function addPrivateRoutes(router: Router, dependencies: Dependencies) {
 
 function addListRoutes(router: Router, dependencies: Dependencies) {
 	router.post('/list', async (req, res) => {
-		if (req.auth?.payload.sub === undefined) {
+		const userId = getUserIdFromRequest(req);
+		if (userId === undefined) {
 			res.status(400).send('No user id provided');
 			return;
 		}
@@ -59,17 +61,17 @@ function addListRoutes(router: Router, dependencies: Dependencies) {
 
 		const created = await new CreateListUsecase(dependencies.listRepository).execute({
 			...data,
-			userId: req.auth.payload.sub
+			userId
 		});
 
 		if (created.success === false) {
 			switch (created.code) {
 				case UNKNOWN_DATA_SHAPE_CODE:
 					res.status(500).send(created.message + created.code);
-					return
+					return;
 				case DATA_MISSING_CODE:
 					res.status(500).send(created.message + created.code);
-					return
+					return;
 				default:
 					forceExhaust(created.code);
 			}
@@ -100,7 +102,7 @@ function addListRoutes(router: Router, dependencies: Dependencies) {
 			switch (loaded.code) {
 				case UNKNOWN_DATA_SHAPE_CODE:
 					res.status(500).send('Failed to load list. ErrorCode: ' + loaded.code);
-					return
+					return;
 				default:
 					forceExhaust(loaded.code);
 			}
