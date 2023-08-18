@@ -4,9 +4,14 @@ import {
 	CreateListResponse,
 	createListRequestSchema
 } from '../../../../shared/src/definitions/communication/createListRequestResponse';
+import {
+	GetListDetailsResponse,
+	getListDetailsRequestSchema
+} from '../../../../shared/src/definitions/communication/getListDetailsRequestResponse';
 import { VersionResponse } from '../../../../shared/src/definitions/versionRequestResponse';
 import { Dependencies } from '../../domain/definitions/dependencies';
 import { CreateListUsecase } from '../../domain/usecases/lists/createListUsecase';
+import { GetListUsecase } from '../../domain/usecases/lists/getListUsecase';
 
 export async function createApp(dependencies: Dependencies): Promise<Express> {
 	const authHandler: Handler = await dependencies.tokenChecker.getHandler();
@@ -38,7 +43,10 @@ function addPrivateRoutes(router: Router, dependencies: Dependencies) {
 
 function addListRoutes(router: Router, dependencies: Dependencies) {
 	router.post('/list', async (req, res) => {
-		console.log(req.auth?.payload.sub ?? 'no sub');
+		if (req.auth?.payload.sub === undefined) {
+			res.status(400).send('No user id provided');
+			return;
+		}
 		const parsedBody = createListRequestSchema.safeParse(req.body);
 		if (!parsedBody.success) {
 			res.status(400).send(parsedBody.error.errors);
@@ -47,7 +55,10 @@ function addListRoutes(router: Router, dependencies: Dependencies) {
 
 		const data = parsedBody.data;
 
-		const created = await new CreateListUsecase(dependencies.listRepository).execute(data);
+		const created = await new CreateListUsecase(dependencies.listRepository).execute({
+			...data,
+			userId: req.auth.payload.sub
+		});
 
 		if (created.success === false) {
 			res.status(500).send('Failed to create list. ErrorCode: ' + created.code);
@@ -63,5 +74,34 @@ function addListRoutes(router: Router, dependencies: Dependencies) {
 		};
 
 		return res.status(200).send(result);
+	});
+
+	router.get('/list', async (req, res) => {
+		const parsedBody = getListDetailsRequestSchema.safeParse(req.body);
+		if (!parsedBody.success) {
+			res.status(400).send(parsedBody.error.errors);
+			return;
+		}
+
+		const data = parsedBody.data;
+		const loded = await new GetListUsecase(dependencies.listRepository).execute({ id: data.id });
+
+		if (loded.success === false) {
+			res.status(500).send('Failed to load list. ErrorCode: ' + loded.code);
+			return;
+		}
+
+		if (loded.value.list === undefined) {
+			res.status(404).send('List not found');
+			return;
+		}
+
+		const response: GetListDetailsResponse = {
+			id: loded.value.list.id,
+			name: loded.value.list.name,
+			description: loded.value.list.description
+		};
+
+		return res.status(200).send(response);
 	});
 }

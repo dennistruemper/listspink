@@ -5,7 +5,7 @@ export function forceExhaust(_input: never): never {
 	throw new Error('can not be reached');
 }
 
-export type Result<Value> =
+export type Result<Value, ErrorCodes> =
 	| {
 			success: true;
 			value: Value;
@@ -13,13 +13,13 @@ export type Result<Value> =
 	| {
 			success: false;
 			message: string;
-			code: number;
+			code: ErrorCodes;
 	  };
 
-export function success<T>(value: T): Result<T> {
+export function success<T, E>(value: T): Result<T, E> {
 	return { success: true, value };
 }
 
-export function failure<T>(message: string, code: number): Result<T> {
+export function failure<T, E>(message: string, code: E): Result<T, E> {
 	return { success: false, message, code };
 }
