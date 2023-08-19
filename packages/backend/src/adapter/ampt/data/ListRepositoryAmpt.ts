@@ -6,6 +6,10 @@ import {
 	listPinkSchema
 } from '../../../../../shared/src/definitions/listPink';
 import {
+	ListToItemConnection,
+	listToItemConnectionSchema
+} from '../../../../../shared/src/definitions/listToItemConnection';
+import {
 	UserToListConnection,
 	userToListConnectionSchema
 } from '../../../../../shared/src/definitions/userToListConnection';
@@ -17,12 +21,16 @@ import {
 	success
 } from '../../../../../shared/src/languageExtension';
 import {
+	ConnectItemToListErrors,
+	ConnectItemToListInput,
 	ConnectToUserErrors,
 	ConnectToUserInput,
 	CreateListErrors,
 	CreateListInput,
 	GetAllListsErrors,
 	GetListErrors,
+	GetListsByItemIdForUserErrors,
+	GetListsByItemIdForUserInput,
 	GetListsDetailsErrors,
 	ListRepository,
 	UserHasAccessErrors,
@@ -33,6 +41,7 @@ import { batchResultSchema } from './batchResultSchema';
 
 const getListsSchema = batchResultSchema(listPinkSchema);
 const getUserToListConnectionsSchema = batchResultSchema(userToListConnectionSchema);
+const getListToItemConnectionsSchema = batchResultSchema(listToItemConnectionSchema);
 
 export class ListRepositoryAmpt implements ListRepository {
 	private storageName = 'LIST';
@@ -164,5 +173,57 @@ export class ListRepositoryAmpt implements ListRepository {
 		}
 
 		return success(true);
+	}
+
+	async connectItemToList(
+		input: ConnectItemToListInput
+	): Promise<Result<ListToItemConnection, ConnectItemToListErrors>> {
+		const key = `ITEM${delimiter}${input.itemId}:${this.storageName}${delimiter}${input.listId}`;
+		const connectionDocument: ListToItemConnection = {
+			listId: input.listId,
+			itemId: input.itemId,
+			itemName: input.itemName,
+			itemDescription: input.itemDescription
+		};
+
+		const label1key = `DEPENDS_ON_ITEM${delimiter}${input.itemId}${amptDelimiter}LIST${delimiter}${input.listId}}}`;
+
+		await data.set(key, connectionDocument, {
+			label1: label1key,
+			label5: `LIST_HAS_ITEMS${amptDelimiter}${key.replace(amptDelimiter, delimiter)}`
+		});
+
+		return success(connectionDocument);
+	}
+
+	async getListsByItemIdForUser(
+		input: GetListsByItemIdForUserInput
+	): Promise<Result<ListPinkDetails[], GetListsByItemIdForUserErrors>> {
+		const serachKey = `DEPENDS_ON_ITEM${delimiter}${input.itemId}${amptDelimiter}LIST${delimiter}*`;
+
+		const loaded = await data.get(serachKey, { label: 'label1' });
+		const parsed = getListToItemConnectionsSchema.safeParse(loaded);
+		if (parsed.success === false) return failure('unknown data shape', UNKNOWN_DATA_SHAPE_CODE);
+
+		function mapToResult(connection: ListToItemConnection): ListPinkDetails {
+			return {
+				id: connection.listId,
+				name: connection.itemName,
+				description: connection.itemDescription
+			};
+		}
+
+		const result: ListPinkDetails[] = [];
+		const listDetails = parsed.data.items.map((item) => mapToResult(item.value));
+		for (const listDetail of listDetails) {
+			const hasAccess = await this.userHasAccess({ listId: listDetail.id, userId: input.userId });
+			if (hasAccess.success === false) return failure(hasAccess.message, hasAccess.code);
+
+			if (hasAccess.value === true) {
+				result.push(listDetail);
+			}
+		}
+
+		return success(listDetails);
 	}
 }

@@ -2,6 +2,7 @@ import ksuid from 'ksuid';
 import { IdGenerator } from '../../shared/src/definitions/idGenerator';
 import { TokenCheckerFake } from '../test/util/tokenCheckerFake';
 import { ConfigRepositoryAmpt } from './adapter/ampt/configRepositoryAmpt';
+import { ItemRepositoryAmpt } from './adapter/ampt/data/ItemRepositoryAmpt';
 import { ListRepositoryAmpt } from './adapter/ampt/data/ListRepositoryAmpt';
 import { TokenCheckerAuth0 } from './adapter/auth0/tokenCheckerAuth0';
 import { Dependencies } from './domain/definitions/dependencies';
@@ -30,10 +31,12 @@ function testDependencies(): Dependencies {
 	const idGenerator = new KsuidGenerator();
 	const tokenChecker = new TokenCheckerFake();
 	const listRepository = new ListRepositoryAmpt(idGenerator);
+	const itemRepository = new ItemRepositoryAmpt(idGenerator);
 	return {
 		configRepository,
 		idGenerator,
 		tokenChecker,
+		itemRepository,
 		listRepository
 	};
 }
@@ -43,10 +46,12 @@ function devDependencies(): Dependencies {
 	const idGenerator = new KsuidGenerator();
 	const tokenChecker = new TokenCheckerAuth0(configRepository);
 	const listRepository = new ListRepositoryAmpt(idGenerator);
+	const itemRepository = new ItemRepositoryAmpt(idGenerator);
 	return {
 		configRepository,
 		idGenerator,
 		tokenChecker,
+		itemRepository,
 		listRepository
 	};
 }
@@ -56,10 +61,12 @@ function betaDependencies(): Dependencies {
 	const idGenerator = new KsuidGenerator();
 	const tokenChecker = new TokenCheckerAuth0(configRepository);
 	const listRepository = new ListRepositoryAmpt(idGenerator);
+	const itemRepository = new ItemRepositoryAmpt(idGenerator);
 	return {
 		configRepository,
 		idGenerator,
 		tokenChecker,
+		itemRepository,
 		listRepository
 	};
 }
@@ -69,10 +76,12 @@ function prodDependencies(): Dependencies {
 	const idGenerator = new KsuidGenerator();
 	const tokenChecker = new TokenCheckerAuth0(configRepository);
 	const listRepository = new ListRepositoryAmpt(idGenerator);
+	const itemRepository = new ItemRepositoryAmpt(idGenerator);
 	return {
 		configRepository,
 		idGenerator,
 		tokenChecker,
+		itemRepository,
 		listRepository
 	};
 }

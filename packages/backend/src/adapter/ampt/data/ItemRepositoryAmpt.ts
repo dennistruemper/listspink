@@ -2,10 +2,15 @@ import { data, GetBatchResponse } from '@ampt/data';
 import { IdGenerator } from '../../../../../shared/src/definitions/idGenerator';
 import { ItemPink, itemSchema } from '../../../../../shared/src/definitions/itemPink';
 import { amptDelimiter, delimiter } from '../../../../../shared/src/globalConstants';
+import { failure, Result, success } from '../../../../../shared/src/languageExtension';
 import {
+	CreateItemErrors,
 	CreateItemInput,
+	GetAllItemsErrors,
+	GetItemErrors,
 	ItemRepository
-} from '../../../domain/definitions/repositories/ItemRepository';
+} from '../../../domain/definitions/repositories/itemRepository';
+import { UNKNOWN_DATA_SHAPE_CODE } from '../../../domain/errorCodes';
 import { batchResultSchema } from './batchResultSchema';
 
 const getItemsSchema = batchResultSchema(itemSchema);
@@ -23,15 +28,15 @@ export class ItemRepositoryAmpt implements ItemRepository {
 		return `${idPart}${amptDelimiter}${idPart}}`;
 	}
 
-	async getItem(id: string): Promise<ItemPink | undefined> {
+	async getItem(id: string): Promise<Result<ItemPink | undefined, GetItemErrors>> {
 		const result = await data.get(this.storageId(id));
-		const parsed = itemSchema.safeParse(result);
+		const parsed = itemSchema.optional().safeParse(result);
 		if (parsed.success) {
-			return parsed.data;
+			return success(parsed.data);
 		}
-		return undefined;
+		return failure(parsed.error.message, UNKNOWN_DATA_SHAPE_CODE);
 	}
-	public async create(item: CreateItemInput): Promise<ItemPink | undefined> {
+	public async create(item: CreateItemInput): Promise<Result<ItemPink, CreateItemErrors>> {
 		const id = item.id ?? this.idGenerator.generate();
 		const storageId = this.storageId(id);
 
@@ -43,12 +48,12 @@ export class ItemRepositoryAmpt implements ItemRepository {
 
 		const parsed = itemSchema.safeParse(result);
 		if (parsed.success) {
-			return parsed.data;
+			return success(parsed.data);
 		}
-		return undefined;
+		return failure(parsed.error.message, UNKNOWN_DATA_SHAPE_CODE);
 	}
 
-	async getAllItems(): Promise<ItemPink[] | undefined> {
+	async getAllItems(): Promise<Result<ItemPink[], GetAllItemsErrors>> {
 		let loaded: GetBatchResponse<unknown> | undefined = await data.getByLabel(
 			'label5',
 			`${this.storageName}S${amptDelimiter}*`
@@ -60,13 +65,15 @@ export class ItemRepositoryAmpt implements ItemRepository {
 			if (parsed.success) {
 				result.push(...parsed.data.items.map((item) => item.value));
 			} else {
-				console.log('parsing failed with errors:', JSON.stringify(parsed.error));
-				return undefined;
+				return failure(
+					'parsing failed with errors:' + JSON.stringify(parsed.error),
+					UNKNOWN_DATA_SHAPE_CODE
+				);
 			}
 
 			loaded = loaded.next ? ((await loaded.next()) as GetBatchResponse<unknown>) : undefined;
 		}
 
-		return result;
+		return success(result);
 	}
 }
