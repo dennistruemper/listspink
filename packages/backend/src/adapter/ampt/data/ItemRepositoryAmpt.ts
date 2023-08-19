@@ -38,11 +38,8 @@ export class ItemRepositoryAmpt implements ItemRepository {
 		const result = await data.set(
 			storageId,
 			{ ...item, id },
-			{ label5: `${this.storageName}S${amptDelimiter}${storageId.replace(':', ':')}` }
+			{ label5: `${this.storageName}S${amptDelimiter}${storageId}` }
 		);
-
-		const resultA = await data.get(this.storageId(id), { meta: true });
-		console.log(JSON.stringify(resultA));
 
 		const parsed = itemSchema.safeParse(result);
 		if (parsed.success) {

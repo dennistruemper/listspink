@@ -1,10 +1,17 @@
 import { z } from 'zod';
 
+export const listPinkDetailsSchema = z.object({
+	name: z.string(),
+	description: z.string().optional(),
+	id: z.string()
+});
+export type ListPinkDetails = z.infer<typeof listPinkDetailsSchema>;
+
 export const listPinkSchema = z.object({
 	name: z.string(),
 	description: z.string().optional(),
-	itemIds: z.string().array(),
-	id: z.string()
+	id: z.string(),
+	itemIds: z.string().array()
 });
 
 export type ListPink = z.infer<typeof listPinkSchema>;

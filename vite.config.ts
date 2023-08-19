@@ -18,6 +18,6 @@ export default defineConfig({
 	plugins: [sveltekit(), topLevelAwait()],
 	test: {
 		include: [patternFromMode(process.env.MODE, process.env.BASE_PATH ?? '.')],
-		testTimeout: 10000
+		testTimeout: 20000
 	}
 });

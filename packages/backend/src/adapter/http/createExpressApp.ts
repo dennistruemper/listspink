@@ -1,12 +1,8 @@
 import cors from 'cors';
 import express, { Express, Handler, Router } from 'express';
-import {
-	CreateListResponse,
-	createListRequestSchema
-} from '../../../../shared/src/definitions/communication/createListRequestResponse';
 import { VersionResponse } from '../../../../shared/src/definitions/versionRequestResponse';
 import { Dependencies } from '../../domain/definitions/dependencies';
-import { ListRepositoryAmpt } from '../ampt/data/ListRepositoryAmpt';
+import { addListRoutes } from './listRoutes';
 
 export async function createApp(dependencies: Dependencies): Promise<Express> {
 	const authHandler: Handler = await dependencies.tokenChecker.getHandler();
@@ -34,35 +30,4 @@ function addPublicRoutes(router: Router, dependencies: Dependencies) {
 
 function addPrivateRoutes(router: Router, dependencies: Dependencies) {
 	addListRoutes(router, dependencies);
-}
-
-function addListRoutes(router: Router, dependencies: Dependencies) {
-	router.post('/list', async (req, res) => {
-		console.log(req.auth?.payload.sub ?? 'no sub');
-		const parsedBody = createListRequestSchema.safeParse(req.body);
-		if (!parsedBody.success) {
-			res.status(400).send(parsedBody.error.errors);
-			return;
-		}
-
-		const data = parsedBody.data;
-
-		const listRepository = new ListRepositoryAmpt(dependencies.idGenerator);
-		const created = await listRepository.create({
-			name: data.name,
-			itemIds: [],
-			description: data.description
-		});
-		if (created === undefined) {
-			res.status(500).send('Failed to create list');
-			return;
-		}
-		const result: CreateListResponse = {
-			id: created.id,
-			name: created.name,
-			description: created.description
-		};
-
-		return res.status(200).send(result);
-	});
 }
