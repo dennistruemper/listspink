@@ -1,7 +1,14 @@
 import { data, GetBatchResponse } from '@ampt/data';
 import { IdGenerator } from '../../../../../shared/src/definitions/idGenerator';
-import { ListPink, listPinkSchema } from '../../../../../shared/src/definitions/listPink';
-import { UserToListConnection } from '../../../../../shared/src/definitions/userToListConnection';
+import {
+	ListPink,
+	ListPinkDetails,
+	listPinkSchema
+} from '../../../../../shared/src/definitions/listPink';
+import {
+	UserToListConnection,
+	userToListConnectionSchema
+} from '../../../../../shared/src/definitions/userToListConnection';
 import { amptDelimiter, delimiter } from '../../../../../shared/src/globalConstants';
 import {
 	failure,
@@ -13,7 +20,10 @@ import {
 	ConnectToUserErrors,
 	ConnectToUserInput,
 	CreateListInput,
-	ListRepository
+	GetListsDetailsErrors,
+	ListRepository,
+	UserHasAccessErrors,
+	UserHasAccessInput
 } from '../../../domain/definitions/repositories/ListRepository';
 import {
 	DATA_MISSING_CODE,
@@ -22,7 +32,8 @@ import {
 } from '../../../domain/errorCodes';
 import { batchResultSchema } from './batchResultSchema';
 
-const getItemsSchema = batchResultSchema(listPinkSchema);
+const getListsSchema = batchResultSchema(listPinkSchema);
+const getUserToListConnectionsSchema = batchResultSchema(userToListConnectionSchema);
 
 export class ListRepositoryAmpt implements ListRepository {
 	private storageName = 'LIST';
@@ -73,7 +84,7 @@ export class ListRepositoryAmpt implements ListRepository {
 		const result: ListPink[] = [];
 
 		while (loaded) {
-			const parsed = getItemsSchema.safeParse(loaded);
+			const parsed = getListsSchema.safeParse(loaded);
 			if (parsed.success) {
 				result.push(...parsed.data.items.map((item) => item.value));
 			} else {
@@ -104,14 +115,15 @@ export class ListRepositoryAmpt implements ListRepository {
 		const list = listLoaded.value;
 
 		if (list === undefined) {
-			return failure(`list for id ${input.listId} does not exist`, DATA_MISSING_CODE);
+			return failure(`List for id ${input.listId} does not exist`, DATA_MISSING_CODE);
 		}
 
 		const key = `USER${delimiter}${input.userId}:${this.storageName}${delimiter}${input.listId}`;
 		const connectionDocument: UserToListConnection = {
 			listName: list.name,
 			listId: list.id,
-			userId: input.userId
+			userId: input.userId,
+			listDescription: list.description
 		};
 
 		const label1key = `DEPENDS_ON_LIST${delimiter}${input.listId}}${amptDelimiter}USER${delimiter}${input.userId}}}`;
@@ -122,5 +134,41 @@ export class ListRepositoryAmpt implements ListRepository {
 		});
 
 		return success(connectionDocument);
+	}
+
+	async getListsDetailsForUser(
+		userId: string
+	): Promise<Result<ListPinkDetails[], GetListsDetailsErrors>> {
+		const serachKey = `USER${delimiter}${userId}:${this.storageName}${delimiter}*`;
+
+		const loaded = await data.get(serachKey);
+		const parsed = getUserToListConnectionsSchema.safeParse(loaded);
+		if (parsed.success === false) return failure('unknown data shape', UNKNOWN_DATA_SHAPE_CODE);
+
+		function mapToResult(connection: UserToListConnection): ListPinkDetails {
+			return {
+				id: connection.listId,
+				name: connection.listName,
+				description: connection.listDescription
+			};
+		}
+
+		const result = parsed.data.items.map((item) => mapToResult(item.value));
+
+		return success(result);
+	}
+
+	async userHasAccess(input: UserHasAccessInput): Promise<Result<boolean, UserHasAccessErrors>> {
+		const key = `USER${delimiter}${input.userId}:${this.storageName}${delimiter}${input.listId}`;
+		const loaded = await data.get(key);
+
+		if (loaded === undefined) {
+			return success(false);
+		}
+
+		const parsed = userToListConnectionSchema.safeParse(loaded);
+		if (parsed.success === false) return failure('unknown data shape', UNKNOWN_DATA_SHAPE_CODE);
+
+		return success(true);
 	}
 }

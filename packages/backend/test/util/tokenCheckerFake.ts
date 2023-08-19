@@ -13,11 +13,6 @@ export class TokenCheckerFake implements TokenChecker {
 
 			const token = decodeJwt(encodedTokenPayload);
 
-			if (token.sub === undefined) {
-				res.status(401).send('No User Id in token');
-				return;
-			}
-
 			if (req.auth?.payload !== undefined) {
 				console.log('TokenCheckerFake Set auth: ' + req.auth);
 

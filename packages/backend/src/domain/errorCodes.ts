@@ -6,3 +6,5 @@ export type UNKNOWN_DATA_SHAPE = 2;
 export const UNKNOWN_DATA_SHAPE_CODE = 2;
 export type DATA_MISSING = 3;
 export const DATA_MISSING_CODE = 3;
+export type NO_ACCESS = 4;
+export const NO_ACCESS_CODE = 4;
