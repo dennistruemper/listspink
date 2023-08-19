@@ -19,17 +19,16 @@ import {
 import {
 	ConnectToUserErrors,
 	ConnectToUserInput,
+	CreateListErrors,
 	CreateListInput,
+	GetAllListsErrors,
+	GetListErrors,
 	GetListsDetailsErrors,
 	ListRepository,
 	UserHasAccessErrors,
 	UserHasAccessInput
 } from '../../../domain/definitions/repositories/ListRepository';
-import {
-	DATA_MISSING_CODE,
-	UNKNOWN_DATA_SHAPE,
-	UNKNOWN_DATA_SHAPE_CODE
-} from '../../../domain/errorCodes';
+import { DATA_MISSING_CODE, UNKNOWN_DATA_SHAPE_CODE } from '../../../domain/errorCodes';
 import { batchResultSchema } from './batchResultSchema';
 
 const getListsSchema = batchResultSchema(listPinkSchema);
@@ -48,18 +47,16 @@ export class ListRepositoryAmpt implements ListRepository {
 		return `${idPart}${amptDelimiter}${idPart}}`;
 	}
 
-	async getList(id: string): Promise<Result<ListPink | undefined, UNKNOWN_DATA_SHAPE>> {
+	async getList(id: string): Promise<Result<ListPink | undefined, GetListErrors>> {
 		const result = await data.get(this.storageId(id));
 
-		// it is ok to not find a list
-		const optionalListSchema = listPinkSchema.optional();
-		const parsed = optionalListSchema.safeParse(result);
+		const parsed = listPinkSchema.optional().safeParse(result);
 		if (parsed.success) {
 			return success(parsed.data);
 		}
 		return failure('unknown data shape', UNKNOWN_DATA_SHAPE_CODE);
 	}
-	public async create(list: CreateListInput): Promise<Result<ListPink, UNKNOWN_DATA_SHAPE>> {
+	public async create(list: CreateListInput): Promise<Result<ListPink, CreateListErrors>> {
 		const id = list.id ?? this.idGenerator.generate();
 		const storageId = this.storageId(id);
 
@@ -76,7 +73,7 @@ export class ListRepositoryAmpt implements ListRepository {
 		return failure('unknown data shape', UNKNOWN_DATA_SHAPE_CODE);
 	}
 
-	async getAllLists(): Promise<Result<ListPink[], UNKNOWN_DATA_SHAPE>> {
+	async getAllLists(): Promise<Result<ListPink[], GetAllListsErrors>> {
 		let loaded: GetBatchResponse<unknown> | undefined = await data.getByLabel(
 			'label5',
 			`${this.storageName}S${amptDelimiter}*`
@@ -165,9 +162,6 @@ export class ListRepositoryAmpt implements ListRepository {
 		if (loaded === undefined) {
 			return success(false);
 		}
-
-		const parsed = userToListConnectionSchema.safeParse(loaded);
-		if (parsed.success === false) return failure('unknown data shape', UNKNOWN_DATA_SHAPE_CODE);
 
 		return success(true);
 	}
