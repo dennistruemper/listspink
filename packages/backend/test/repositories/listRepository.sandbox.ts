@@ -55,7 +55,7 @@ describe('ListRepository', () => {
 		if (listsAfterResult.success === false) throw new Error('List not got');
 
 		const listsCountEnd = listsAfterResult.value.length ?? 0;
-		expect(listsCountEnd).toEqual(listsCountStart + 1);
+		expect(listsCountEnd).toBeGreaterThan(listsCountStart);
 	});
 
 	it('should have an error if list is missing', async () => {

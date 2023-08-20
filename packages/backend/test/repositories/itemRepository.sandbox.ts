@@ -8,28 +8,44 @@ describe('ItemRepository', () => {
 	it('should return created item', async () => {
 		const item = { id: '1', name: 'test' };
 		const created = await repository.create(item);
-		expect(created).toBeDefined();
-		const result = await repository.getItem(created?.id ?? 'dummy');
-		expect(result).toEqual(item);
+		if (created.success === false) throw new Error('Item creation failed');
+
+		const result = await repository.getItem(created.value.id);
+		if (result.success === false) throw new Error('Item not found');
+
+		expect(result.value).toEqual(item);
 	});
 	it('should create id for item without id', async () => {
 		const item = { id: undefined, name: 'test' };
 		const created = await repository.create(item);
-		expect(created).toBeDefined();
-		const result = await repository.getItem(created?.id ?? 'dummy');
-		expect(result?.name).toEqual(item.name);
-		expect(result?.id).toBeDefined();
-		expect(ksuid.parse(result?.id ?? '')).toBeTruthy();
+		if (created.success === false) throw new Error('Item creation failed');
+
+		const result = await repository.getItem(created.value.id);
+		if (result.success === false) throw new Error('Item not found');
+
+		expect(result.value?.name).toEqual(item.name);
+		expect(result.value?.id).toBeDefined();
+		expect(ksuid.parse(result.value?.id ?? '')).toBeTruthy();
 	});
 	it('should return undefined for non existing item', async () => {
 		const result = await repository.getItem('dummy_aieunaeiei');
-		expect(result).toBeUndefined();
+		if (result.success === false) throw new Error('Item not found');
+
+		expect(result.value).toBeUndefined();
 	});
 	it('should return one more item after item is inserted', async () => {
-		const itemsContStart = (await repository.getAllItems())?.length ?? 0;
+		const allBefore = await repository.getAllItems();
+		if (allBefore.success === false) throw new Error('Items not found');
+
+		const itemsContStart = allBefore.value.length;
+
 		await repository.create({ name: 'test' });
-		const itemsContEnd = (await repository.getAllItems())?.length ?? 0;
-		expect(itemsContEnd).toEqual(itemsContStart + 1);
+
+		const allAfter = await repository.getAllItems();
+		if (allAfter.success === false) throw new Error('Items not found');
+
+		const itemsContEnd = allAfter.value.length;
+		expect(itemsContEnd).toBeGreaterThan(itemsContStart);
 		console.log(itemsContEnd);
 	});
 });

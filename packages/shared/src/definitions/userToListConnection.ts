@@ -5,5 +5,4 @@ export const userToListConnectionSchema = z.object({
 	listName: z.string(),
 	listDescription: z.string().optional()
 });
-export type ListPinkDetails = z.infer<typeof userToListConnectionSchema>;
 export type UserToListConnection = z.infer<typeof userToListConnectionSchema>;

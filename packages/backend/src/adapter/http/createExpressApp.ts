@@ -2,6 +2,7 @@ import cors from 'cors';
 import express, { Express, Handler, Router } from 'express';
 import { VersionResponse } from '../../../../shared/src/definitions/versionRequestResponse';
 import { Dependencies } from '../../domain/definitions/dependencies';
+import { addItemRoutes } from './itemRoutes';
 import { addListRoutes } from './listRoutes';
 
 export async function createApp(dependencies: Dependencies): Promise<Express> {
@@ -30,4 +31,5 @@ function addPublicRoutes(router: Router, dependencies: Dependencies) {
 
 function addPrivateRoutes(router: Router, dependencies: Dependencies) {
 	addListRoutes(router, dependencies);
+	addItemRoutes(router, dependencies);
 }
