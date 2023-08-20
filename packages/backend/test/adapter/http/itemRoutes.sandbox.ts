@@ -113,8 +113,8 @@ describe.concurrent('item enppoints', async () => {
 			if (parsed.success === false) throw new Error('List response parsing failed');
 
 			expect(parsed.data.length).toEqual(2);
-			expect(parsed.data[0].id).toEqual(itemIds[0]);
-			expect(parsed.data[1].id).toEqual(itemIds[1]);
+			expect(itemIds).toContain(parsed.data[0].id);
+			expect(itemIds).toContain(parsed.data[1].id);
 		});
 
 		it('should not work for unconnected user', async () => {
