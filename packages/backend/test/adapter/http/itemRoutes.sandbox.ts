@@ -97,7 +97,7 @@ describe.concurrent('item enppoints', async () => {
 			await supertest(app).get('/api/list/someId/items').expect(401);
 		});
 
-		it.only('should work for list with 2 items connected to user', async () => {
+		it('should work for list with 2 items connected to user', async () => {
 			const { userId, listId, itemIds } = await createListAndItemsWithConnectionsToUser({
 				dependencies,
 				itemCount: 2
