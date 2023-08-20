@@ -37,18 +37,39 @@ async function createListAndConnectToUser(
 async function createListAndItemWithConnectionsToUser(input: {
 	dependencies: Dependencies;
 }): Promise<{ userId: string; listId: string; itemId: string }> {
+	const { userId, listId, itemIds } = await createListAndItemsWithConnectionsToUser({
+		dependencies: input.dependencies,
+		itemCount: 1
+	});
+
+	return { userId, listId, itemId: itemIds[0] };
+}
+
+async function createListAndItemsWithConnectionsToUser(input: {
+	dependencies: Dependencies;
+	itemCount: number;
+}): Promise<{ userId: string; listId: string; itemIds: string[] }> {
 	const { dependencies } = input;
 
 	const { userId, listId } = await createListAndConnectToUser(dependencies);
 
-	const createResult = await new CreateItemForListUsecase(
-		dependencies.itemRepository,
-		dependencies.listRepository
-	).execute({ itemName: 'item name', listId, userId, itemDescription: 'test description' });
+	const itemIds: string[] = [];
+	for (let i = 0; i < input.itemCount; i++) {
+		const createResult = await new CreateItemForListUsecase(
+			dependencies.itemRepository,
+			dependencies.listRepository
+		).execute({
+			itemName: 'item name ' + i,
+			listId,
+			userId,
+			itemDescription: 'test description ' + i
+		});
 
-	if (createResult.success === false) throw new Error('Item creation failed');
+		if (createResult.success === false) throw new Error('Item creation failed');
+		itemIds.push(createResult.value.item.id);
+	}
 
-	return { userId, listId, itemId: createResult.value.item.id };
+	return { userId, listId, itemIds };
 }
 
 describe.concurrent('item enppoints', async () => {
@@ -71,29 +92,19 @@ describe.concurrent('item enppoints', async () => {
 		});
 	});
 
-	describe.skip('list endpoint api/list GET', async () => {
+	describe('list endpoint api/list GET', async () => {
 		it('should get a 401 without authorization', async () => {
-			await supertest(app).get('/api/list').expect(401);
+			await supertest(app).get('/api/list/someId/items').expect(401);
 		});
 
-		it('should work for connected user', async () => {
-			const userId = 'USER' + dependencies.idGenerator.generate();
-			const created = await dependencies.listRepository.create({
-				name: 'testName',
-				description: 'testDescription',
-				itemIds: []
+		it.only('should work for list with 2 items connected to user', async () => {
+			const { userId, listId, itemIds } = await createListAndItemsWithConnectionsToUser({
+				dependencies,
+				itemCount: 2
 			});
-			if (created.success === false) throw new Error('List creation failed');
-
-			const connected = await dependencies.listRepository.connectToUser({
-				listId: created.value.id,
-				userId
-			});
-
-			if (connected.success === false) throw new Error('List connection failed');
 
 			const result = await supertest(app)
-				.get(`/api/list/`)
+				.get(`/api/list/${listId}/items`)
 				.set('Authorization', 'Bearer ' + createJwtDummy(userId))
 				.expect(200);
 
@@ -101,10 +112,9 @@ describe.concurrent('item enppoints', async () => {
 
 			if (parsed.success === false) throw new Error('List response parsing failed');
 
-			expect(parsed.data.length).toEqual(1);
-			expect(parsed.data[0].id).toEqual(created.value.id);
-			expect(parsed.data[0].name).toEqual(created.value.name);
-			expect(parsed.data[0].description).toEqual(created.value.description);
+			expect(parsed.data.length).toEqual(2);
+			expect(parsed.data[0].id).toEqual(itemIds[0]);
+			expect(parsed.data[1].id).toEqual(itemIds[1]);
 		});
 
 		it('should not work for unconnected user', async () => {
@@ -117,7 +127,7 @@ describe.concurrent('item enppoints', async () => {
 			if (created.success === false) throw new Error('List creation failed');
 
 			const result = await supertest(app)
-				.get(`/api/list/${created.value.id}`)
+				.get(`/api/list/${created.value.id}/items`)
 				.set('Authorization', 'Bearer ' + createJwtDummy(userId))
 				.expect(403);
 		});

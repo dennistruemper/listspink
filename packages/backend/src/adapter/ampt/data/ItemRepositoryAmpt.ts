@@ -1,6 +1,7 @@
 import { data, GetBatchResponse } from '@ampt/data';
 import { IdGenerator } from '../../../../../shared/src/definitions/idGenerator';
 import { ItemPink, itemSchema } from '../../../../../shared/src/definitions/itemPink';
+import { listToItemConnectionSchema } from '../../../../../shared/src/definitions/listToItemConnection';
 import { amptDelimiter, delimiter } from '../../../../../shared/src/globalConstants';
 import { failure, Result, success } from '../../../../../shared/src/languageExtension';
 import {
@@ -8,12 +9,14 @@ import {
 	CreateItemInput,
 	GetAllItemsErrors,
 	GetItemErrors,
+	GetItemsForListInput,
 	ItemRepository
 } from '../../../domain/definitions/repositories/itemRepository';
 import { UNKNOWN_DATA_SHAPE_CODE } from '../../../domain/errorCodes';
 import { batchResultSchema } from './batchResultSchema';
 
 const getItemsSchema = batchResultSchema(itemSchema);
+const getListToItemConnectionSchema = batchResultSchema(listToItemConnectionSchema);
 
 export class ItemRepositoryAmpt implements ItemRepository {
 	private storageName = 'ITEM';
@@ -25,7 +28,7 @@ export class ItemRepositoryAmpt implements ItemRepository {
 
 	private storageId(id: string): string {
 		const idPart = `${this.storageName}${delimiter}${id}`;
-		return `${idPart}${amptDelimiter}${idPart}}`;
+		return `${idPart}${amptDelimiter}${idPart}`;
 	}
 
 	async getItem(id: string): Promise<Result<ItemPink | undefined, GetItemErrors>> {
@@ -75,5 +78,32 @@ export class ItemRepositoryAmpt implements ItemRepository {
 		}
 
 		return success(result);
+	}
+
+	async getItemsForList(
+		input: GetItemsForListInput
+	): Promise<Result<ItemPink[], GetAllItemsErrors>> {
+		const key = `LIST${delimiter}${input.listId}${amptDelimiter}ITEM${delimiter}*`;
+
+		const loaded = await data.get(key);
+
+		const parsed = getListToItemConnectionSchema.safeParse(loaded);
+		if (parsed.success === false) {
+			return failure(
+				'parsing failed with errors:' + JSON.stringify(parsed.error),
+				UNKNOWN_DATA_SHAPE_CODE
+			);
+		}
+
+		return success(
+			parsed.data.items.map((item) => {
+				return {
+					id: item.value.itemId,
+					name: item.value.itemName,
+					description: item.value.itemDescription,
+					completed: item.value.itemCompleted
+				};
+			})
+		);
 	}
 }

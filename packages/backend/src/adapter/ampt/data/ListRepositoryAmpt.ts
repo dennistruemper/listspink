@@ -53,7 +53,7 @@ export class ListRepositoryAmpt implements ListRepository {
 
 	private storageId(id: string): string {
 		const idPart = `${this.storageName}${delimiter}${id}`;
-		return `${idPart}${amptDelimiter}${idPart}}`;
+		return `${idPart}${amptDelimiter}${idPart}`;
 	}
 
 	async getList(id: string): Promise<Result<ListPink | undefined, GetListErrors>> {
@@ -132,7 +132,7 @@ export class ListRepositoryAmpt implements ListRepository {
 			listDescription: list.description
 		};
 
-		const label1key = `DEPENDS_ON_LIST${delimiter}${input.listId}}${amptDelimiter}USER${delimiter}${input.userId}}}`;
+		const label1key = `DEPENDS_ON_LIST${delimiter}${input.listId}${amptDelimiter}USER${delimiter}${input.userId}`;
 
 		await data.set(key, connectionDocument, {
 			label1: label1key,
@@ -178,15 +178,16 @@ export class ListRepositoryAmpt implements ListRepository {
 	async connectItemToList(
 		input: ConnectItemToListInput
 	): Promise<Result<ListToItemConnection, ConnectItemToListErrors>> {
-		const key = `ITEM${delimiter}${input.itemId}:${this.storageName}${delimiter}${input.listId}`;
+		const key = `${this.storageName}${delimiter}${input.listId}${amptDelimiter}ITEM${delimiter}${input.itemId}`;
 		const connectionDocument: ListToItemConnection = {
 			listId: input.listId,
 			itemId: input.itemId,
 			itemName: input.itemName,
-			itemDescription: input.itemDescription
+			itemDescription: input.itemDescription,
+			itemCompleted: input.itemCompleted
 		};
 
-		const label1key = `DEPENDS_ON_ITEM${delimiter}${input.itemId}${amptDelimiter}LIST${delimiter}${input.listId}}}`;
+		const label1key = `DEPENDS_ON_ITEM${delimiter}${input.itemId}${amptDelimiter}LIST${delimiter}${input.listId}`;
 
 		await data.set(key, connectionDocument, {
 			label1: label1key,

@@ -13,6 +13,7 @@ export type ConnectItemToListInput = {
 	itemId: string;
 	itemName: string;
 	itemDescription?: string;
+	itemCompleted?: string;
 };
 
 export type CreateListErrors = UNKNOWN_DATA_SHAPE;
