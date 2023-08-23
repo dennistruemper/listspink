@@ -10,7 +10,7 @@ import {
 	DATA_MISSING_CODE,
 	NO_ACCESS_CODE,
 	UNKNOWN_DATA_SHAPE_CODE
-} from '../../domain/errorCodes';
+} from '../../../../shared/src/definitions/errorCodes';
 import { CreateListUsecase } from '../../domain/usecases/lists/createListUsecase';
 import { GetListUsecase } from '../../domain/usecases/lists/getListUsecase';
 import { getUserIdFromRequest } from './expressHelper';

@@ -9,6 +9,7 @@ export async function createApp(dependencies: Dependencies): Promise<Express> {
 	const authHandler: Handler = await dependencies.tokenChecker.getHandler();
 
 	const app = express();
+	app.options('*', cors());
 	app.use(express.json());
 	app.use(cors());
 

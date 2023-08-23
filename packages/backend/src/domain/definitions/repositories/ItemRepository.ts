@@ -1,6 +1,6 @@
 import { ItemPink } from '../../../../../shared/src/definitions/itemPink';
 import { OptionalID, Result } from '../../../../../shared/src/languageExtension';
-import { UNKNOWN_DATA_SHAPE } from '../../errorCodes';
+import { UNKNOWN_DATA_SHAPE } from '../../../../../shared/src/definitions/errorCodes';
 
 export type CreateItemInput = OptionalID<ItemPink>;
 export type GetItemsForListInput = { listId: string };

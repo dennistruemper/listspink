@@ -112,7 +112,19 @@ export function createUpdateFunction(deps: Dependencies) {
 				};
 			}
 			case 'create_list': {
-				const newList = createListPink(event.name, deps.uuidGenerator);
+				const token = await deps.authRepository.getAccessToken();
+				let newList;
+				if (token !== undefined) {
+					const createResult = await deps.listRepository.create({
+						name: event.name,
+						description: undefined,
+						token: token
+					});
+					if (createResult.success === false) throw new Error('List creation failed');
+					newList = createResult.value;
+				} else {
+					newList = createListPink(event.name, deps.uuidGenerator);
+				}
 				return {
 					...previousState,
 					lists: [...previousState.lists, newList],
