@@ -2,7 +2,11 @@ import { ListPink, ListPinkDetails } from '../../../../../shared/src/definitions
 import { ListToItemConnection } from '../../../../../shared/src/definitions/listToItemConnection';
 import { UserToListConnection } from '../../../../../shared/src/definitions/userToListConnection';
 import { OptionalID, Result } from '../../../../../shared/src/languageExtension';
-import { DATA_MISSING, NO_ACCESS, UNKNOWN_DATA_SHAPE } from '../../errorCodes';
+import {
+	DATA_MISSING,
+	NO_ACCESS,
+	UNKNOWN_DATA_SHAPE
+} from '../../../../../shared/src/definitions/errorCodes';
 
 export type CreateListInput = OptionalID<ListPink>;
 export type GetListsByItemIdForUserInput = { itemId: string; userId: string };

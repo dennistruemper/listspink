@@ -6,7 +6,10 @@ import {
 } from '../../../../shared/src/definitions/communication/itemRequestResponses';
 import { forceExhaust } from '../../../../shared/src/languageExtension';
 import { Dependencies } from '../../domain/definitions/dependencies';
-import { NO_ACCESS_CODE, UNKNOWN_DATA_SHAPE_CODE } from '../../domain/errorCodes';
+import {
+	NO_ACCESS_CODE,
+	UNKNOWN_DATA_SHAPE_CODE
+} from '../../../../shared/src/definitions/errorCodes';
 import { CreateItemForListUsecase } from '../../domain/usecases/items/createItemForListUsecase';
 import { GetItemUsecase } from '../../domain/usecases/items/getItemUsecase';
 import { GetItemsForListUsecase } from '../../domain/usecases/items/getItemsForListUsecase';

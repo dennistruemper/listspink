@@ -1,6 +1,6 @@
 import ksuid from 'ksuid';
 import { describe, expect, it } from 'vitest';
-import { DATA_MISSING_CODE } from '../../src/domain/errorCodes';
+import { DATA_MISSING_CODE } from '../../../shared/src/definitions/errorCodes';
 import { getDependencies } from '../../src/stageDependencies';
 
 describe('ListRepository', () => {

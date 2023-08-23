@@ -12,7 +12,7 @@ import {
 	GetItemsForListInput,
 	ItemRepository
 } from '../../../domain/definitions/repositories/itemRepository';
-import { UNKNOWN_DATA_SHAPE_CODE } from '../../../domain/errorCodes';
+import { UNKNOWN_DATA_SHAPE_CODE } from '../../../../../shared/src/definitions/errorCodes';
 import { batchResultSchema } from './batchResultSchema';
 
 const getItemsSchema = batchResultSchema(itemSchema);

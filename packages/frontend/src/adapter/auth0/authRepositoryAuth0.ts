@@ -24,7 +24,7 @@ export class AuthRepositoryAuth0 implements AuthRepository {
 	}
 
 	async getAccessToken(): Promise<string | undefined> {
-		const token = await this.client.getTokenSilently({
+		const token = await this.client.getTokenWithPopup({
 			authorizationParams: {
 				redirect_uri: window.origin,
 				audience: this.audience,
