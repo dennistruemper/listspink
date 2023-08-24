@@ -22,9 +22,15 @@
 	$: activeItems = $appStore.current.currentList?.activeItems ?? [];
 	$: completedItems = $appStore.current.currentList?.completedItems ?? [];
 
+	// auth 0
 	const code = url.searchParams.get('code');
 	const state = url.searchParams.get('state');
 	if (code && state && $appStore.current.user === undefined) {
+		appStore.dispatch({ type: 'login_check', url: url.toString() });
+	}
+
+	// clerk
+	if (url.toString().includes('clerk_db_jwt') && $appStore.current.user === undefined) {
 		appStore.dispatch({ type: 'login_check', url: url.toString() });
 	}
 </script>

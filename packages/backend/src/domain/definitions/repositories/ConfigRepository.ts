@@ -4,4 +4,7 @@ export interface ConfigRepository {
 	getAuth0Domain(): Promise<string>;
 	getAuth0Audience(): Promise<string>;
 	getAuth0TokenUrl(): Promise<string>;
+	getClerkSecretKey(): Promise<string>;
+	getClerkApi(): Promise<string>;
+	exportClerkSecretKey(): Promise<void>;
 }

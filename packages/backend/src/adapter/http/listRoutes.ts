@@ -4,13 +4,13 @@ import {
 	createListRequestSchema
 } from '../../../../shared/src/definitions/communication/createListRequestResponse';
 import { GetListDetailsResponse } from '../../../../shared/src/definitions/communication/getListDetailsRequestResponse';
-import { forceExhaust } from '../../../../shared/src/languageExtension';
-import { Dependencies } from '../../domain/definitions/dependencies';
 import {
 	DATA_MISSING_CODE,
 	NO_ACCESS_CODE,
 	UNKNOWN_DATA_SHAPE_CODE
 } from '../../../../shared/src/definitions/errorCodes';
+import { forceExhaust } from '../../../../shared/src/languageExtension';
+import { Dependencies } from '../../domain/definitions/dependencies';
 import { CreateListUsecase } from '../../domain/usecases/lists/createListUsecase';
 import { GetListUsecase } from '../../domain/usecases/lists/getListUsecase';
 import { getUserIdFromRequest } from './expressHelper';

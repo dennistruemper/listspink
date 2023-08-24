@@ -4,7 +4,8 @@ import { TokenCheckerFake } from '../test/util/tokenCheckerFake';
 import { ConfigRepositoryAmpt } from './adapter/ampt/configRepositoryAmpt';
 import { ItemRepositoryAmpt } from './adapter/ampt/data/ItemRepositoryAmpt';
 import { ListRepositoryAmpt } from './adapter/ampt/data/ListRepositoryAmpt';
-import { TokenCheckerAuth0 } from './adapter/auth0/tokenCheckerAuth0';
+import { TokenCheckerClerk } from './adapter/clerk/tokenCheckerClerk';
+
 import { Dependencies } from './domain/definitions/dependencies';
 
 export function getDependencies(stage: string): Dependencies {
@@ -44,7 +45,7 @@ function testDependencies(): Dependencies {
 function devDependencies(): Dependencies {
 	const configRepository = new ConfigRepositoryAmpt();
 	const idGenerator = new KsuidGenerator();
-	const tokenChecker = new TokenCheckerAuth0(configRepository);
+	const tokenChecker = new TokenCheckerClerk(configRepository);
 	const listRepository = new ListRepositoryAmpt(idGenerator);
 	const itemRepository = new ItemRepositoryAmpt(idGenerator);
 	return {
@@ -59,7 +60,7 @@ function devDependencies(): Dependencies {
 function betaDependencies(): Dependencies {
 	const configRepository = new ConfigRepositoryAmpt();
 	const idGenerator = new KsuidGenerator();
-	const tokenChecker = new TokenCheckerAuth0(configRepository);
+	const tokenChecker = new TokenCheckerClerk(configRepository);
 	const listRepository = new ListRepositoryAmpt(idGenerator);
 	const itemRepository = new ItemRepositoryAmpt(idGenerator);
 	return {
@@ -74,7 +75,7 @@ function betaDependencies(): Dependencies {
 function prodDependencies(): Dependencies {
 	const configRepository = new ConfigRepositoryAmpt();
 	const idGenerator = new KsuidGenerator();
-	const tokenChecker = new TokenCheckerAuth0(configRepository);
+	const tokenChecker = new TokenCheckerClerk(configRepository);
 	const listRepository = new ListRepositoryAmpt(idGenerator);
 	const itemRepository = new ItemRepositoryAmpt(idGenerator);
 	return {

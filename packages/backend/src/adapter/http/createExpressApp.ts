@@ -13,6 +13,8 @@ export async function createApp(dependencies: Dependencies): Promise<Express> {
 	app.use(express.json());
 	app.use(cors());
 
+	dependencies.configRepository.exportClerkSecretKey();
+
 	const publicApi = Router();
 	app.use('/api', publicApi);
 	addPublicRoutes(publicApi, dependencies);
