@@ -197,6 +197,28 @@ export function createUpdateFunction(deps: Dependencies) {
 					currentList: calculateCurrentList(intermediateState5, previousState.currentList?.id)
 				};
 			}
+			case 'load_lists': {
+				const token = await deps.authRepository.getAccessToken();
+				if (token === undefined) throw new Error('No token found');
+				const listsResult = await deps.listRepository.getAll({ token: token });
+				if (listsResult.success === false)
+					throw new Error('Failed to load lists: ' + listsResult.message);
+
+				const loadedListsState = { ...previousState, lists: listsResult.value };
+
+				return {
+					...loadedListsState,
+					currentList: calculateCurrentList(loadedListsState, listsResult.value[0]?.id)
+				};
+			}
+			case 'load_version': {
+				const versionResult = await deps.versionRepository.getVersion();
+				if (versionResult.success === false) throw new Error('Failed to load version');
+				return {
+					...previousState,
+					version: versionResult.data.version
+				};
+			}
 		}
 		forceExhaust(event);
 	};

@@ -8,6 +8,11 @@ export type CreateListInput = {
 	token: string;
 };
 
+export type GetListsForUser = {
+	token: string;
+};
+
 export interface ListRepository {
 	create(data: CreateListInput): Promise<Result<ListPink, UNKNOWN_DATA_SHAPE>>;
+	getAll(data: GetListsForUser): Promise<Result<ListPink[], UNKNOWN_DATA_SHAPE>>;
 }
