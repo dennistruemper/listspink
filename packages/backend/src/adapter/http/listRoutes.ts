@@ -106,7 +106,8 @@ function addCreateListForUserRoute(router: Router, dependencies: Dependencies) {
 		const result: CreateListResponse = {
 			id: list.id,
 			name: list.name,
-			description: list.description
+			description: list.description,
+			itemIds: []
 		};
 
 		return res.status(200).send(result);
