@@ -6,7 +6,7 @@
 	"main": "packages/backend/index.ts",
 	"type": "module",
 	"scripts": {
-		"dev-be": "ampt",
+		"dev-be": "ampt --skip-update",
 		"dev-fe": "export BACKEND_URL=$(./scripts/getSandboxUrl.sh) && cd packages/frontend && echo PUBLIC_BACKEND_URL $BACKEND_URL && PUBLIC_BACKEND_URL=$BACKEND_URL npm run dev",
 		"dev-test": "npx ampt run test-all-watch --test-stage",
 		"lint": "cd packages/frontend && npm run lint && cd -",
@@ -22,6 +22,7 @@
 	"dependencies": {
 		"@ampt/data": "0.0.1-beta.18",
 		"@ampt/sdk": "0.0.1-beta.60",
+		"@clerk/clerk-sdk-node": "4.12.2",
 		"cors": "2.8.5",
 		"express": "4.18.2",
 		"express-oauth2-jwt-bearer": "1.5.0",

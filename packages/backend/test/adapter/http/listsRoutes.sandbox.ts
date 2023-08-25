@@ -3,10 +3,11 @@ import { describe, expect, it } from 'vitest';
 import { CreateListRequest } from '../../../../shared/src/definitions/communication/createListRequestResponse';
 import { getListDetailsArrayResponseSchema } from '../../../../shared/src/definitions/communication/getListDetailsRequestResponse';
 import { createApp } from '../../../src/adapter/http/createExpressApp';
-import { getDependencies } from '../../../src/stageDependencies';
+
 import { createJwtDummy } from '../../util/jwt';
+import { getTestDependencies } from '../testDependencies';
 describe.concurrent('list enppoints', async () => {
-	const dependencies = getDependencies('test');
+	const dependencies = getTestDependencies('integration');
 	const app = await createApp(dependencies);
 
 	describe('list endpoint api/list/:listId GET', async () => {
@@ -118,7 +119,7 @@ describe.concurrent('list enppoints', async () => {
 
 		it('should get an error without name', async () => {
 			type CreateListRequestWithutName = Omit<CreateListRequest, 'name'>;
-			const body: CreateListRequestWithutName = { description: 'testDescription' };
+			const body: CreateListRequestWithutName = { description: 'testDescription', itemIds: [] };
 			const result = await supertest(app)
 				.post('/api/list')
 				.set('Authorization', 'Bearer ' + createJwtDummy('UserId123'))
@@ -131,7 +132,7 @@ describe.concurrent('list enppoints', async () => {
 			const result = await supertest(app)
 				.post('/api/list')
 				.set('Authorization', 'Bearer ' + createJwtDummy('UserId123'))
-				.send({ name: 'testName', description: 'testDescription' })
+				.send({ name: 'testName', description: 'testDescription', itemIds: [] })
 				.expect(200);
 			expect(result.text).toContain('name":"testName');
 			expect(result.text).toContain('description":"testDescription');

@@ -10,7 +10,8 @@
 
 {#if $appStore.current.user}
 	<p class={textColor}>
-		Logged in as {$appStore.current.user.displayName ?? $appStore.current.user.name}
+		Logged in as {$appStore.current.user.displayName ?? $appStore.current.user.name} with email
+		{$appStore.current.user.email}
 	</p>
 {:else}
 	<p class={textColor}>Not logged in</p>

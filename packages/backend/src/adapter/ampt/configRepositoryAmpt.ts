@@ -14,7 +14,17 @@ export class ConfigRepositoryAmpt implements ConfigRepository {
 	getAuth0Domain(): Promise<string> {
 		return params('AUTH0_DOMAIN');
 	}
-	async getAuth0Audience(): Promise<string> {
+	getAuth0Audience(): Promise<string> {
 		return params('AUTH0_AUDIENCE');
+	}
+
+	getClerkSecretKey(): Promise<string> {
+		return params('CLERK_SECRET_KEY');
+	}
+	getClerkApi(): Promise<string> {
+		return params('CLERK_API');
+	}
+	async exportClerkSecretKey(): Promise<void> {
+		return params().export('CLERK_API');
 	}
 }

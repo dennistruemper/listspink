@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { afterNavigate } from '$app/navigation';
-	import { base } from '$app/paths';
 	import toast from 'svelte-french-toast';
 	import ActionBar from '../../../components/actionBar.svelte';
 	import FadeIn from '../../../components/animation/fadeIn.svelte';
@@ -20,12 +18,6 @@
 		}
 		return false;
 	}
-
-	let previousPage: string = base;
-
-	afterNavigate(({ from }) => {
-		previousPage = from?.url.pathname || previousPage;
-	});
 </script>
 
 <FadeIn>

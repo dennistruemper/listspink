@@ -1,16 +1,13 @@
-import ksuid from 'ksuid';
-import { IdGenerator } from '../../shared/src/definitions/idGenerator';
-import { TokenCheckerFake } from '../test/util/tokenCheckerFake';
 import { ConfigRepositoryAmpt } from './adapter/ampt/configRepositoryAmpt';
 import { ItemRepositoryAmpt } from './adapter/ampt/data/ItemRepositoryAmpt';
 import { ListRepositoryAmpt } from './adapter/ampt/data/ListRepositoryAmpt';
-import { TokenCheckerAuth0 } from './adapter/auth0/tokenCheckerAuth0';
+import { TokenCheckerClerk } from './adapter/clerk/tokenCheckerClerk';
+
+import { KsuidGenerator } from './adapter/ampt/util/ksuidGenerator';
 import { Dependencies } from './domain/definitions/dependencies';
 
-export function getDependencies(stage: string): Dependencies {
+export function getProdDependencies(stage: string): Dependencies {
 	switch (stage) {
-		case 'test':
-			return testDependencies();
 		case 'beta':
 			return betaDependencies();
 		case 'prod':
@@ -20,31 +17,11 @@ export function getDependencies(stage: string): Dependencies {
 	}
 }
 
-class KsuidGenerator implements IdGenerator {
-	generate(): string {
-		return ksuid.randomSync().string;
-	}
-}
-
-function testDependencies(): Dependencies {
-	const configRepository = new ConfigRepositoryAmpt();
-	const idGenerator = new KsuidGenerator();
-	const tokenChecker = new TokenCheckerFake();
-	const listRepository = new ListRepositoryAmpt(idGenerator);
-	const itemRepository = new ItemRepositoryAmpt(idGenerator);
-	return {
-		configRepository,
-		idGenerator,
-		tokenChecker,
-		itemRepository,
-		listRepository
-	};
-}
-
 function devDependencies(): Dependencies {
+	console.log('devDependencies loaded');
 	const configRepository = new ConfigRepositoryAmpt();
 	const idGenerator = new KsuidGenerator();
-	const tokenChecker = new TokenCheckerAuth0(configRepository);
+	const tokenChecker = new TokenCheckerClerk(configRepository);
 	const listRepository = new ListRepositoryAmpt(idGenerator);
 	const itemRepository = new ItemRepositoryAmpt(idGenerator);
 	return {
@@ -57,9 +34,10 @@ function devDependencies(): Dependencies {
 }
 
 function betaDependencies(): Dependencies {
+	console.log('betaDependencies loaded');
 	const configRepository = new ConfigRepositoryAmpt();
 	const idGenerator = new KsuidGenerator();
-	const tokenChecker = new TokenCheckerAuth0(configRepository);
+	const tokenChecker = new TokenCheckerClerk(configRepository);
 	const listRepository = new ListRepositoryAmpt(idGenerator);
 	const itemRepository = new ItemRepositoryAmpt(idGenerator);
 	return {
@@ -72,9 +50,10 @@ function betaDependencies(): Dependencies {
 }
 
 function prodDependencies(): Dependencies {
+	console.log('prodDependencies loaded');
 	const configRepository = new ConfigRepositoryAmpt();
 	const idGenerator = new KsuidGenerator();
-	const tokenChecker = new TokenCheckerAuth0(configRepository);
+	const tokenChecker = new TokenCheckerClerk(configRepository);
 	const listRepository = new ListRepositoryAmpt(idGenerator);
 	const itemRepository = new ItemRepositoryAmpt(idGenerator);
 	return {

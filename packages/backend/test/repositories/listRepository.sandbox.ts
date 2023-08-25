@@ -1,10 +1,10 @@
 import ksuid from 'ksuid';
 import { describe, expect, it } from 'vitest';
 import { DATA_MISSING_CODE } from '../../../shared/src/definitions/errorCodes';
-import { getDependencies } from '../../src/stageDependencies';
+import { getTestDependencies } from '../adapter/testDependencies';
 
 describe('ListRepository', () => {
-	const deps = getDependencies('test');
+	const deps = getTestDependencies('integration');
 	const repository = deps.listRepository;
 	it('should return created list', async () => {
 		const list = { id: 'dummy', name: 'test', itemIds: [] };

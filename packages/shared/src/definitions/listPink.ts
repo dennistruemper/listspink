@@ -11,7 +11,7 @@ export const listPinkSchema = z.object({
 	name: z.string(),
 	description: z.string().optional(),
 	id: z.string(),
-	itemIds: z.string().array()
+	itemIds: z.string().array().default([])
 });
 
 export type ListPink = z.infer<typeof listPinkSchema>;

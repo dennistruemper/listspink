@@ -1,5 +1,7 @@
 export function getUserIdFromRequest(req: unknown): string | undefined {
-	const maybeRequestWithUser = req as { auth?: { payload?: { sub?: string } } };
+	const maybeRequestWithUser = req as {
+		auth?: { payload?: { sub?: string }; sessionClaims?: { sub?: string } };
+	};
 
-	return maybeRequestWithUser?.auth?.payload?.sub;
+	return maybeRequestWithUser.auth?.sessionClaims?.sub ?? maybeRequestWithUser?.auth?.payload?.sub;
 }

@@ -8,10 +8,18 @@ import { addListRoutes } from './listRoutes';
 export async function createApp(dependencies: Dependencies): Promise<Express> {
 	const authHandler: Handler = await dependencies.tokenChecker.getHandler();
 
+	const corsOptions = {
+		origin: '*',
+		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+		allowedHeaders: 'Content-Type,Authorization'
+	};
+
 	const app = express();
-	app.options('*', cors());
+	app.options('*', cors(corsOptions));
 	app.use(express.json());
-	app.use(cors());
+	app.use(cors(corsOptions));
+
+	dependencies.configRepository.exportClerkSecretKey();
 
 	const publicApi = Router();
 	app.use('/api', publicApi);

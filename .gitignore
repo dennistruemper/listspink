@@ -6,3 +6,4 @@ urlSandbox.txt
 .ampt
 .DS_Store
 .svelte-kit
+packages/frontend/test-results/

@@ -1,5 +1,5 @@
 import { PUBLIC_STAGE } from '$env/static/public';
-import { AuthRepositoryAuth0 } from './adapter/auth0/authRepositoryAuth0';
+import { AuthRepositoryClerk } from './adapter/authRepositoryClerk';
 import { ListRepositoryBackend } from './adapter/backend/listRepositoryBackend';
 import { VersionRepositoryBackend } from './adapter/backend/versionRepositoryBackend';
 import { UuidGenerator } from './adapter/uuid';
@@ -21,10 +21,8 @@ async function prodDependencies(): Promise<Dependencies> {
 		uuidGenerator: UuidGenerator.v4,
 		versionRepository: new VersionRepositoryBackend(),
 		listRepository: new ListRepositoryBackend(),
-		authRepository: await AuthRepositoryAuth0.create({
-			domain: 'listspink.eu.auth0.com',
-			clientId: '0gCuLyMdGyU31BbgPXdnmofNCWREJAlu',
-			audience: 'lists.pink'
+		authRepository: await AuthRepositoryClerk.create({
+			frontendApi: 'pk_live_Y2xlcmsubGlzdHMucGluayQ'
 		})
 	};
 }
@@ -34,10 +32,8 @@ async function betaDependencies(): Promise<Dependencies> {
 		uuidGenerator: UuidGenerator.v4,
 		versionRepository: new VersionRepositoryBackend(),
 		listRepository: new ListRepositoryBackend(),
-		authRepository: await AuthRepositoryAuth0.create({
-			domain: 'listspink-beta.eu.auth0.com',
-			clientId: 'ipLY3EN3zHzl4zj9d6o38mTDYtgPDPe4',
-			audience: 'beta.lists.pink'
+		authRepository: await AuthRepositoryClerk.create({
+			frontendApi: 'pk_test_aGFyZHktZ2xpZGVyLTIwLmNsZXJrLmFjY291bnRzLmRldiQ'
 		})
 	};
 }
@@ -47,10 +43,8 @@ async function devDependencies(): Promise<Dependencies> {
 		uuidGenerator: UuidGenerator.v4,
 		versionRepository: new VersionRepositoryBackend(),
 		listRepository: new ListRepositoryBackend(),
-		authRepository: await AuthRepositoryAuth0.create({
-			domain: 'listspink-dev.eu.auth0.com',
-			clientId: 'WVvNpcV9Fzoj3EWiYXtsdkiKDGfa5sCu',
-			audience: 'dev.lists.pink'
+		authRepository: await AuthRepositoryClerk.create({
+			frontendApi: 'pk_test_aGFyZHktZ2xpZGVyLTIwLmNsZXJrLmFjY291bnRzLmRldiQ'
 		})
 	};
 }
