@@ -28,6 +28,7 @@ class KsuidGenerator implements IdGenerator {
 }
 
 function testDependencies(): Dependencies {
+	console.log('testDependencies loaded');
 	const configRepository = new ConfigRepositoryAmpt();
 	const idGenerator = new KsuidGenerator();
 	const tokenChecker = new TokenCheckerFake();
@@ -43,6 +44,7 @@ function testDependencies(): Dependencies {
 }
 
 function devDependencies(): Dependencies {
+	console.log('devDependencies loaded');
 	const configRepository = new ConfigRepositoryAmpt();
 	const idGenerator = new KsuidGenerator();
 	const tokenChecker = new TokenCheckerClerk(configRepository);
@@ -58,6 +60,7 @@ function devDependencies(): Dependencies {
 }
 
 function betaDependencies(): Dependencies {
+	console.log('betaDependencies loaded');
 	const configRepository = new ConfigRepositoryAmpt();
 	const idGenerator = new KsuidGenerator();
 	const tokenChecker = new TokenCheckerClerk(configRepository);
@@ -73,6 +76,7 @@ function betaDependencies(): Dependencies {
 }
 
 function prodDependencies(): Dependencies {
+	console.log('prodDependencies loaded');
 	const configRepository = new ConfigRepositoryAmpt();
 	const idGenerator = new KsuidGenerator();
 	const tokenChecker = new TokenCheckerClerk(configRepository);
