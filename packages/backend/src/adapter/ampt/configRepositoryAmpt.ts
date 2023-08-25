@@ -25,7 +25,6 @@ export class ConfigRepositoryAmpt implements ConfigRepository {
 		return params('CLERK_API');
 	}
 	async exportClerkSecretKey(): Promise<void> {
-		const key = await this.getClerkSecretKey();
-		process.env.CLERK_SECRET_KEY = key;
+		return params().export('CLERK_API');
 	}
 }

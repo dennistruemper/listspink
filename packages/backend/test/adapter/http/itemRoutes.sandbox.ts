@@ -5,8 +5,9 @@ import { CreateItemRequest } from '../../../../shared/src/definitions/communicat
 import { createApp } from '../../../src/adapter/http/createExpressApp';
 import { Dependencies } from '../../../src/domain/definitions/dependencies';
 import { CreateItemForListUsecase } from '../../../src/domain/usecases/items/createItemForListUsecase';
-import { getDependencies } from '../../../src/stageDependencies';
+
 import { createJwtDummy } from '../../util/jwt';
+import { getTestDependencies } from '../testDependencies';
 
 async function createListAndUser(
 	dependencies: Dependencies
@@ -73,7 +74,7 @@ async function createListAndItemsWithConnectionsToUser(input: {
 }
 
 describe.concurrent('item enppoints', async () => {
-	const dependencies = getDependencies('test');
+	const dependencies = getTestDependencies('integration');
 	const app = await createApp(dependencies);
 
 	describe('list endpoint api/item/:itemId GET', async () => {
