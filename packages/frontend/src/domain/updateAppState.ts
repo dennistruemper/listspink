@@ -120,7 +120,8 @@ export function createUpdateFunction(deps: Dependencies) {
 						description: undefined,
 						token: token
 					});
-					if (createResult.success === false) throw new Error('List creation failed');
+					if (createResult.success === false)
+						throw new Error('List creation failed: ' + createResult.message);
 					newList = createResult.value;
 				} else {
 					newList = createListPink(event.name, deps.uuidGenerator);

@@ -19,7 +19,8 @@ export class ListRepositoryBackend implements ListRepository {
 	async create(data: CreateListInput): Promise<Result<ListPink, UNKNOWN_DATA_SHAPE>> {
 		const body: CreateListRequest = {
 			name: data.name,
-			description: data.description
+			description: data.description,
+			itemIds: []
 		};
 
 		const response = await fetch(PUBLIC_BACKEND_URL + '/api/list', {

@@ -1,4 +1,8 @@
 import { data, GetBatchResponse } from '@ampt/data';
+import {
+	DATA_MISSING_CODE,
+	UNKNOWN_DATA_SHAPE_CODE
+} from '../../../../../shared/src/definitions/errorCodes';
 import { IdGenerator } from '../../../../../shared/src/definitions/idGenerator';
 import {
 	ListPink,
@@ -36,10 +40,6 @@ import {
 	UserHasAccessErrors,
 	UserHasAccessInput
 } from '../../../domain/definitions/repositories/ListRepository';
-import {
-	DATA_MISSING_CODE,
-	UNKNOWN_DATA_SHAPE_CODE
-} from '../../../../../shared/src/definitions/errorCodes';
 import { batchResultSchema } from './batchResultSchema';
 
 const getListsSchema = batchResultSchema(listPinkSchema);
