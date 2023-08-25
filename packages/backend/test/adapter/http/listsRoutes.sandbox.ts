@@ -3,10 +3,11 @@ import { describe, expect, it } from 'vitest';
 import { CreateListRequest } from '../../../../shared/src/definitions/communication/createListRequestResponse';
 import { getListDetailsArrayResponseSchema } from '../../../../shared/src/definitions/communication/getListDetailsRequestResponse';
 import { createApp } from '../../../src/adapter/http/createExpressApp';
-import { getDependencies } from '../../../src/stageDependencies';
+
 import { createJwtDummy } from '../../util/jwt';
+import { getDependencies } from '../testDependencies';
 describe.concurrent('list enppoints', async () => {
-	const dependencies = getDependencies('test');
+	const dependencies = getDependencies('integration');
 	const app = await createApp(dependencies);
 
 	describe('list endpoint api/list/:listId GET', async () => {
