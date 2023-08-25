@@ -8,7 +8,7 @@
 	"scripts": {
 		"dev-be": "ampt --skip-update",
 		"dev-fe": "export BACKEND_URL=$(./scripts/getSandboxUrl.sh) && cd packages/frontend && echo PUBLIC_BACKEND_URL $BACKEND_URL && PUBLIC_BACKEND_URL=$BACKEND_URL npm run dev",
-		"dev-test": "npx ampt --skip-update run test-all-watch --test-stage",
+		"dev-test": "npx ampt run test-all-watch --test-stage",
 		"lint": "cd packages/frontend && npm run lint && cd -",
 		"test-local": "BASE_PATH=** MODE=LOCAL vitest run",
 		"format": "prettier --write .",

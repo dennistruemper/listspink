@@ -118,7 +118,7 @@ describe.concurrent('list enppoints', async () => {
 
 		it('should get an error without name', async () => {
 			type CreateListRequestWithutName = Omit<CreateListRequest, 'name'>;
-			const body: CreateListRequestWithutName = { description: 'testDescription' };
+			const body: CreateListRequestWithutName = { description: 'testDescription', itemIds: [] };
 			const result = await supertest(app)
 				.post('/api/list')
 				.set('Authorization', 'Bearer ' + createJwtDummy('UserId123'))
@@ -131,7 +131,7 @@ describe.concurrent('list enppoints', async () => {
 			const result = await supertest(app)
 				.post('/api/list')
 				.set('Authorization', 'Bearer ' + createJwtDummy('UserId123'))
-				.send({ name: 'testName', description: 'testDescription' })
+				.send({ name: 'testName', description: 'testDescription', itemIds: [] })
 				.expect(200);
 			expect(result.text).toContain('name":"testName');
 			expect(result.text).toContain('description":"testDescription');
