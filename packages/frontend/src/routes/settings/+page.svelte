@@ -3,9 +3,10 @@
 	import FadeIn from '../../components/animation/fadeIn.svelte';
 	import Version from '../../components/version.svelte';
 	import { appStore } from '../../stores/appStore';
-	import type { PageData } from './$types';
 
-	export let data: PageData;
+	appStore.dispatch({ type: 'load_version' });
+
+	$: version = $appStore.current.version;
 </script>
 
 <FadeIn>
@@ -27,7 +28,13 @@
 		</p>
 	{/if}
 
-	<p>Version: {data.success === true ? data.data.version : 'could not load backend version'}</p>
+	<p>
+		Version: {#if version === undefined}
+			Loading version...
+		{:else}
+			{version}
+		{/if}
+	</p>
 
 	<Version></Version>
 </FadeIn>

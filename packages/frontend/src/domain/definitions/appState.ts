@@ -10,6 +10,7 @@ export type AppState = {
 	lists: ListPink[];
 	items: ItemPink[];
 	currentList?: CurrentListPink;
+	version?: string;
 };
 
 export function initialAppState(deps: Dependencies): AppState {

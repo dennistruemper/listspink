@@ -5,12 +5,14 @@ export type Event =
 	| RefreshDataEvent
 	| AddItemToListEvent
 	| EditItemEvent
+	| LoadListsEvent
 	| CreateItemAndAddToListsEvent
 	| ToggleItemDoneEvent
 	| CreateListEvent
 	| ChooseListByIdEvent
 	| EditListEvent
-	| RemoveListEvent;
+	| RemoveListEvent
+	| LoadVersionEvent;
 
 interface EventBase {
 	type: string;
@@ -74,4 +76,12 @@ interface EditListEvent extends EventBase {
 interface RemoveListEvent extends EventBase {
 	type: 'remove_list';
 	listId: string;
+}
+
+interface LoadListsEvent extends EventBase {
+	type: 'load_lists';
+}
+
+interface LoadVersionEvent extends EventBase {
+	type: 'load_version';
 }
