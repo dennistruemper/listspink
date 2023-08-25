@@ -6,7 +6,7 @@ import { TokenCheckerClerk } from './adapter/clerk/tokenCheckerClerk';
 import { KsuidGenerator } from './adapter/ampt/util/ksuidGenerator';
 import { Dependencies } from './domain/definitions/dependencies';
 
-export function getDependencies(stage: string): Dependencies {
+export function getProdDependencies(stage: string): Dependencies {
 	switch (stage) {
 		case 'beta':
 			return betaDependencies();

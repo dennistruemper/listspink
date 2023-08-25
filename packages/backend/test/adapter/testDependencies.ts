@@ -5,7 +5,7 @@ import { KsuidGenerator } from '../../src/adapter/ampt/util/ksuidGenerator';
 import { Dependencies } from '../../src/domain/definitions/dependencies';
 import { TokenCheckerFake } from '../util/tokenCheckerFake';
 
-export function getDependencies(stage: 'integration'): Dependencies {
+export function getTestDependencies(stage: 'integration'): Dependencies {
 	switch (stage) {
 		case 'integration':
 		default:
@@ -14,7 +14,7 @@ export function getDependencies(stage: 'integration'): Dependencies {
 }
 
 function integrationDependencies(): Dependencies {
-	console.log('testDependencies loaded');
+	console.log('integrationTestDependencies loaded');
 	const configRepository = new ConfigRepositoryAmpt();
 	const idGenerator = new KsuidGenerator();
 	const tokenChecker = new TokenCheckerFake();

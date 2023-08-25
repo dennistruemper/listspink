@@ -5,9 +5,9 @@ import { getListDetailsArrayResponseSchema } from '../../../../shared/src/defini
 import { createApp } from '../../../src/adapter/http/createExpressApp';
 
 import { createJwtDummy } from '../../util/jwt';
-import { getDependencies } from '../testDependencies';
+import { getTestDependencies } from '../testDependencies';
 describe.concurrent('list enppoints', async () => {
-	const dependencies = getDependencies('integration');
+	const dependencies = getTestDependencies('integration');
 	const app = await createApp(dependencies);
 
 	describe('list endpoint api/list/:listId GET', async () => {
