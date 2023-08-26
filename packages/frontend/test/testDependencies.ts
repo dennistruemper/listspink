@@ -47,7 +47,8 @@ class AuthRepositoryFake implements AuthRepository {
 
 class ListRepositoryFake implements ListRepository {
 	getAll(
-		data: GetListsForUser
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		_data: GetListsForUser
 	): Promise<
 		Result<{ name: string; id: string; itemIds: string[]; description?: string | undefined }[], 2>
 	> {
@@ -86,7 +87,8 @@ class ItemRepositoryFake implements ItemRepository {
 			}
 		});
 	}
-	getAll(data: GetItemsForListInput): Promise<Result<GetItemsForListResponse, 2>> {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	getAll(_data: GetItemsForListInput): Promise<Result<GetItemsForListResponse, 2>> {
 		return Promise.resolve(success({ items: [] }));
 	}
 }

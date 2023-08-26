@@ -9,7 +9,6 @@ function createClerkTestMailAdress(): string {
 	return prefix + suffix;
 }
 const dummyPassword = 'listspink';
-const dummyRegistrationCode = '424242';
 
 test('create new user', async ({ page }) => {
 	await page.goto(TestGlobalConstants.getLatestURL());
