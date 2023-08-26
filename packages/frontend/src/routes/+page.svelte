@@ -29,11 +29,17 @@
 		appStore.dispatch({ type: 'login_check', url: url.toString() });
 	}
 
-	appStore.dispatch({ type: 'load_lists' });
-
 	// clerk
 	if (url.toString().includes('clerk_db_jwt') && $appStore.current.user === undefined) {
 		appStore.dispatch({ type: 'login_check', url: url.toString() });
+	}
+
+	appStore.dispatch({ type: 'load_lists' });
+	if ($appStore.current.currentList !== undefined) {
+		appStore.dispatch({
+			type: 'load_items_for_list',
+			listId: $appStore.current.currentList?.id
+		});
 	}
 </script>
 
