@@ -1,5 +1,5 @@
 import { createItemPink, type ItemPink } from '../../../shared/src/definitions/itemPink';
-import { createListPink } from '../../../shared/src/definitions/listPink';
+import { createListPink, type ListPink } from '../../../shared/src/definitions/listPink';
 import { forceExhaust } from '../../../shared/src/languageExtension';
 import type { AppState } from './definitions/appState';
 import type { CurrentListPink } from './definitions/currentList';
@@ -90,11 +90,26 @@ export function createUpdateFunction(deps: Dependencies) {
 				};
 			}
 			case 'create_item_and_add_to_lists': {
-				const newItem = createItemPink({
-					name: event.name,
-					uuidGenerator: deps.uuidGenerator,
-					description: event.description
-				});
+				const token = await deps.authRepository.getAccessToken();
+				let newItem: ItemPink;
+				if (token !== undefined) {
+					//TODO multiple not working
+					const createResult = await deps.itemRepository.create({
+						name: event.name,
+						description: event.description,
+						listId: event.listIds[0],
+						token: token
+					});
+					if (createResult.success === false)
+						throw new Error('Item creation failed: ' + createResult.message);
+					newItem = createResult.value;
+				} else {
+					newItem = createItemPink({
+						name: event.name,
+						uuidGenerator: deps.uuidGenerator,
+						description: event.description
+					});
+				}
 				const intermediateState: AppState = {
 					...previousState,
 					items: [...previousState.items, newItem],
@@ -219,6 +234,28 @@ export function createUpdateFunction(deps: Dependencies) {
 					version: versionResult.data.version
 				};
 			}
+			case 'load_items_for_list': {
+				const token = await deps.authRepository.getAccessToken();
+				if (token === undefined) throw new Error('No token found');
+				const itemsResult = await deps.itemRepository.getAll({
+					token: token,
+					listId: event.listId
+				});
+				if (itemsResult.success === false)
+					throw new Error('Failed to load items: ' + itemsResult.message);
+
+				const loadedItemsState = {
+					...previousState,
+					items: itemsResult.value.items,
+					lists: putItemIdsInLists(itemsResult.value.items, previousState.lists)
+				};
+
+				return {
+					...loadedItemsState,
+
+					currentList: calculateCurrentList(loadedItemsState, previousState.currentList?.id)
+				};
+			}
 		}
 		forceExhaust(event);
 	};
@@ -240,4 +277,10 @@ function toggleMatchingItemCompleted(item: ItemPink, itemId: string, time: Date)
 			completed: undefined
 		};
 	}
+}
+function putItemIdsInLists(items: { listId: string; id: string }[], lists: ListPink[]) {
+	return lists.map((list) => {
+		const itemIds = items.filter((item) => item.listId === list.id).map((item) => item.id);
+		return { ...list, itemIds: itemIds };
+	});
 }

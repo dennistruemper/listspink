@@ -1,18 +1,19 @@
 export type Event =
+	| AddItemToListEvent
+	| AuthLoginCheckEvent
 	| AuthLoginInitializedEvent
 	| AuthLogoutEvent
-	| AuthLoginCheckEvent
-	| RefreshDataEvent
-	| AddItemToListEvent
-	| EditItemEvent
-	| LoadListsEvent
-	| CreateItemAndAddToListsEvent
-	| ToggleItemDoneEvent
-	| CreateListEvent
 	| ChooseListByIdEvent
+	| CreateItemAndAddToListsEvent
+	| CreateListEvent
+	| EditItemEvent
 	| EditListEvent
+	| LoadItemsEvent
+	| LoadListsEvent
+	| LoadVersionEvent
+	| RefreshDataEvent
 	| RemoveListEvent
-	| LoadVersionEvent;
+	| ToggleItemDoneEvent;
 
 interface EventBase {
 	type: string;
@@ -84,4 +85,9 @@ interface LoadListsEvent extends EventBase {
 
 interface LoadVersionEvent extends EventBase {
 	type: 'load_version';
+}
+
+interface LoadItemsEvent extends EventBase {
+	type: 'load_items_for_list';
+	listId: string;
 }

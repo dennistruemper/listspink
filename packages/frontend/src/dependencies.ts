@@ -1,5 +1,6 @@
 import { PUBLIC_STAGE } from '$env/static/public';
 import { AuthRepositoryClerk } from './adapter/authRepositoryClerk';
+import { ItemRepositoryBackend } from './adapter/backend/itemRepositoryBackend';
 import { ListRepositoryBackend } from './adapter/backend/listRepositoryBackend';
 import { VersionRepositoryBackend } from './adapter/backend/versionRepositoryBackend';
 import { UuidGenerator } from './adapter/uuid';
@@ -21,6 +22,7 @@ async function prodDependencies(): Promise<Dependencies> {
 		uuidGenerator: UuidGenerator.v4,
 		versionRepository: new VersionRepositoryBackend(),
 		listRepository: new ListRepositoryBackend(),
+		itemRepository: new ItemRepositoryBackend(),
 		authRepository: await AuthRepositoryClerk.create({
 			frontendApi: 'pk_live_Y2xlcmsubGlzdHMucGluayQ'
 		})
@@ -32,6 +34,7 @@ async function betaDependencies(): Promise<Dependencies> {
 		uuidGenerator: UuidGenerator.v4,
 		versionRepository: new VersionRepositoryBackend(),
 		listRepository: new ListRepositoryBackend(),
+		itemRepository: new ItemRepositoryBackend(),
 		authRepository: await AuthRepositoryClerk.create({
 			frontendApi: 'pk_test_aGFyZHktZ2xpZGVyLTIwLmNsZXJrLmFjY291bnRzLmRldiQ'
 		})
@@ -43,6 +46,7 @@ async function devDependencies(): Promise<Dependencies> {
 		uuidGenerator: UuidGenerator.v4,
 		versionRepository: new VersionRepositoryBackend(),
 		listRepository: new ListRepositoryBackend(),
+		itemRepository: new ItemRepositoryBackend(),
 		authRepository: await AuthRepositoryClerk.create({
 			frontendApi: 'pk_test_aGFyZHktZ2xpZGVyLTIwLmNsZXJrLmFjY291bnRzLmRldiQ'
 		})
