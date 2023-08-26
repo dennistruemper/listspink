@@ -1,9 +1,16 @@
-import { Result } from '../../shared/src/languageExtension';
+import { Result, success } from '../../shared/src/languageExtension';
 import { UuidGenerator } from '../src/adapter/uuid';
 import type { AuthRepository } from '../src/domain/definitions/authRepository';
 import type { Dependencies } from '../src/domain/definitions/dependencies';
 import {
+	CreateItemInput,
+	GetItemsForListInput,
+	GetItemsForListResponse,
+	ItemRepository
+} from '../src/domain/definitions/repositories/itemRepository';
+import {
 	CreateListInput,
+	GetListsForUser,
 	ListRepository
 } from '../src/domain/definitions/repositories/listRepository';
 import type { User } from '../src/domain/definitions/user';
@@ -39,6 +46,13 @@ class AuthRepositoryFake implements AuthRepository {
 }
 
 class ListRepositoryFake implements ListRepository {
+	getAll(
+		data: GetListsForUser
+	): Promise<
+		Result<{ name: string; id: string; itemIds: string[]; description?: string | undefined }[], 2>
+	> {
+		return Promise.resolve(success([]));
+	}
 	create(
 		data: CreateListInput
 	): Promise<
@@ -51,9 +65,36 @@ class ListRepositoryFake implements ListRepository {
 	}
 }
 
+class ItemRepositoryFake implements ItemRepository {
+	create(data: CreateItemInput): Promise<
+		Result<
+			{
+				name: string;
+				id: string;
+				description?: string | undefined;
+				completed?: string | undefined;
+			},
+			2
+		>
+	> {
+		return Promise.resolve({
+			success: true,
+			value: {
+				id: 'fakeId',
+				description: data.description,
+				name: data.name
+			}
+		});
+	}
+	getAll(data: GetItemsForListInput): Promise<Result<GetItemsForListResponse, 2>> {
+		return Promise.resolve(success({ items: [] }));
+	}
+}
+
 export const defaultTestDependencies: Dependencies = {
 	uuidGenerator: UuidGenerator.v4,
 	listRepository: new ListRepositoryFake(),
+	itemRepository: new ItemRepositoryFake(),
 	versionRepository: new VersionRepositoryFake(),
 	authRepository: new AuthRepositoryFake()
 };
