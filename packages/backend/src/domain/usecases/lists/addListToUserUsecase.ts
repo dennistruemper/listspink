@@ -1,6 +1,7 @@
+import { UNKNOWN_DATA_SHAPE } from '../../../../../shared/src/definitions/errorCodes';
 import { Result, failure, success } from '../../../../../shared/src/languageExtension';
-import { ListRepository } from '../../definitions/repositories/ListRepository';
-import { UNKNOWN_DATA_SHAPE } from '../../errorCodes';
+import { ListRepository } from '../../definitions/repositories/listRepository';
+
 import { Usecase } from '../usecase';
 
 export interface AddListToUserInput {

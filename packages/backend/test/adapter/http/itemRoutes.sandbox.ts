@@ -1,11 +1,15 @@
 import supertest from 'supertest';
 import { describe, expect, it } from 'vitest';
 import { getListDetailsArrayResponseSchema } from '../../../../shared/src/definitions/communication/getListDetailsRequestResponse';
-import { CreateItemRequest } from '../../../../shared/src/definitions/communication/itemRequestResponses';
+import {
+	CreateItemRequest,
+	UpdateItemRequest
+} from '../../../../shared/src/definitions/communication/itemRequestResponses';
 import { createApp } from '../../../src/adapter/http/createExpressApp';
 import { Dependencies } from '../../../src/domain/definitions/dependencies';
 import { CreateItemForListUsecase } from '../../../src/domain/usecases/items/createItemForListUsecase';
 
+import { ItemPink } from '../../../../shared/src/definitions/itemPink';
 import { createJwtDummy } from '../../util/jwt';
 import { getTestDependencies } from '../testDependencies';
 
@@ -37,24 +41,25 @@ async function createListAndConnectToUser(
 
 async function createListAndItemWithConnectionsToUser(input: {
 	dependencies: Dependencies;
-}): Promise<{ userId: string; listId: string; itemId: string }> {
-	const { userId, listId, itemIds } = await createListAndItemsWithConnectionsToUser({
+}): Promise<{ userId: string; listId: string; itemId: string; item: ItemPink }> {
+	const { userId, listId, itemIds, items } = await createListAndItemsWithConnectionsToUser({
 		dependencies: input.dependencies,
 		itemCount: 1
 	});
 
-	return { userId, listId, itemId: itemIds[0] };
+	return { userId, listId, itemId: itemIds[0], item: items[0] };
 }
 
 async function createListAndItemsWithConnectionsToUser(input: {
 	dependencies: Dependencies;
 	itemCount: number;
-}): Promise<{ userId: string; listId: string; itemIds: string[] }> {
+}): Promise<{ userId: string; listId: string; itemIds: string[]; items: ItemPink[] }> {
 	const { dependencies } = input;
 
 	const { userId, listId } = await createListAndConnectToUser(dependencies);
 
 	const itemIds: string[] = [];
+	const items: ItemPink[] = [];
 	for (let i = 0; i < input.itemCount; i++) {
 		const createResult = await new CreateItemForListUsecase(
 			dependencies.itemRepository,
@@ -68,9 +73,10 @@ async function createListAndItemsWithConnectionsToUser(input: {
 
 		if (createResult.success === false) throw new Error('Item creation failed');
 		itemIds.push(createResult.value.item.id);
+		items.push(createResult.value.item);
 	}
 
-	return { userId, listId, itemIds };
+	return { userId, listId, itemIds, items };
 }
 
 describe.concurrent('item enppoints', async () => {
@@ -208,6 +214,39 @@ describe.concurrent('item enppoints', async () => {
 				.set('Authorization', 'Bearer ' + createJwtDummy(userId))
 				.send(body)
 				.expect(200);
+		});
+	});
+	describe.only('update item', () => {
+		it('should get a 401 without authorization', async () => {
+			const { itemId, listId } = await createListAndItemWithConnectionsToUser({
+				dependencies
+			});
+			await supertest(app).put(`/api/list/${listId}/item/${itemId}`).expect(401);
+		});
+
+		it('update completed only', async () => {
+			const { userId, itemId, listId, item } = await createListAndItemWithConnectionsToUser({
+				dependencies
+			});
+
+			const completedTime = new Date().toISOString();
+			const body: UpdateItemRequest = { completed: completedTime };
+
+			const result = await supertest(app)
+				.put(`/api/list/${listId}/item/${itemId}`)
+				.set('Authorization', 'Bearer ' + createJwtDummy(userId))
+				.send(body)
+				.expect(200);
+			console.log(result.text);
+
+			// wait 1 sec
+			await new Promise((resolve) => setTimeout(resolve, 1000));
+			const loadedItem = await dependencies.itemRepository.getItem(itemId);
+			console.log(JSON.stringify(loadedItem, null, 2));
+			if (loadedItem.success === false) throw new Error('Item loading failed');
+
+			expect(loadedItem.value?.completed).toEqual(completedTime);
+			expect(loadedItem.value?.name).toEqual(item.name);
 		});
 	});
 });

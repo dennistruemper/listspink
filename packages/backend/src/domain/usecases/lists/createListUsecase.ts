@@ -4,7 +4,7 @@ import {
 	ConnectToUserErrors,
 	CreateListErrors,
 	ListRepository
-} from '../../definitions/repositories/ListRepository';
+} from '../../definitions/repositories/listRepository';
 import { Usecase } from '../usecase';
 
 export interface CreateListInput {
