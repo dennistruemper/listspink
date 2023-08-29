@@ -216,7 +216,7 @@ describe.concurrent('item enppoints', async () => {
 				.expect(200);
 		});
 	});
-	describe.only('update item', () => {
+	describe('update item', () => {
 		it('should get a 401 without authorization', async () => {
 			const { itemId, listId } = await createListAndItemWithConnectionsToUser({
 				dependencies
