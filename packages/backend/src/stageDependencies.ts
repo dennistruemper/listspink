@@ -1,6 +1,6 @@
 import { ConfigRepositoryAmpt } from './adapter/ampt/configRepositoryAmpt';
-import { ItemRepositoryAmpt } from './adapter/ampt/data/ItemRepositoryAmpt';
-import { ListRepositoryAmpt } from './adapter/ampt/data/ListRepositoryAmpt';
+import { ItemRepositoryAmpt } from './adapter/ampt/data/itemRepositoryAmpt';
+import { ListRepositoryAmpt } from './adapter/ampt/data/listRepositoryAmpt';
 import { TokenCheckerClerk } from './adapter/clerk/tokenCheckerClerk';
 
 import { KsuidGenerator } from './adapter/ampt/util/ksuidGenerator';

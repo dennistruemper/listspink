@@ -1,11 +1,11 @@
-import { ListPink } from '../../../../../shared/src/definitions/listPink';
-import { Result, failure, success } from '../../../../../shared/src/languageExtension';
-import { ListRepository } from '../../definitions/repositories/ListRepository';
 import {
 	NO_ACCESS,
 	NO_ACCESS_CODE,
 	UNKNOWN_DATA_SHAPE
 } from '../../../../../shared/src/definitions/errorCodes';
+import { ListPink } from '../../../../../shared/src/definitions/listPink';
+import { Result, failure, success } from '../../../../../shared/src/languageExtension';
+import { ListRepository } from '../../definitions/repositories/listRepository';
 import { Usecase } from '../usecase';
 
 export interface GetListInput {

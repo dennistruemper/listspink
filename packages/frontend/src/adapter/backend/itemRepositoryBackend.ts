@@ -2,7 +2,9 @@ import { PUBLIC_BACKEND_URL } from '$env/static/public';
 import {
 	createItemResponseSchema,
 	getItemsResponseSchema,
-	type CreateItemRequest
+	updateItemResponseSchema,
+	type CreateItemRequest,
+	type UpdateItemRequest
 } from '../../../../shared/src/definitions/communication/itemRequestResponses';
 import {
 	UNKNOWN_DATA_SHAPE_CODE,
@@ -14,7 +16,8 @@ import type {
 	CreateItemInput,
 	GetItemsForListInput,
 	GetItemsForListResponse,
-	ItemRepository
+	ItemRepository,
+	UpdateItemInput
 } from '../../domain/definitions/repositories/itemRepository';
 import { parseResponse } from '../httpClient';
 
@@ -68,6 +71,38 @@ export class ItemRepositoryBackend implements ItemRepository {
 				return success({
 					items
 				});
+			} else {
+				console.log(parsed.error);
+				return failure(parsed.error, UNKNOWN_DATA_SHAPE_CODE);
+			}
+		}
+
+		const errorText = await response.text();
+
+		return failure(errorText, UNKNOWN_DATA_SHAPE_CODE);
+	}
+
+	async update(data: UpdateItemInput): Promise<Result<void, UNKNOWN_DATA_SHAPE>> {
+		const body: UpdateItemRequest = {
+			...data.changes
+		};
+
+		const response = await fetch(
+			PUBLIC_BACKEND_URL + `/api/list/${data.listId}/item/${data.itemId}`,
+			{
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${data.token}`
+				},
+				body: JSON.stringify(body)
+			}
+		);
+
+		if (response.status === 200) {
+			const parsed = parseResponse(await response.json(), updateItemResponseSchema);
+			if (parsed.success) {
+				return success(undefined);
 			} else {
 				console.log(parsed.error);
 				return failure(parsed.error, UNKNOWN_DATA_SHAPE_CODE);

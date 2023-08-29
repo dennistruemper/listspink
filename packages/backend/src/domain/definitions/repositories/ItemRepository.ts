@@ -1,9 +1,13 @@
-import { ItemPink } from '../../../../../shared/src/definitions/itemPink';
-import { OptionalID, Result } from '../../../../../shared/src/languageExtension';
 import { UNKNOWN_DATA_SHAPE } from '../../../../../shared/src/definitions/errorCodes';
+import { ItemPink } from '../../../../../shared/src/definitions/itemPink';
+import { OptionalID, Result, UpdateInput } from '../../../../../shared/src/languageExtension';
 
 export type CreateItemInput = OptionalID<ItemPink>;
 export type GetItemsForListInput = { listId: string };
+export type UpdateItemInput = {
+	itemId: string;
+	updatedFields: UpdateInput<Omit<ItemPink, 'id'>>;
+};
 
 export type CreateItemErrors = UNKNOWN_DATA_SHAPE;
 export type GetItemErrors = UNKNOWN_DATA_SHAPE;
@@ -15,4 +19,5 @@ export interface ItemRepository {
 	getItem(id: string): Promise<Result<ItemPink | undefined, GetItemErrors>>;
 	getAllItems(): Promise<Result<ItemPink[], GetAllItemsErrors>>;
 	getItemsForList(input: GetItemsForListInput): Promise<Result<ItemPink[], GetItemsForListErrors>>;
+	update(update: UpdateItemInput): Promise<Result<void, UNKNOWN_DATA_SHAPE>>;
 }

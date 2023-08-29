@@ -1,4 +1,9 @@
 export type OptionalID<T> = Omit<T, 'id'> & { id?: string };
+export type AtLeastOne<T> = AtLeastOneHelper<Required<T>>;
+type AtLeastOneHelper<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
+export type UpdateInput<T> = UpdateInputHelper<Required<Nullable<T>>>;
+type UpdateInputHelper<T, U = { [K in keyof T]: Pick<T, K> }> = (Partial<T> & U[keyof U]) | null;
+export type Nullable<T> = { [P in keyof T]: T[P] | null };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function forceExhaust(_input: never): never {

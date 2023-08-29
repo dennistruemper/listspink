@@ -1,4 +1,8 @@
 import { data, GetBatchResponse } from '@ampt/data';
+import {
+	UNKNOWN_DATA_SHAPE,
+	UNKNOWN_DATA_SHAPE_CODE
+} from '../../../../../shared/src/definitions/errorCodes';
 import { IdGenerator } from '../../../../../shared/src/definitions/idGenerator';
 import { ItemPink, itemSchema } from '../../../../../shared/src/definitions/itemPink';
 import { listToItemConnectionSchema } from '../../../../../shared/src/definitions/listToItemConnection';
@@ -10,9 +14,9 @@ import {
 	GetAllItemsErrors,
 	GetItemErrors,
 	GetItemsForListInput,
-	ItemRepository
+	ItemRepository,
+	UpdateItemInput
 } from '../../../domain/definitions/repositories/itemRepository';
-import { UNKNOWN_DATA_SHAPE_CODE } from '../../../../../shared/src/definitions/errorCodes';
 import { batchResultSchema } from './batchResultSchema';
 
 const getItemsSchema = batchResultSchema(itemSchema);
@@ -94,16 +98,32 @@ export class ItemRepositoryAmpt implements ItemRepository {
 				UNKNOWN_DATA_SHAPE_CODE
 			);
 		}
-
 		return success(
 			parsed.data.items.map((item) => {
 				return {
 					id: item.value.itemId,
 					name: item.value.itemName,
 					description: item.value.itemDescription,
-					completed: item.value.itemCompleted
+					completed: item.value.completed
 				};
 			})
 		);
+	}
+
+	async update(update: UpdateItemInput): Promise<Result<void, UNKNOWN_DATA_SHAPE>> {
+		const key = this.storageId(update.itemId);
+		const result = await data.set(key, update.updatedFields, {});
+
+		if (result === undefined) {
+			return failure('No Result from data source', UNKNOWN_DATA_SHAPE_CODE);
+		}
+
+		// load dependent items and update too
+		const dependents = await data.get(`DEPENDS_ON_ITEM#${update.itemId}:*`, { label: 'label1' });
+		dependents.items.forEach(async (item) => {
+			await data.set(item.key, update.updatedFields);
+		});
+
+		return success(undefined);
 	}
 }

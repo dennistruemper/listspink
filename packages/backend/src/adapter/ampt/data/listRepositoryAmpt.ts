@@ -39,7 +39,7 @@ import {
 	ListRepository,
 	UserHasAccessErrors,
 	UserHasAccessInput
-} from '../../../domain/definitions/repositories/ListRepository';
+} from '../../../domain/definitions/repositories/listRepository';
 import { batchResultSchema } from './batchResultSchema';
 
 const getListsSchema = batchResultSchema(listPinkSchema);

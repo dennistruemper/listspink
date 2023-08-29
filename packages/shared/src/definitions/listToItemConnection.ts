@@ -4,6 +4,7 @@ export const listToItemConnectionSchema = z.object({
 	listId: z.string(),
 	itemName: z.string(),
 	itemDescription: z.string().optional(),
-	itemCompleted: z.string().optional()
+	itemCompleted: z.string().optional(),
+	completed: z.string().optional()
 });
 export type ListToItemConnection = z.infer<typeof listToItemConnectionSchema>;

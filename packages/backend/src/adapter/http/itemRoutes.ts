@@ -2,23 +2,28 @@ import { Router } from 'express';
 import { GetListDetailsResponse } from '../../../../shared/src/definitions/communication/getListDetailsRequestResponse';
 import {
 	CreateItemResponse,
-	createItemRequestSchema
+	GetItemsResponse,
+	UpdateItemResponses,
+	createItemRequestSchema,
+	updateItemRequestSchema
 } from '../../../../shared/src/definitions/communication/itemRequestResponses';
-import { forceExhaust } from '../../../../shared/src/languageExtension';
-import { Dependencies } from '../../domain/definitions/dependencies';
 import {
 	NO_ACCESS_CODE,
 	UNKNOWN_DATA_SHAPE_CODE
 } from '../../../../shared/src/definitions/errorCodes';
+import { forceExhaust } from '../../../../shared/src/languageExtension';
+import { Dependencies } from '../../domain/definitions/dependencies';
 import { CreateItemForListUsecase } from '../../domain/usecases/items/createItemForListUsecase';
 import { GetItemUsecase } from '../../domain/usecases/items/getItemUsecase';
 import { GetItemsForListUsecase } from '../../domain/usecases/items/getItemsForListUsecase';
+import { UpdateItemUsecase } from '../../domain/usecases/items/updateItemsUsecase';
 import { getUserIdFromRequest } from './expressHelper';
 
 export function addItemRoutes(router: Router, dependencies: Dependencies) {
 	addCreateItemForListRoute(router, dependencies);
 	addGetItemDetailsRoute(router, dependencies);
 	addGetItemDetailsForListRoute(router, dependencies);
+	addUpdateItemDetailsRoute(router, dependencies);
 }
 
 function addGetItemDetailsRoute(router: Router, dependencies: Dependencies) {
@@ -61,10 +66,11 @@ function addGetItemDetailsRoute(router: Router, dependencies: Dependencies) {
 			return;
 		}
 
-		const response: GetListDetailsResponse = {
+		const response: GetItemsResponse = {
 			name: loaded.value.item.name,
 			id: loaded.value.item.id,
-			description: loaded.value.item.description
+			description: loaded.value.item.description,
+			completed: loaded.value.item.completed
 		};
 
 		return res.status(200).send(response);
@@ -124,7 +130,6 @@ function addCreateItemForListRoute(router: Router, dependencies: Dependencies) {
 	});
 }
 
-// TODO implement this templat with List instead of Item
 function addGetItemDetailsForListRoute(router: Router, dependencies: Dependencies) {
 	router.get('/list/:listId/items', async (req, res) => {
 		const userId = getUserIdFromRequest(req);
@@ -162,8 +167,61 @@ function addGetItemDetailsForListRoute(router: Router, dependencies: Dependencie
 		const response: GetListDetailsResponse[] = loaded.value.items.map((list) => ({
 			id: list.id,
 			name: list.name,
-			description: list.description
+			description: list.description,
+			completed: list.completed
 		}));
+
+		return res.status(200).send(response);
+	});
+}
+
+function addUpdateItemDetailsRoute(router: Router, dependencies: Dependencies) {
+	router.put('/list/:listId/item/:itemId', async (req, res) => {
+		const userId = getUserIdFromRequest(req);
+		if (userId === undefined) {
+			res.status(400).send('No user id in token');
+			return;
+		}
+		const listId = req.params.listId;
+		if (listId === undefined) {
+			res.status(400).send('No list id provided');
+		}
+		const itemId = req.params.itemId;
+		if (listId === undefined) {
+			res.status(400).send('No item id provided');
+		}
+
+		const paredBody = updateItemRequestSchema.safeParse(req.body);
+		if (!paredBody.success) {
+			res.status(400).send(paredBody.error.errors);
+			return;
+		}
+
+		const loaded = await new UpdateItemUsecase(
+			dependencies.itemRepository,
+			dependencies.listRepository
+		).execute({
+			itemId,
+			listId,
+			userId,
+			changes: paredBody.data
+		});
+
+		if (loaded.success === false) {
+			switch (loaded.code) {
+				case UNKNOWN_DATA_SHAPE_CODE:
+					console.error('Error code: ' + loaded.code + ' ' + loaded.message);
+					res.status(500).send('Failed to update item. ErrorCode: ' + loaded.code);
+					return;
+				case NO_ACCESS_CODE:
+					res.status(403).send('User does not have access to this list');
+					return;
+				default:
+					forceExhaust(loaded.code);
+			}
+		}
+
+		const response: UpdateItemResponses = {};
 
 		return res.status(200).send(response);
 	});

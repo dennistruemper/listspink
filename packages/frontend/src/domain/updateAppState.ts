@@ -165,6 +165,19 @@ export function createUpdateFunction(deps: Dependencies) {
 				};
 			}
 			case 'toggle_item_done_event': {
+				const token = await deps.authRepository.getAccessToken();
+				if (token !== undefined) {
+					await deps.itemRepository.update({
+						itemId: event.itemId,
+						listId: previousState.currentList?.id ?? '',
+						token: token,
+						changes: {
+							completed: event.newDoneState ? event.time.toISOString() : null
+						}
+					});
+				} else {
+					// nothing offline specific for now
+				}
 				const intermediateState3 = {
 					...previousState,
 					items: previousState.items.map((item) =>

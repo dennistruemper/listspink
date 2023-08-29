@@ -6,7 +6,8 @@ import {
 	CreateItemInput,
 	GetItemsForListInput,
 	GetItemsForListResponse,
-	ItemRepository
+	ItemRepository,
+	UpdateItemInput
 } from '../src/domain/definitions/repositories/itemRepository';
 import {
 	CreateListInput,
@@ -67,6 +68,10 @@ class ListRepositoryFake implements ListRepository {
 }
 
 class ItemRepositoryFake implements ItemRepository {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	update(_data: UpdateItemInput): Promise<Result<void, 2>> {
+		return Promise.resolve(success(undefined));
+	}
 	create(data: CreateItemInput): Promise<
 		Result<
 			{
