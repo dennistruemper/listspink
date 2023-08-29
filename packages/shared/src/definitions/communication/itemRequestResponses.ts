@@ -21,20 +21,12 @@ export type GetItemsResponse = z.infer<typeof getItemResponseSchema>;
 
 export const getItemsResponseSchema = getItemResponseSchema.array();
 
-export const updateItemRequestSchema = z
-	.object({
-		name: z.string().optional(),
-		description: z.string().optional(),
-		completed: z.string().optional()
-	})
-	.and(
-		z
-			.object({ name: z.string() })
-			.or(z.object({ description: z.string() }))
-			.or(z.object({ completed: z.string() }))
-	);
+export const updateItemRequestSchema = z.object({
+	name: z.string().nullish(),
+	description: z.string().nullish(),
+	completed: z.string().nullish()
+});
 
 export type UpdateItemRequest = z.infer<typeof updateItemRequestSchema>;
-export type UpdateItemResponses = {
-	// empty for now
-};
+export const updateItemResponseSchema = z.object({});
+export type UpdateItemResponses = z.infer<typeof updateItemResponseSchema>;

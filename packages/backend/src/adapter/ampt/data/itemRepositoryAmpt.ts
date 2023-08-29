@@ -98,14 +98,13 @@ export class ItemRepositoryAmpt implements ItemRepository {
 				UNKNOWN_DATA_SHAPE_CODE
 			);
 		}
-
 		return success(
 			parsed.data.items.map((item) => {
 				return {
 					id: item.value.itemId,
 					name: item.value.itemName,
 					description: item.value.itemDescription,
-					completed: item.value.itemCompleted
+					completed: item.value.completed
 				};
 			})
 		);
@@ -115,9 +114,16 @@ export class ItemRepositoryAmpt implements ItemRepository {
 		const key = this.storageId(update.itemId);
 		const result = await data.set(key, update.updatedFields, {});
 
-		if (result !== undefined) {
-			return success(undefined);
+		if (result === undefined) {
+			return failure('No Result from data source', UNKNOWN_DATA_SHAPE_CODE);
 		}
-		return failure('No Result from data source', UNKNOWN_DATA_SHAPE_CODE);
+
+		// load dependent items and update too
+		const dependents = await data.get(`DEPENDS_ON_ITEM#${update.itemId}:*`, { label: 'label1' });
+		dependents.items.forEach(async (item) => {
+			await data.set(item.key, update.updatedFields);
+		});
+
+		return success(undefined);
 	}
 }

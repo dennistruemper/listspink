@@ -77,7 +77,8 @@ describe('itemManagement', () => {
 		const newState = await updateAppState(state, {
 			type: 'toggle_item_done_event',
 			itemId: state.items[0].id,
-			time: now
+			time: now,
+			newDoneState: true
 		});
 
 		expect(newState.items[0].completed).toBe(now.toISOString());
@@ -90,7 +91,8 @@ describe('itemManagement', () => {
 		const newState = await updateAppState(state, {
 			type: 'toggle_item_done_event',
 			itemId: state.items[0].id,
-			time: now
+			time: now,
+			newDoneState: false
 		});
 
 		expect(newState.items[0].completed).toBe(undefined);

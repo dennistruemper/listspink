@@ -50,6 +50,7 @@ interface EditItemEvent extends EventBase {
 
 interface ToggleItemDoneEvent extends EventBase {
 	type: 'toggle_item_done_event';
+	newDoneState: boolean;
 	itemId: string;
 	time: Date;
 }

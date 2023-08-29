@@ -1,12 +1,12 @@
 import { UNKNOWN_DATA_SHAPE } from '../../../../../shared/src/definitions/errorCodes';
 import { ItemPink } from '../../../../../shared/src/definitions/itemPink';
-import { AtLeastOne, OptionalID, Result } from '../../../../../shared/src/languageExtension';
+import { OptionalID, Result, UpdateInput } from '../../../../../shared/src/languageExtension';
 
 export type CreateItemInput = OptionalID<ItemPink>;
 export type GetItemsForListInput = { listId: string };
 export type UpdateItemInput = {
 	itemId: string;
-	updatedFields: AtLeastOne<Omit<ItemPink, 'id'>>;
+	updatedFields: UpdateInput<Omit<ItemPink, 'id'>>;
 };
 
 export type CreateItemErrors = UNKNOWN_DATA_SHAPE;

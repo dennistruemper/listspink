@@ -25,7 +25,11 @@
 				>Login</ActionBarButton
 			>
 		{:else}
-			<ActionBarButton onClick={() => appStore.dispatch({ type: 'logout' })}>Logout</ActionBarButton
+			<ActionBarButton
+				onClick={() => {
+					appStore.dispatch({ type: 'logout' });
+					appStore.reset();
+				}}>Logout</ActionBarButton
 			>
 		{/if}
 	</div>

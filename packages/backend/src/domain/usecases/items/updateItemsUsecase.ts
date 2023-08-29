@@ -4,7 +4,7 @@ import {
 	UNKNOWN_DATA_SHAPE
 } from '../../../../../shared/src/definitions/errorCodes';
 import { ItemPink } from '../../../../../shared/src/definitions/itemPink';
-import { AtLeastOne, Result, failure, success } from '../../../../../shared/src/languageExtension';
+import { Result, UpdateInput, failure, success } from '../../../../../shared/src/languageExtension';
 import { ItemRepository } from '../../definitions/repositories/itemRepository';
 import { ListRepository } from '../../definitions/repositories/listRepository';
 import { Usecase } from '../usecase';
@@ -13,7 +13,7 @@ export interface UpdateItemInput {
 	itemId: string;
 	listId: string;
 	userId: string;
-	changes: AtLeastOne<Omit<ItemPink, 'id'>>;
+	changes: UpdateInput<Omit<ItemPink, 'id'>>;
 }
 
 export type UpdateItemOutput = {
