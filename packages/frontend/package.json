@@ -42,7 +42,7 @@
 	"type": "module",
 	"dependencies": {
 		"@auth0/auth0-spa-js": "2.1.2",
-		"@clerk/clerk-js": "4.56.1",
+		"@clerk/clerk-js": "4.56.2",
 		"svelte-french-toast": "1.2.0",
 		"uuid": "9.0.0",
 		"zod": "3.22.2"
