@@ -22,7 +22,7 @@
 	"dependencies": {
 		"@ampt/data": "0.0.1-beta.18",
 		"@ampt/sdk": "0.0.1-beta.62",
-		"@clerk/clerk-sdk-node": "4.12.3",
+		"@clerk/clerk-sdk-node": "4.12.4",
 		"cors": "2.8.5",
 		"express": "4.18.2",
 		"express-oauth2-jwt-bearer": "1.5.0",
