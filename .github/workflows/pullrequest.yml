@@ -68,19 +68,19 @@ jobs:
           bun x ampt run test --test-stage
 
       - name: Pull Vercel Environment Information
-        run: bunx vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        run: bun x vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
       - name: Build Project Artifacts
-        run: PUBLIC_BACKEND_URL=${{ steps.deploy-backend.outputs.BACKEND_URL}} PUBLIC_STAGE=dev bunx vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        run: PUBLIC_BACKEND_URL=${{ steps.deploy-backend.outputs.BACKEND_URL}} PUBLIC_STAGE=dev bun x vercel build --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy Project Artifacts to Vercel
         id: deploy-frontend
         run: |
-          url=$(bunx vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+          url=$(bun x vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
           echo "FRONTEND_URL=$url" >> "$GITHUB_OUTPUT"
       - name: Install Playwright Browsers
-        run: bunx playwright install --with-deps
+        run: bun x playwright install --with-deps
         if: steps.playwright-cache.outputs.cache-hit != 'true'
       - name: Install Playwright Dependencies
-        run: bunx playwright install-deps
+        run: bun x playwright install-deps
         if: steps.playwright-cache.outputs.cache-hit != 'true'
       - name: run end to end tests
         run: FRONTEND_URL=${{ steps.deploy-frontend.outputs.FRONTEND_URL}} bun run test:e2e
