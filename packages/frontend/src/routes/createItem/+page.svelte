@@ -1,7 +1,6 @@
 <script lang="ts">
 	import toast from 'svelte-french-toast';
 	import ActionBar from '../../components/actionBar.svelte';
-	import FadeIn from '../../components/animation/fadeIn.svelte';
 	import ActionBarBackButton from '../../components/buttons/actionBarBackButton.svelte';
 	import ActionBarButton from '../../components/buttons/actionBarButton.svelte';
 	import MultilineTextInput from '../../components/form/multilineTextInput.svelte';
@@ -32,43 +31,41 @@
 	}
 </script>
 
-<FadeIn>
-	<form>
-		<div class="space-y-4 sm:space-y-8 {textColor}">
-			<TextInput
-				placeholder="Name of your new item"
-				caption="Name"
-				name="name"
-				bind:value={itemName}
-			/>
-			<MultilineTextInput
-				bind:value={description}
-				name="description"
-				rows={3}
-				caption="Description"
-			/>
-			<h3 class="">List to add item</h3>
-			<div class=" space-y-3 rounded-xl p-4 ml-8 {itemBackground}">
-				{#each lists as list}
-					<div class="flex flex-row items-center justify-center">
-						<div class="flex flex-column items-center w-full px-8 sm:px-14 sm:w-5/666">
-							<input
-								type="checkbox"
-								id={list.id}
-								checked={selectedLists.indexOf(list.id) !== -1}
-								on:click={() => {
-									selectedLists = toggleListSelected(list.id, selectedLists);
-								}}
-							/>
-							<div class="pl-2">{list.name}</div>
-							<br />
-						</div>
+<form>
+	<div class="space-y-4 sm:space-y-8 {textColor}">
+		<TextInput
+			placeholder="Name of your new item"
+			caption="Name"
+			name="name"
+			bind:value={itemName}
+		/>
+		<MultilineTextInput
+			bind:value={description}
+			name="description"
+			rows={3}
+			caption="Description"
+		/>
+		<h3 class="">List to add item</h3>
+		<div class=" space-y-3 rounded-xl p-4 ml-8 {itemBackground}">
+			{#each lists as list}
+				<div class="flex flex-row items-center justify-center">
+					<div class="flex flex-column items-center w-full px-8 sm:px-14 sm:w-5/666">
+						<input
+							type="checkbox"
+							id={list.id}
+							checked={selectedLists.indexOf(list.id) !== -1}
+							on:click={() => {
+								selectedLists = toggleListSelected(list.id, selectedLists);
+							}}
+						/>
+						<div class="pl-2">{list.name}</div>
+						<br />
 					</div>
-				{/each}
-			</div>
+				</div>
+			{/each}
 		</div>
-	</form>
-</FadeIn>
+	</div>
+</form>
 
 <ActionBar>
 	<div class="w-full h-full flex items-center justify-between px-16">

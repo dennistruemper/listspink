@@ -1,5 +1,4 @@
 <script>
-	import FadeIn from '../../components/animation/fadeIn.svelte';
 	import List from '../../components/list.svelte';
 	import ListItem from '../../components/listItem.svelte';
 	import { appStore } from '../../stores/appStore';
@@ -10,8 +9,6 @@
 	$: items = $appStore.current.items;
 </script>
 
-<FadeIn>
-	<List {items} let:item>
-		<ListItem itemId={item.id} />
-	</List>
-</FadeIn>
+<List {items} let:item>
+	<ListItem itemId={item.id} />
+</List>
