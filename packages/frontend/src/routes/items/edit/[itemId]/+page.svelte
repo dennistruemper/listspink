@@ -3,7 +3,6 @@
 	import { base } from '$app/paths';
 	import toast from 'svelte-french-toast';
 	import ActionBar from '../../../../components/actionBar.svelte';
-	import FadeIn from '../../../../components/animation/fadeIn.svelte';
 	import ActionBarBackButton from '../../../../components/buttons/actionBarBackButton.svelte';
 	import ActionBarButton from '../../../../components/buttons/actionBarButton.svelte';
 	import MultilineTextInput from '../../../../components/form/multilineTextInput.svelte';
@@ -45,24 +44,23 @@
 	}
 </script>
 
-<FadeIn>
-	<form>
-		<div class="space-y-4 sm:space-y-8 {textColor}">
-			<TextInput
-				placeholder="Name of your new item"
-				caption="Name"
-				name="name"
-				bind:value={itemName}
-			/>
-			<MultilineTextInput
-				bind:value={description}
-				name="description"
-				rows={3}
-				caption="Description"
-			/>
-		</div>
-	</form>
-</FadeIn>
+<form>
+	<div class="space-y-4 sm:space-y-8 {textColor}">
+		<TextInput
+			viewTransitionId={`item-name-${itemRaw?.id}`}
+			placeholder="Name of your new item"
+			caption="Name"
+			name="name"
+			bind:value={itemName}
+		/>
+		<MultilineTextInput
+			bind:value={description}
+			name="description"
+			rows={3}
+			caption="Description"
+		/>
+	</div>
+</form>
 
 <ActionBar>
 	<div class="w-full h-full flex items-center justify-between px-16">
@@ -93,3 +91,9 @@
 		</ActionBarButton>
 	</div>
 </ActionBar>
+
+<style>
+	.listItemViewTransition {
+		view-transition-name: 'item-name-${itemRaw.id}';
+	}
+</style>
