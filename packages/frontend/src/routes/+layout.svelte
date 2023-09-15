@@ -10,11 +10,13 @@
 	import { backgroundBlur, itemBackground } from '../theme';
 
 	onNavigate((navigation) => {
-		// @ts-ignore
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore no types - feature is too new
 		if (!document.startViewTransition) return;
 
 		return new Promise((resolve) => {
-			// @ts-ignore
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore no types - feature is too new
 			document.startViewTransition(async () => {
 				resolve();
 				await navigation.complete;

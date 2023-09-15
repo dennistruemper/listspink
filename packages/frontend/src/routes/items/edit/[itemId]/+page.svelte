@@ -47,7 +47,6 @@
 <form>
 	<div class="space-y-4 sm:space-y-8 {textColor}">
 		<TextInput
-			viewTransitionId={`item-name-${itemRaw?.id}`}
 			placeholder="Name of your new item"
 			caption="Name"
 			name="name"
