@@ -45,7 +45,7 @@
 		"prettier": "3.0.3",
 		"prettier-plugin-svelte": "3.0.3",
 		"supertest": "6.3.3",
-		"vite": "4.4.9",
+		"vite": "4.4.10",
 		"vitest": "0.34.6"
 	},
 	"workspaces": [
