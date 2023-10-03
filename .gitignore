@@ -7,3 +7,5 @@ urlSandbox.txt
 .DS_Store
 .svelte-kit
 packages/frontend/test-results/
+
+static

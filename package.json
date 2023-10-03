@@ -9,6 +9,8 @@
 		"dev-be": "ampt --skip-update",
 		"dev-fe": "export BACKEND_URL=$(./scripts/getSandboxUrl.sh) && cd packages/frontend && echo PUBLIC_BACKEND_URL $BACKEND_URL && PUBLIC_BACKEND_URL=$BACKEND_URL npm run dev",
 		"dev-test": "npx ampt run test-all-watch --test-stage",
+		"build-fe": "cd packages/frontend-elm && npx elm-land build && mv dist ../../static",
+		"build-fe-cp": "cd packages/frontend-elm && cp -R dist/ ../../static",
 		"lint": "cd packages/frontend && npm run lint && cd -",
 		"test-local": "BASE_PATH=** MODE=LOCAL vitest run",
 		"format": "prettier --write .",
