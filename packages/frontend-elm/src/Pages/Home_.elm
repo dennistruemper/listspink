@@ -1,17 +1,19 @@
 module Pages.Home_ exposing (Model, Msg, page)
 
+import Auth
 import Effect exposing (Effect)
 import Html
 import Html.Events exposing (onClick)
 import Page exposing (Page)
 import Route exposing (Route)
 import Shared
-import Shared.Model exposing (User, getUserName)
+import Shared.Model
+import User exposing (User, getUserName)
 import View exposing (View)
 
 
-page : Shared.Model -> Route () -> Page Model Msg
-page shared route =
+page : Auth.User -> Shared.Model -> Route () -> Page Model Msg
+page user shared route =
     Page.new
         { init = init shared
         , update = update
@@ -25,7 +27,7 @@ page shared route =
 
 
 type alias Model =
-    { userName : String, user : Maybe Shared.Model.User }
+    { userName : String, user : Maybe User }
 
 
 init : Shared.Model -> () -> ( Model, Effect Msg )
