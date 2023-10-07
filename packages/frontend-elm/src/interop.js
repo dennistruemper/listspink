@@ -4,6 +4,7 @@ let clerk;
 
 // This returns the flags passed into your Elm application
 export const flags = async ({ env }) => {
+	console.log('Flags', JSON.stringify(env, null, 2));
 	const clerkPublicKey =
 		env.STAGE === 'prod'
 			? 'pk_live_Y2xlcmsubGlzdHMucGluayQ'

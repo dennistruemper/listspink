@@ -10,7 +10,8 @@
 		"dev-fe": "export BACKEND_URL=$(./scripts/getSandboxUrl.sh) && cd packages/frontend && echo PUBLIC_BACKEND_URL $BACKEND_URL && PUBLIC_BACKEND_URL=$BACKEND_URL npm run dev",
 		"dev-test": "npx ampt run test-all-watch --test-stage",
 		"build-fe": "cd packages/frontend-elm && npx elm-land build && mv dist ../../static",
-		"build-fe-cp": "cd packages/frontend-elm && cp -R dist/ ../../static",
+		"build-fe-cp-beta": "cd packages/frontend-elm && STAGE=beta npx elm-land build && cp -R dist/ ../../static",
+		"build-fe-cp-prod": "cd packages/frontend-elm && STAGE=prod npx elm-land build && cp -R dist/ ../../static",
 		"lint": "cd packages/frontend && npm run lint && cd -",
 		"test-local": "BASE_PATH=** MODE=LOCAL vitest run",
 		"format": "prettier --write .",
@@ -36,7 +37,7 @@
 		"org": "dennistruemper269889"
 	},
 	"devDependencies": {
-		"@ampt/cli": "1.0.2",
+		"@ampt/cli": "^1.0.2",
 		"@types/express": "4.17.18",
 		"@types/node": "20.8.0",
 		"@types/supertest": "2.0.13",
