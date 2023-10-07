@@ -1,0 +1,9 @@
+@charset "utf-8";
+// modify the bulma variables here
+$pink : #f997fa;
+$purple: #a3a1f7;
+$primary: $purple;
+$background: $pink;
+$body-background-color: $pink;
+
+@import "../../../node_modules/bulma/bulma.sass"

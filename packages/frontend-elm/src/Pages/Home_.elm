@@ -3,6 +3,7 @@ module Pages.Home_ exposing (Model, Msg, page)
 import Auth
 import Effect exposing (Effect)
 import Html
+import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
 import Page exposing (Page)
 import Route exposing (Route)
@@ -94,7 +95,7 @@ view model =
         button =
             case model.user of
                 Just _ ->
-                    Html.button [ onClick SignOutClicked ] [ Html.text "sign out" ]
+                    Html.button [ class "button is-primary", onClick SignOutClicked ] [ Html.text "sign out" ]
 
                 Nothing ->
                     Html.button [ onClick SignInClicked ] [ Html.text "sign in" ]
