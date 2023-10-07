@@ -11,5 +11,8 @@
 	"dependencies": {
 		"@clerk/clerk-js": "4.59.1",
 		"zod": "3.22.2"
+	},
+	"devDependencies": {
+		"elm-land": "0.19.4"
 	}
 }

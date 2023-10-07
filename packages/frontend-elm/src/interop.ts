@@ -1,9 +1,10 @@
 import Clerk from '@clerk/clerk-js';
+import { handleMessageFromElm } from '../fromElm';
 //import { handleMessageFromElm } from './fromElm';
-let clerk;
+let clerk: Clerk;
 
 // This returns the flags passed into your Elm application
-export const flags = async ({ env }) => {
+export const flags = async ({ env }: { env: Record<string, string> }): Promise<{ user: any }> => {
 	console.log('Flags', JSON.stringify(env, null, 2));
 	const clerkPublicKey =
 		env.STAGE === 'prod'
@@ -18,7 +19,7 @@ export const flags = async ({ env }) => {
 		userName: user?.username,
 		fistName: user?.firstName,
 		lastName: user?.lastName,
-		email: user?.primaryEmailAddress.emailAddress,
+		email: user?.primaryEmailAddress?.emailAddress,
 		id: user?.id
 	};
 	console.log('User', userData);
@@ -26,18 +27,35 @@ export const flags = async ({ env }) => {
 	return toElm;
 };
 
-let websocket;
+interface Env {
+	BASE_URL?: string;
+	STAGE?: string;
+}
+
+interface App {
+	ports: {
+		toElm: {
+			send?: (data: unknown) => void;
+		};
+		fromElm: {
+			subscribe?: (send: (data: unknown) => unknown) => void;
+		};
+	};
+}
+
+let websocket: WebSocket;
 // This function is called after your Elm app starts
-export const onReady = ({ app, env }) => {
-	console.log('Elm is ready', app, env);
+export const onReady = ({ app, env }: { app: App; env: Env }): void => {
+	console.log('Elm is now ready', app, env);
+	const baseUrl = env.BASE_URL?.replace('https', 'wss') ?? 'wss://' + window.location.host;
 	try {
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
-		websocket = new WebSocket(env.BASE_URL.replace('https', 'wss'));
+		websocket = new WebSocket(baseUrl);
 	} catch (e) {
 		console.log('Error connecting to Ampt WS', e);
 	}
-	console.log('Connecting to Ampt WS', env.BASE_URL.replace('https', 'wss'));
+	console.log('Connected to Ampt WS', baseUrl);
 
 	console.log('Sending message to elm', app.ports);
 	if (app.ports.toElm.send) {
@@ -54,46 +72,8 @@ export const onReady = ({ app, env }) => {
 	};
 
 	if (app.ports.fromElm.subscribe) {
-		app.ports.fromElm.subscribe((data) => {
+		app.ports.fromElm.subscribe((data: unknown) => {
 			handleMessageFromElm(data, clerk);
 		});
 	}
 };
-
-import { z } from 'zod';
-
-const baseMessageSchema = z.object({
-	tag: z.string(),
-	data: z.string()
-});
-
-export async function handleMessageFromElm(data, clerk) {
-	console.log('Received message', data);
-	const parsed = baseMessageSchema.safeParse(data);
-	if (!parsed.success) {
-		console.log('parsing failed');
-		alert('Invalid message. Please contact support. More information: ' + JSON.stringify(data));
-		console.error(
-			'Invalid message. Please contact support. More information: ' + JSON.stringify(data)
-		);
-		return;
-	}
-
-	switch (parsed.data.tag) {
-		case 'logging':
-			console.log(parsed.data.data);
-			break;
-		case 'signin-redirect':
-			await clerk.redirectToSignIn({});
-			break;
-		case 'signout':
-			clerk.signOut();
-			break;
-		default:
-			alert('Invalid message. Please contact support. More information: ' + JSON.stringify(data));
-			console.error(
-				'Invalid message. Please contact support. More information: ' + JSON.stringify(data)
-			);
-			return;
-	}
-}
