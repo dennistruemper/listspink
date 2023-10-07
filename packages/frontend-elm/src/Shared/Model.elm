@@ -1,6 +1,6 @@
-module Shared.Model exposing (Model, User, getUserName)
+module Shared.Model exposing (Model)
 
-{-| -}
+import User exposing (User)
 
 
 {-| Normally, this value would live in "Shared.elm"
@@ -14,18 +14,3 @@ type alias Model =
     { lastMessage : String
     , user : Maybe User
     }
-
-
-type alias User =
-    { id : String
-    , firstName : Maybe String
-    , lastName : Maybe String
-    , userName : Maybe String
-    , email : String
-    }
-
-
-getUserName : User -> String
-getUserName user =
-    user.userName
-        |> Maybe.withDefault user.email

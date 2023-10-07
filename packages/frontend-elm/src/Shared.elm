@@ -18,8 +18,9 @@ import Json.Decode
 import Ports exposing (toElm)
 import Route exposing (Route)
 import Route.Path
-import Shared.Model exposing (User)
+import Shared.Model
 import Shared.Msg
+import User exposing (User)
 
 
 
@@ -55,11 +56,17 @@ type alias Model =
 
 init : Result Json.Decode.Error Flags -> Route () -> ( Model, Effect Msg )
 init flagsResult route =
-    ( { lastMessage = ""
-      , user =
+    let
+        user =
             flagsResult
                 |> Result.map .user
                 |> Result.withDefault Nothing
+
+        a =
+            Debug.log "user" user
+    in
+    ( { lastMessage = ""
+      , user = user
       }
     , Effect.none
     )
