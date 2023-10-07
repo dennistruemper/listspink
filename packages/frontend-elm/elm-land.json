@@ -4,7 +4,7 @@
 			"development": { "debugger": true },
 			"production": { "debugger": false }
 		},
-		"env": ["CLERK_PK"],
+		"env": ["STAGE"],
 		"html": {
 			"attributes": {
 				"html": { "lang": "en" },
