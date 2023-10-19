@@ -4,7 +4,7 @@ module Effect exposing
     , sendCmd, sendMsg
     , pushRoute, replaceRoute, loadExternalUrl
     , map, toCmd
-    , logging, redirectToSignIn, signOut
+    , logging, redirectToProfile, redirectToSignIn, signOut
     )
 
 {-|
@@ -133,6 +133,11 @@ signOut =
     SendMessageToJavaScript { tag = "signout", data = Encode.object [] }
 
 
+redirectToProfile : Effect msg
+redirectToProfile =
+    SendMessageToJavaScript { tag = "profile-redirect", data = Encode.object [] }
+
+
 
 -- INTERNALS
 
@@ -165,7 +170,11 @@ map fn effect =
             SendSharedMsg sharedMsg
 
         SendMessageToJavaScript message ->
-            SendMessageToJavaScript message
+            if message.tag == "signout" then
+                batch [ SendMessageToJavaScript message, SendSharedMsg Shared.Msg.UserSignedOut ]
+
+            else
+                SendMessageToJavaScript message
 
 
 {-| Elm Land depends on this function to perform your effects.

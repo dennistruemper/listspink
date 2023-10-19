@@ -1,4 +1,4 @@
-module User exposing (User, getUserName)
+module User exposing (User, getImageUrlOrDefault, getUserName)
 
 
 type alias User =
@@ -7,6 +7,7 @@ type alias User =
     , lastName : Maybe String
     , userName : Maybe String
     , email : String
+    , image : Maybe String
     }
 
 
@@ -14,3 +15,9 @@ getUserName : User -> String
 getUserName user =
     user.userName
         |> Maybe.withDefault user.email
+
+
+getImageUrlOrDefault : User -> String
+getImageUrlOrDefault user =
+    user.image
+        |> Maybe.withDefault "logo.png"

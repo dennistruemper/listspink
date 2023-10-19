@@ -20,7 +20,8 @@ export const flags = async ({ env }: { env: Record<string, string> }): Promise<{
 		fistName: user?.firstName,
 		lastName: user?.lastName,
 		email: user?.primaryEmailAddress?.emailAddress,
-		id: user?.id
+		id: user?.id,
+		image: user?.imageUrl
 	};
 	console.log('User', userData);
 	const toElm = { user: userData };

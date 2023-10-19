@@ -15,3 +15,4 @@ type Msg
     = NoOp
     | FromJavascript String
     | UserUpdate (Maybe User)
+    | UserSignedOut

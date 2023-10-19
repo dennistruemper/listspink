@@ -3,7 +3,9 @@ module Pages.Home_ exposing (Model, Msg, page)
 import Auth
 import Effect exposing (Effect)
 import Html
+import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
+import Layouts exposing (Layout)
 import Page exposing (Page)
 import Route exposing (Route)
 import Shared
@@ -20,6 +22,15 @@ page user shared route =
         , subscriptions = subscriptions
         , view = view
         }
+        |> Page.withLayout toLayout
+
+
+{-| Use the sidebar layout on this page
+-}
+toLayout : Model -> Layouts.Layout Msg
+toLayout model =
+    Layouts.Scaffold
+        {}
 
 
 
@@ -90,18 +101,13 @@ subscriptions model =
 
 view : Model -> View Msg
 view model =
-    let
-        button =
-            case model.user of
-                Just _ ->
-                    Html.button [ onClick SignOutClicked ] [ Html.text "sign out" ]
-
-                Nothing ->
-                    Html.button [ onClick SignInClicked ] [ Html.text "sign in" ]
-    in
     { title = "Pages.Home_"
     , body =
-        [ button
-        , Html.text model.userName
+        [ Html.div [ class "bg-pink-100 " ]
+            [ Html.text model.userName
+            , Html.div [ class "h-96 w-96 bg-black p-8 m-8" ] [ Html.text "test" ]
+            , Html.div [ class "h-96 w-96 bg-black p-8 m-8" ] [ Html.text "test" ]
+            , Html.div [ class "h-96 w-96 bg-black p-8 m-8" ] [ Html.text "test" ]
+            ]
         ]
     }

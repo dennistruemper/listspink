@@ -38,12 +38,13 @@ decoder =
 
 
 userDecoder =
-    Json.Decode.map5 User
+    Json.Decode.map6 User
         (Json.Decode.field "id" Json.Decode.string)
         (Json.Decode.maybe (Json.Decode.field "firstName" Json.Decode.string))
         (Json.Decode.maybe (Json.Decode.field "lastName" Json.Decode.string))
         (Json.Decode.maybe (Json.Decode.field "userName" Json.Decode.string))
         (Json.Decode.field "email" Json.Decode.string)
+        (Json.Decode.maybe (Json.Decode.field "image" Json.Decode.string))
 
 
 
@@ -95,6 +96,11 @@ update route msg model =
 
         Shared.Msg.UserUpdate newUser ->
             ( { model | user = newUser }
+            , Effect.none
+            )
+
+        Shared.Msg.UserSignedOut ->
+            ( { model | user = Nothing }
             , Effect.none
             )
 

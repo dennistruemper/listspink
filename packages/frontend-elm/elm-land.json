@@ -7,7 +7,7 @@
 		"env": ["STAGE", "BASE_URL"],
 		"html": {
 			"attributes": {
-				"html": { "lang": "en" },
+				"html": { "lang": "en", "class": "bg-pink-100 v-screen" },
 				"head": {}
 			},
 			"title": "Elm Land",
@@ -16,7 +16,7 @@
 				{ "http-equiv": "X-UA-Compatible", "content": "IE=edge" },
 				{ "name": "viewport", "content": "width=device-width, initial-scale=1.0" }
 			],
-			"link": [],
+			"link": [{ "rel": "stylesheet", "href": "/lists.pink.css" }],
 			"script": []
 		},
 		"router": {

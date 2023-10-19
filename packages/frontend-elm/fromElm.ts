@@ -29,6 +29,9 @@ export async function handleMessageFromElm(data: unknown, clerk: Clerk) {
 		case 'signout':
 			clerk.signOut();
 			break;
+		case 'profile-redirect':
+			await clerk.redirectToUserProfile();
+			break;
 		default:
 			alert('Invalid message. Please contact support. More information: ' + JSON.stringify(data));
 			console.error(
