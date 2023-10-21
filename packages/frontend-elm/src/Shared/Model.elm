@@ -13,4 +13,5 @@ own file, so they can be imported by `Effect.elm`
 type alias Model =
     { lastMessage : String
     , user : Maybe User
+    , baseUrl : String
     }

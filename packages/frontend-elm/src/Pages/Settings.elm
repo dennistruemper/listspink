@@ -1,22 +1,32 @@
 module Pages.Settings exposing (Model, Msg, page)
 
-import Auth
+import Api exposing (Data(..))
+import Api.Version
 import Effect exposing (Effect)
 import Html
+import Http
+import Layouts exposing (Layout)
 import Page exposing (Page)
 import Route exposing (Route)
 import Shared
 import View exposing (View)
 
 
-page : Auth.User -> Shared.Model -> Route () -> Page Model Msg
-page user shared route =
+page : Shared.Model -> Route () -> Page Model Msg
+page shared route =
     Page.new
-        { init = init
+        { init = init shared
         , update = update
         , subscriptions = subscriptions
         , view = view
         }
+        |> Page.withLayout toLayout
+
+
+toLayout : Model -> Layouts.Layout Msg
+toLayout model =
+    Layouts.Scaffold
+        {}
 
 
 
@@ -24,13 +34,17 @@ page user shared route =
 
 
 type alias Model =
-    {}
+    { backendVersion : Data String
+    , baseUrl : String
+    }
 
 
-init : () -> ( Model, Effect Msg )
-init () =
-    ( {}
-    , Effect.none
+init : Shared.Model -> () -> ( Model, Effect Msg )
+init shared () =
+    ( { backendVersion = Api.Loading
+      , baseUrl = shared.baseUrl
+      }
+    , Api.Version.getVersion { onResponse = VersionResponded, baseUrl = shared.baseUrl }
     )
 
 
@@ -39,14 +53,19 @@ init () =
 
 
 type Msg
-    = NoOp
+    = VersionResponded (Result Http.Error String)
 
 
 update : Msg -> Model -> ( Model, Effect Msg )
 update msg model =
     case msg of
-        NoOp ->
-            ( model
+        VersionResponded (Ok backendVersion) ->
+            ( { model | backendVersion = Api.Success backendVersion }
+            , Effect.none
+            )
+
+        VersionResponded (Err httpErr) ->
+            ( { model | backendVersion = Api.Failure httpErr }
             , Effect.none
             )
 
@@ -67,5 +86,19 @@ subscriptions model =
 view : Model -> View Msg
 view model =
     { title = "Pages.Settings"
-    , body = [ Html.text "/settings" ]
+    , body =
+        [ Html.text "Backendversion: "
+        , case model.backendVersion of
+            Api.NotAsked ->
+                Html.text "Not Asked for version yet"
+
+            Api.Loading ->
+                Html.text "Loading..."
+
+            Api.Success backendVersion ->
+                Html.text backendVersion
+
+            Api.Failure httpErr ->
+                Html.text "Error getting Version"
+        ]
     }

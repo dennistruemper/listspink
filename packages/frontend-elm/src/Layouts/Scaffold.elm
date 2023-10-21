@@ -170,10 +170,10 @@ viewSettingsIcon =
         ]
 
 
-viewMenuItem text icon =
+viewMenuItem text icon path =
     Html.li []
         [ Html.a
-            [ Attr.href "#"
+            [ Attr.href path
             , class "text-black hover:text-black hover:bg-pink-400 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
             ]
             [ icon
@@ -313,7 +313,7 @@ viewUserMenu model toContentMsg =
 viewMenuItems : List (Html.Html msg)
 viewMenuItems =
     [ viewActiveMenuItem "Dashboard" viewHomeIcon
-    , viewMenuItem "Team" viewTeamIcon
+    , viewMenuItem "Team" viewTeamIcon "/"
     ]
 
 
@@ -420,7 +420,7 @@ viewMobileSidebar model menuItems toContentMsg =
                             , Html.li
                                 [ class "mt-auto"
                                 ]
-                                [ viewMenuItem "Settings" viewSettingsIcon
+                                [ viewMenuItem "Settings" viewSettingsIcon (Route.Path.Settings |> Route.Path.toString)
                                 ]
                             ]
                         ]
@@ -466,7 +466,7 @@ viewDesktopSidebar mode menuItems toContentMsg =
                     , Html.li
                         [ class "mt-auto"
                         ]
-                        [ viewMenuItem "Settings" viewSettingsIcon
+                        [ viewMenuItem "Settings" viewSettingsIcon (Route.Path.Settings |> Route.Path.toString)
                         ]
                     ]
                 ]

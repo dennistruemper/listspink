@@ -10,6 +10,7 @@ export const flags = async ({ env }: { env: Record<string, string> }): Promise<{
 		env.STAGE === 'prod'
 			? 'pk_live_Y2xlcmsubGlzdHMucGluayQ'
 			: 'pk_test_aGFyZHktZ2xpZGVyLTIwLmNsZXJrLmFjY291bnRzLmRldiQ';
+	const baseUrl = normalizeBaseUrl(env.BASE_URL);
 	console.log('Clerk PK', clerkPublicKey);
 	clerk = new Clerk(clerkPublicKey);
 	await clerk.load({});
@@ -24,9 +25,20 @@ export const flags = async ({ env }: { env: Record<string, string> }): Promise<{
 		image: user?.imageUrl
 	};
 	console.log('User', userData);
-	const toElm = { user: userData };
+	const toElm = { user: userData, baseUrl: baseUrl };
 	return toElm;
 };
+
+function normalizeBaseUrl(baseUrl?: string): string {
+	if (!baseUrl) {
+		return '/api/';
+	}
+
+	if (baseUrl.endsWith('/')) {
+		return baseUrl + 'api/';
+	}
+	return baseUrl + '/api/';
+}
 
 interface Env {
 	BASE_URL?: string;
