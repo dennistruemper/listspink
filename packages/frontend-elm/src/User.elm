@@ -8,6 +8,7 @@ type alias User =
     , userName : Maybe String
     , email : String
     , image : Maybe String
+    , authToken : String
     }
 
 

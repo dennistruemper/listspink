@@ -170,11 +170,12 @@ viewSettingsIcon =
         ]
 
 
-viewMenuItem text icon path =
+viewMenuItem : String -> Html.Html msg -> (Msg -> msg) -> Route.Path.Path -> Html.Html msg
+viewMenuItem text icon toContentMsg path =
     Html.li []
-        [ Html.a
-            [ Attr.href path
-            , class "text-black hover:text-black hover:bg-pink-400 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+        [ Html.div
+            [ onClick (NavigateTo path |> toContentMsg)
+            , class "text-black hover:text-black bg-pink-500 hover:bg-pink-400 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
             ]
             [ icon
             , Html.text text
@@ -272,8 +273,7 @@ viewUserMenu model toContentMsg =
                 , Attr.attribute "aria-labelledby" "user-menu-button"
                 , Attr.tabindex -1
                 ]
-                [ {- Active: "bg-gray-50", Not Active: "" -}
-                  Html.a
+                [ Html.a
                     [ Attr.href "#"
                     , class "block px-3 py-1 text-sm leading-6 text-gray-900"
                     , Attr.attribute "role" "menuitem"
@@ -310,10 +310,10 @@ viewUserMenu model toContentMsg =
             Html.div [] []
 
 
-viewMenuItems : List (Html.Html msg)
-viewMenuItems =
+viewMenuItems : (Msg -> contentMsg) -> List (Html.Html contentMsg)
+viewMenuItems toContentMsg =
     [ viewActiveMenuItem "Dashboard" viewHomeIcon
-    , viewMenuItem "Team" viewTeamIcon "/"
+    , viewMenuItem "Team" viewTeamIcon toContentMsg Route.Path.Home_
     ]
 
 
@@ -388,8 +388,7 @@ viewMobileSidebar model menuItems toContentMsg =
                             ]
                         ]
                     ]
-                , {- Sidebar component, swap this element with another sidebar if you like -}
-                  Html.div
+                , Html.div
                     [ class "flex grow flex-col gap-y-5 overflow-y-auto bg-pink-300 px-6 pb-4 rounded-r-2xl"
                     ]
                     [ Html.div
@@ -420,7 +419,7 @@ viewMobileSidebar model menuItems toContentMsg =
                             , Html.li
                                 [ class "mt-auto"
                                 ]
-                                [ viewMenuItem "Settings" viewSettingsIcon (Route.Path.Settings |> Route.Path.toString)
+                                [ viewMenuItem "Settings" viewSettingsIcon toContentMsg Route.Path.Settings
                                 ]
                             ]
                         ]
@@ -435,8 +434,7 @@ viewDesktopSidebar mode menuItems toContentMsg =
     Html.div
         [ class "hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col"
         ]
-        [ {- Sidebar component, swap this element with another sidebar if you like -}
-          Html.div
+        [ Html.div
             [ class "flex grow flex-col gap-y-5 overflow-y-auto bg-pink-300 px-6 pb-4"
             ]
             [ Html.div
@@ -466,7 +464,7 @@ viewDesktopSidebar mode menuItems toContentMsg =
                     , Html.li
                         [ class "mt-auto"
                         ]
-                        [ viewMenuItem "Settings" viewSettingsIcon (Route.Path.Settings |> Route.Path.toString)
+                        [ viewMenuItem "Settings" viewSettingsIcon toContentMsg Route.Path.Settings
                         ]
                     ]
                 ]
@@ -493,8 +491,8 @@ view { toContentMsg, model, content } =
         [ Html.div
             [ class "flex overflow-hidden"
             ]
-            [ {- Off-canvas menu for mobile, show/hide based on off-canvas menu state. -} viewMobileSidebar model viewMenuItems toContentMsg
-            , {- Static sidebar for desktop -} viewDesktopSidebar model viewMenuItems toContentMsg
+            [ viewMobileSidebar model (viewMenuItems toContentMsg) toContentMsg
+            , viewDesktopSidebar model (viewMenuItems toContentMsg) toContentMsg
             , Html.div
                 [ class "lg:pl-72 flex flex-col h-screen w-0 flex-1 overflow-hidden"
                 ]

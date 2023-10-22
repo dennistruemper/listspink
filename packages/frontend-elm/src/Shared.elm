@@ -39,13 +39,14 @@ decoder =
 
 
 userDecoder =
-    Json.Decode.map6 User
+    Json.Decode.map7 User
         (Json.Decode.field "id" Json.Decode.string)
         (Json.Decode.maybe (Json.Decode.field "firstName" Json.Decode.string))
         (Json.Decode.maybe (Json.Decode.field "lastName" Json.Decode.string))
         (Json.Decode.maybe (Json.Decode.field "userName" Json.Decode.string))
         (Json.Decode.field "email" Json.Decode.string)
         (Json.Decode.maybe (Json.Decode.field "image" Json.Decode.string))
+        (Json.Decode.field "authToken" Json.Decode.string)
 
 
 

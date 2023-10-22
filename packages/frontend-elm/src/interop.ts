@@ -22,7 +22,8 @@ export const flags = async ({ env }: { env: Record<string, string> }): Promise<{
 		lastName: user?.lastName,
 		email: user?.primaryEmailAddress?.emailAddress,
 		id: user?.id,
-		image: user?.imageUrl
+		image: user?.imageUrl,
+		authToken: await clerk.session?.getToken()
 	};
 	console.log('User', userData);
 	const toElm = { user: userData, baseUrl: baseUrl };
