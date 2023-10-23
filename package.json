@@ -20,7 +20,7 @@
 		"ampt:test-all-watch": "BASE_PATH=packages/backend MODE=ALL vitest"
 	},
 	"dependencies": {
-		"@ampt/data": "1.0.4",
+		"@ampt/data": "1.0.5",
 		"@ampt/sdk": "1.0.4",
 		"@clerk/clerk-sdk-node": "4.12.15",
 		"cors": "2.8.5",
