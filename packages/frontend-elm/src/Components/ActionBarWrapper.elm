@@ -4,7 +4,7 @@ import Html exposing (Html)
 import Html.Attributes exposing (class)
 
 
-viewActionBarWrapper : List (Html.Html msg) -> Html.Html msg -> Html.Html msg
+viewActionBarWrapper : List (Html.Html msg) -> List (Html.Html msg) -> Html.Html msg
 viewActionBarWrapper items content =
     Html.div [ class "" ]
         [ Html.div
@@ -18,6 +18,6 @@ viewActionBarWrapper items content =
                     (\item -> Html.div [ class "last:ml-auto" ] [ item ])
                     items
             )
-        , content
+        , Html.div [] content
         , Html.div [ class "h-16 lg:h-0 w-16" ] []
         ]

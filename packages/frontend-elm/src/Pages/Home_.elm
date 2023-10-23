@@ -146,7 +146,7 @@ view model =
         [ viewActionBarWrapper
             [ viewButton "Create" CreateClicked
             ]
-            (Html.div [] <|
+            [ Html.div [] <|
                 case model.listsLoaded of
                     Api.NotAsked ->
                         [ Html.div [] [] ]
@@ -167,6 +167,6 @@ view model =
 
                     Api.Failure error ->
                         [ Html.text "Error loading lists" ]
-            )
+            ]
         ]
     }
