@@ -80,7 +80,7 @@ type Msg
     | SignOutClicked
     | ListsResponded (Result Http.Error (List ListPink))
     | CreateClicked
-    | NavigateClicked Route.Path.Path
+    | NavigateClicked { path : Route.Path.Path, query : Dict.Dict String String }
 
 
 update : Msg -> Model -> ( Model, Effect Msg )
@@ -117,9 +117,9 @@ update msg model =
             , Effect.pushRoute { path = Route.Path.List_Create, query = Dict.empty, hash = Nothing }
             )
 
-        NavigateClicked path ->
+        NavigateClicked { path, query } ->
             ( model
-            , Effect.pushRoute { path = path, query = Dict.empty, hash = Nothing }
+            , Effect.pushRoute { path = path, query = query, hash = Nothing }
             )
 
 

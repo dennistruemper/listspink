@@ -1,15 +1,14 @@
-module Pages.List.Create exposing (Model, Msg, page)
+module Pages.List.Listpink_.Item.Create exposing (Model, Msg, page)
 
-import Api.List
-import Auth
+import Api.Item
+import Auth exposing (User)
+import Browser.Navigation as Navigation
 import Components.ActionBarWrapper exposing (viewActionBarWrapper)
 import Components.Button exposing (viewButton)
 import Components.TextInput exposing (viewTextAreaInput, viewTextInput)
-import Domain.ListPink exposing (ListPink)
+import Domain.ItemPink exposing (ItemPink)
 import Effect exposing (Effect)
 import Html
-import Html.Attributes as Attr exposing (class)
-import Html.Events as Events
 import Http
 import Layouts
 import Page exposing (Page)
@@ -19,10 +18,10 @@ import ValidationResult exposing (ValidationResult(..), viewValidationResult)
 import View exposing (View)
 
 
-page : Auth.User -> Shared.Model -> Route () -> Page Model Msg
+page : User -> Shared.Model -> Route { listpink : String } -> Page Model Msg
 page user shared route =
     Page.new
-        { init = init user shared
+        { init = init user route.params.listpink shared
         , update = update
         , subscriptions = subscriptions
         , view = view
@@ -33,7 +32,8 @@ page user shared route =
 toLayout : Model -> Layouts.Layout Msg
 toLayout model =
     Layouts.Scaffold
-        { title = "Create list" }
+        { title = "Create Item"
+        }
 
 
 
@@ -44,18 +44,20 @@ type alias Model =
     { nameInput : String
     , descriptionInput : String
     , validationError : ValidationResult
-    , user : Auth.User
+    , listId : String
     , baseUrl : String
+    , user : User
     }
 
 
-init : Auth.User -> Shared.Model -> () -> ( Model, Effect Msg )
-init user shared () =
+init : User -> String -> Shared.Model -> () -> ( Model, Effect Msg )
+init user listId shared () =
     ( { nameInput = ""
       , descriptionInput = ""
       , validationError = VNothing
-      , user = user
+      , listId = listId
       , baseUrl = shared.baseUrl
+      , user = user
       }
     , Effect.none
     )
@@ -66,15 +68,22 @@ init user shared () =
 
 
 type Msg
-    = NameChanged String
+    = NoOp
+    | NameChanged String
     | DescriptionChanged String
     | CreateClicked
-    | CreateListResponseReceived (Result Http.Error ListPink)
+    | CreateItemResponseReceived (Result Http.Error ItemPink)
+    | BackClicked
 
 
 update : Msg -> Model -> ( Model, Effect Msg )
 update msg model =
     case msg of
+        NoOp ->
+            ( model
+            , Effect.none
+            )
+
         NameChanged name ->
             ( { model | nameInput = name } |> validateForm
             , Effect.none
@@ -92,11 +101,12 @@ update msg model =
             in
             if validatedModel.validationError == VNothing then
                 ( validatedModel
-                , Api.List.createList
+                , Api.Item.createItem
                     { baseUrl = validatedModel.baseUrl
                     , token = validatedModel.user.authToken
                     , body =
                         { name = validatedModel.nameInput
+                        , listId = validatedModel.listId
                         , description =
                             case validatedModel.descriptionInput of
                                 "" ->
@@ -105,7 +115,7 @@ update msg model =
                                 _ ->
                                     Just validatedModel.descriptionInput
                         }
-                    , onResponse = CreateListResponseReceived
+                    , onResponse = CreateItemResponseReceived
                     }
                 )
 
@@ -114,17 +124,20 @@ update msg model =
                 , Effect.none
                 )
 
-        CreateListResponseReceived result ->
-            case result of
-                Ok list ->
-                    ( { model | nameInput = "", descriptionInput = "", validationError = VSuccess ("List " ++ model.nameInput ++ " created successfully") }
-                    , Effect.none
-                    )
+        CreateItemResponseReceived (Ok item) ->
+            ( { model | nameInput = "", descriptionInput = "", validationError = VSuccess ("Item " ++ model.nameInput ++ " created successfully") }
+            , Effect.none
+            )
 
-                Err error ->
-                    ( model
-                    , Effect.none
-                    )
+        CreateItemResponseReceived (Err error) ->
+            ( model
+            , Effect.none
+            )
+
+        BackClicked ->
+            ( model
+            , Effect.navigateBack
+            )
 
 
 validateForm : Model -> Model
@@ -152,10 +165,11 @@ subscriptions model =
 
 view : Model -> View Msg
 view model =
-    { title = "Create list"
+    { title = "Pages.List.Listpink_.Item.Create"
     , body =
         [ viewActionBarWrapper
-            [ viewButton "Create" CreateClicked
+            [ viewButton "Back" BackClicked
+            , viewButton "Create" CreateClicked
             ]
             [ viewTextInput { name = "Name", value = Just model.nameInput, placeholder = Just "Buy orange juice", action = NameChanged }
             , viewTextAreaInput { name = "Description", value = Just model.descriptionInput, placeholder = Just "What I have to do to buy orage juice", action = DescriptionChanged }

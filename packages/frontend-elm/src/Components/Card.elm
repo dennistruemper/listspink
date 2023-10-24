@@ -1,5 +1,6 @@
 module Components.Card exposing (viewCard, viewListPinkCard)
 
+import Dict exposing (Dict)
 import Domain.ListPink exposing (ListPink)
 import Html exposing (Html)
 import Html.Attributes as Attr exposing (class)
@@ -18,7 +19,7 @@ viewCard content =
         content
 
 
-viewListPinkCard : { listPink : ListPink, navigateMsg : Path -> msg } -> Html msg
+viewListPinkCard : { listPink : ListPink, navigateMsg : { path : Path, query : Dict String String } -> msg } -> Html msg
 viewListPinkCard { listPink, navigateMsg } =
     let
         description =
@@ -34,7 +35,7 @@ viewListPinkCard { listPink, navigateMsg } =
     viewCard
         [ Html.div
             [ class "flex flex-1 flex-col p-4 lg:p-8"
-            , onClick (navigateMsg (Route.Path.List_Listpink__Show { listpink = listPink.id }))
+            , onClick (navigateMsg { path = Route.Path.List_Listpink__Show { listpink = listPink.id }, query = Dict.fromList [ ( "name", listPink.name ) ] })
             ]
             [ Html.h3
                 [ class "lg:mt-6 text-sm font-medium text-lg text-gray-900"
@@ -59,7 +60,7 @@ viewListPinkCard { listPink, navigateMsg } =
                 ]
                 [ Html.button
                     [ class "flex flex-1 items-center justify-center w-full hover:bg-pink-100"
-                    , onClick (navigateMsg (Route.Path.List_Listpink__Details { listpink = listPink.id }))
+                    , onClick (navigateMsg { path = Route.Path.List_Listpink__Details { listpink = listPink.id }, query = Dict.fromList [ ( "name", listPink.name ) ] })
                     ]
                     [ Html.text "Details"
                     ]
@@ -68,7 +69,7 @@ viewListPinkCard { listPink, navigateMsg } =
                     ]
                     [ Html.button
                         [ class "flex flex-1 items-center justify-center w-full hover:bg-pink-100"
-                        , onClick (navigateMsg (Route.Path.List_Listpink__Show { listpink = listPink.id }))
+                        , onClick (navigateMsg { path = Route.Path.List_Listpink__Show { listpink = listPink.id }, query = Dict.fromList [ ( "name", listPink.name ) ] })
                         ]
                         [ Html.text "Show"
                         ]

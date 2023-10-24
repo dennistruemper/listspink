@@ -4,7 +4,7 @@ module Effect exposing
     , sendCmd, sendMsg
     , pushRoute, replaceRoute, loadExternalUrl
     , map, toCmd
-    , logging, redirectToProfile, redirectToSignIn, signOut
+    , logging, navigateBack, redirectToProfile, redirectToSignIn, signOut
     )
 
 {-|
@@ -46,6 +46,7 @@ type Effect msg
         { tag : String
         , data : Encode.Value
         }
+    | NavigateBack
 
 
 
@@ -138,6 +139,11 @@ redirectToProfile =
     SendMessageToJavaScript { tag = "profile-redirect", data = Encode.object [] }
 
 
+navigateBack : Effect msg
+navigateBack =
+    NavigateBack
+
+
 
 -- INTERNALS
 
@@ -165,6 +171,9 @@ map fn effect =
 
         LoadExternalUrl url ->
             LoadExternalUrl url
+
+        NavigateBack ->
+            NavigateBack
 
         SendSharedMsg sharedMsg ->
             SendSharedMsg sharedMsg
@@ -208,6 +217,9 @@ toCmd options effect =
 
         LoadExternalUrl url ->
             Browser.Navigation.load url
+
+        NavigateBack ->
+            Browser.Navigation.back options.key 1
 
         SendSharedMsg sharedMsg ->
             Task.succeed sharedMsg
