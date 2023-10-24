@@ -1,6 +1,6 @@
+import { http } from '@ampt/sdk';
 import cors from 'cors';
 import express, { Express, Handler, Router } from 'express';
-import path from 'path';
 import { VersionResponse } from '../../../../shared/src/definitions/versionRequestResponse';
 import { Dependencies } from '../../domain/definitions/dependencies';
 import { addItemRoutes } from './itemRoutes';
@@ -29,10 +29,12 @@ export async function createApp(dependencies: Dependencies): Promise<Express> {
 	app.use('/api', authHandler, privateApi);
 	addPrivateRoutes(privateApi, dependencies);
 
-	app.get('*', (req, res) => {
-		res.status(404).sendFile(path.resolve('static/index.html'));
+	app.use(async (req, res) => {
+		const notFoundHtmlFile = await http.node.readStaticFile('index.html');
+		res.header('Content-Type', 'text/html');
+		res.status(404);
+		return notFoundHtmlFile?.pipe(res);
 	});
-
 	return app;
 }
 
