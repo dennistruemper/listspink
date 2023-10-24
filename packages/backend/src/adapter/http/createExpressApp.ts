@@ -1,5 +1,6 @@
 import cors from 'cors';
 import express, { Express, Handler, Router } from 'express';
+import path from 'path';
 import { VersionResponse } from '../../../../shared/src/definitions/versionRequestResponse';
 import { Dependencies } from '../../domain/definitions/dependencies';
 import { addItemRoutes } from './itemRoutes';
@@ -27,6 +28,10 @@ export async function createApp(dependencies: Dependencies): Promise<Express> {
 	const privateApi = Router();
 	app.use('/api', authHandler, privateApi);
 	addPrivateRoutes(privateApi, dependencies);
+
+	app.get('*', (req, res) => {
+		res.status(404).sendFile(path.resolve('static/index.html'));
+	});
 
 	return app;
 }

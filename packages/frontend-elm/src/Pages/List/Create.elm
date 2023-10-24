@@ -5,6 +5,7 @@ import Auth
 import Components.ActionBarWrapper exposing (viewActionBarWrapper)
 import Components.Button exposing (viewButton)
 import Components.TextInput exposing (viewTextAreaInput, viewTextInput)
+import Domain.ListPink exposing (ListPink)
 import Effect exposing (Effect)
 import Html
 import Html.Attributes as Attr exposing (class)
@@ -37,7 +38,7 @@ page user shared route =
 toLayout : Model -> Layouts.Layout Msg
 toLayout model =
     Layouts.Scaffold
-        {}
+        { title = "Create list" }
 
 
 
@@ -73,7 +74,7 @@ type Msg
     = NameChanged String
     | DescriptionChanged String
     | CreateClicked
-    | CreateListResponseReceived (Result Http.Error Api.List.ListPink)
+    | CreateListResponseReceived (Result Http.Error ListPink)
 
 
 update : Msg -> Model -> ( Model, Effect Msg )
@@ -169,7 +170,7 @@ viewValidationResult validationResult =
 
 view : Model -> View Msg
 view model =
-    { title = "Pages.List.Create"
+    { title = "Create list"
     , body =
         [ viewActionBarWrapper
             [ viewButton "Create" CreateClicked

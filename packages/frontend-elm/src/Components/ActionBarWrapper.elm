@@ -8,7 +8,7 @@ viewActionBarWrapper : List (Html.Html msg) -> List (Html.Html msg) -> Html.Html
 viewActionBarWrapper items content =
     Html.div [ class "" ]
         [ Html.div
-            [ class "bg-pink-200 h-16 rounded-t-xl lg:rounded-xl pb-4 lg:pb-2 p-2 flex flex-row justify-between justify-items-center fixed lg:relative bottom-0 lg:top-0 left-0  w-full" ]
+            [ class "bg-pink-200 h-16 rounded-t-xl lg:rounded-xl pb-4 lg:pb-0 p-2 flex flex-row justify-between justify-items-center fixed lg:relative bottom-0 lg:top-0 left-0  w-full" ]
             (if List.length items > 1 then
                 items
 

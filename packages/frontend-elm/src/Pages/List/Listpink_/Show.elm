@@ -1,16 +1,14 @@
-module Pages.Bye exposing (Model, Msg, page)
+module Pages.List.Listpink_.Show exposing (Model, Msg, page)
 
-import Auth
 import Effect exposing (Effect)
-import Html
-import Layouts
-import Page exposing (Page)
 import Route exposing (Route)
+import Html
+import Page exposing (Page)
 import Shared
 import View exposing (View)
 
 
-page : Shared.Model -> Route () -> Page Model Msg
+page : Shared.Model -> Route { listpink : String } -> Page Model Msg
 page shared route =
     Page.new
         { init = init
@@ -18,15 +16,6 @@ page shared route =
         , subscriptions = subscriptions
         , view = view
         }
-        |> Page.withLayout toLayout
-
-
-{-| Use the sidebar layout on this page
--}
-toLayout : Model -> Layouts.Layout Msg
-toLayout model =
-    Layouts.Scaffold
-        { title = "" }
 
 
 
@@ -76,6 +65,6 @@ subscriptions model =
 
 view : Model -> View Msg
 view model =
-    { title = "Pages.Bye"
-    , body = [ Html.text "See you next time!" ]
+    { title = "Pages.List.Listpink_.Show"
+    , body = [ Html.text "/list/:listpink/show" ]
     }

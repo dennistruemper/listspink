@@ -1,10 +1,13 @@
 module Pages.SignIn exposing (Model, Msg, page)
 
+import Components.Button exposing (viewButton)
 import Effect exposing (Effect)
-import Route exposing (Route)
 import Html
+import Layouts
 import Page exposing (Page)
+import Route exposing (Route)
 import Shared
+import User exposing (User, getUserName)
 import View exposing (View)
 
 
@@ -14,8 +17,15 @@ page shared route =
         { init = init
         , update = update
         , subscriptions = subscriptions
-        , view = view
+        , view = view shared
         }
+        |> Page.withLayout toLayout
+
+
+toLayout : Model -> Layouts.Layout Msg
+toLayout model =
+    Layouts.Scaffold
+        { title = "Sign in" }
 
 
 
@@ -39,6 +49,7 @@ init () =
 
 type Msg
     = NoOp
+    | SignInClicked
 
 
 update : Msg -> Model -> ( Model, Effect Msg )
@@ -47,6 +58,11 @@ update msg model =
         NoOp ->
             ( model
             , Effect.none
+            )
+
+        SignInClicked ->
+            ( model
+            , Effect.redirectToSignIn
             )
 
 
@@ -63,8 +79,17 @@ subscriptions model =
 -- VIEW
 
 
-view : Model -> View Msg
-view model =
+view : Shared.Model -> Model -> View Msg
+view shared model =
+    let
+        helloText =
+            case shared.user of
+                Just user ->
+                    Html.text ("Hello, " ++ getUserName user)
+
+                Nothing ->
+                    viewButton "Sign in" SignInClicked
+    in
     { title = "Pages.SignIn"
-    , body = [ Html.text "/sign-in" ]
+    , body = []
     }

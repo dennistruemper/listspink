@@ -17,7 +17,7 @@ import View exposing (View)
 
 
 type alias Props =
-    {}
+    { title : String }
 
 
 layout : Props -> Shared.Model -> Route () -> Layout () Model Msg contentMsg
@@ -25,7 +25,7 @@ layout props shared route =
     Layout.new
         { init = init shared
         , update = update
-        , view = view
+        , view = view props
         , subscriptions = subscriptions
         }
 
@@ -484,8 +484,20 @@ viewFooter isVisible =
         Html.div [] []
 
 
-view : { toContentMsg : Msg -> contentMsg, content : View contentMsg, model : Model } -> View contentMsg
-view { toContentMsg, model, content } =
+viewTitle : Props -> Html.Html msg
+viewTitle props =
+    Html.div
+        [ class "flex-1 flex justify-center items-center"
+        ]
+        [ Html.h1
+            [ class "text-xl font-bold text-gray-900"
+            ]
+            [ Html.text props.title ]
+        ]
+
+
+view : Props -> { toContentMsg : Msg -> contentMsg, content : View contentMsg, model : Model } -> View contentMsg
+view props { toContentMsg, model, content } =
     { title = content.title
     , body =
         [ Html.div
@@ -528,7 +540,8 @@ view { toContentMsg, model, content } =
                     , Html.div
                         [ class "flex flex-1 gap-x-4 self-stretch lg:gap-x-6 justify-end"
                         ]
-                        [ Html.div
+                        [ viewTitle props
+                        , Html.div
                             [ class "flex items-center gap-x-4 lg:gap-x-6"
                             ]
                             [ {- Profile dropdown -}

@@ -1,14 +1,17 @@
 module Pages.Home_ exposing (Model, Msg, page)
 
 import Api exposing (Data)
-import Api.List exposing (ListPink)
+import Api.List
 import Auth
 import Components.ActionBarWrapper exposing (viewActionBarWrapper)
 import Components.Button exposing (viewButton)
+import Components.Card exposing (viewListPinkCard)
+import Components.Grid exposing (viewGrid)
 import Dict
+import Domain.ListPink exposing (ListPink)
 import Effect exposing (Effect)
 import Html
-import Html.Attributes exposing (class)
+import Html.Attributes as Attr exposing (class)
 import Html.Events exposing (onClick)
 import Http
 import Layouts exposing (Layout)
@@ -18,6 +21,8 @@ import Route exposing (Route)
 import Route.Path
 import Shared
 import Shared.Model
+import Svg exposing (path, svg)
+import Svg.Attributes as SvgAttr
 import User exposing (User, getUserName)
 import View exposing (View)
 
@@ -36,7 +41,8 @@ page user shared route =
 toLayout : Model -> Layouts.Layout Msg
 toLayout model =
     Layouts.Scaffold
-        {}
+        { title = "Lists Pink"
+        }
 
 
 
@@ -74,6 +80,7 @@ type Msg
     | SignOutClicked
     | ListsResponded (Result Http.Error (List ListPink))
     | CreateClicked
+    | NavigateClicked Route.Path.Path
 
 
 update : Msg -> Model -> ( Model, Effect Msg )
@@ -110,6 +117,11 @@ update msg model =
             , Effect.pushRoute { path = Route.Path.List_Create, query = Dict.empty, hash = Nothing }
             )
 
+        NavigateClicked path ->
+            ( model
+            , Effect.pushRoute { path = path, query = Dict.empty, hash = Nothing }
+            )
+
 
 
 -- SUBSCRIPTIONS
@@ -124,19 +136,28 @@ subscriptions model =
 -- VIEW
 
 
+viewList : ListPink -> Html.Html Msg
+viewList list =
+    Html.div
+        [ class "" ]
+        [ Html.text list.name ]
+
+
 viewLists : List ListPink -> List (Html.Html Msg)
 viewLists lists =
     if List.length lists == 0 then
         [ Html.text "No lists jet" ]
 
     else
-        List.map
-            (\list ->
-                Html.div
-                    [ class "" ]
-                    [ Html.text list.name ]
+        --List.map
+        --    viewList
+        --    lists
+        [ viewGrid
+            (List.map
+                viewListPinkCard
+                (lists |> List.map (\list -> { listPink = list, navigateMsg = NavigateClicked }))
             )
-            lists
+        ]
 
 
 view : Model -> View Msg
@@ -157,11 +178,6 @@ view model =
                     Api.Success lists ->
                         [ Html.div []
                             [ Html.div [] (viewLists lists)
-                            , Html.div [ class "m-8 w-96 h-96 bg-black text-white text-center" ] [ Html.text "placeholder" ]
-                            , Html.div [ class "m-8 w-96 h-96 bg-black text-white text-center" ] [ Html.text "placeholder" ]
-                            , Html.div [ class "m-8 w-96 h-96 bg-black text-white text-center" ] [ Html.text "placeholder" ]
-                            , Html.div [ class "m-8 w-96 h-96 bg-black text-white text-center" ] [ Html.text "placeholder" ]
-                            , Html.text "end"
                             ]
                         ]
 

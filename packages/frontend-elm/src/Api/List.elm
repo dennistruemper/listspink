@@ -1,16 +1,10 @@
-module Api.List exposing (CreateListPink, ListPink, createList, getLists)
+module Api.List exposing (CreateListPink, createList, getLists)
 
+import Domain.ListPink exposing (ListPink)
 import Effect exposing (Effect)
 import Http
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode exposing (Value)
-
-
-type alias ListPink =
-    { id : String
-    , name : String
-    , description : Maybe String
-    }
 
 
 type alias CreateListPink =
