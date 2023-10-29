@@ -94,8 +94,25 @@ update route msg model =
             , Effect.none
             )
 
-        Shared.Msg.FromJavascript event ->
-            ( model
+        Shared.Msg.FromJavascript rawEvent ->
+            let
+                event =
+                    decodeEvent rawEvent
+
+                newUser =
+                    case event.eventType of
+                        "TOKEN_UPDATE" ->
+                            case model.user of
+                                Just user ->
+                                    Just { user | authToken = event.newToken }
+
+                                Nothing ->
+                                    Nothing
+
+                        _ ->
+                            model.user
+            in
+            ( { model | user = newUser }
             , Effect.none
             )
 
@@ -108,6 +125,29 @@ update route msg model =
             ( { model | user = Nothing }
             , Effect.none
             )
+
+
+type alias EventFromJavascript =
+    { eventType : String
+    , newToken : String
+    }
+
+
+eventDecoder : Json.Decode.Decoder EventFromJavascript
+eventDecoder =
+    Json.Decode.map2 EventFromJavascript
+        (Json.Decode.field "type" Json.Decode.string)
+        (Json.Decode.field "newToken" Json.Decode.string)
+
+
+decodeEvent : String -> EventFromJavascript
+decodeEvent event =
+    case Json.Decode.decodeString eventDecoder event of
+        Ok e ->
+            e
+
+        Err error ->
+            EventFromJavascript "error" "error"
 
 
 

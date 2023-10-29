@@ -1,4 +1,4 @@
-module Api.Item exposing (CreateItemPink, createItem, getItemsForList)
+module Api.Item exposing (CreateItemPink, ToggleItemPink, createItem, getItemsForList, toggleItem)
 
 import Domain.ItemPink exposing (ItemPink)
 import Effect exposing (Effect)
@@ -37,17 +37,7 @@ itemDecoder =
         (Decode.field "id" Decode.string)
         (Decode.field "name" Decode.string)
         (Decode.maybe (Decode.field "description" Decode.string))
-        (Decode.maybe (Decode.field "completed" Decode.bool)
-            |> Decode.map
-                (\x ->
-                    case x of
-                        Just completed ->
-                            completed
-
-                        Nothing ->
-                            False
-                )
-        )
+        (Decode.maybe (Decode.field "completed" Decode.string))
 
 
 createItem : { onResponse : Result Http.Error ItemPink -> msg, baseUrl : String, token : String, body : CreateItemPink } -> Effect msg
@@ -75,6 +65,28 @@ createItem options =
                         )
                     )
             , expect = Http.expectJson options.onResponse itemDecoder
+            , timeout = Nothing
+            , tracker = Nothing
+            }
+
+
+type alias ToggleItemPink =
+    { itemId : String
+    , listId : String
+    }
+
+
+toggleItem : { onResponse : Result Http.Error () -> msg, baseUrl : String, token : String, body : ToggleItemPink } -> Effect msg
+toggleItem options =
+    Effect.sendCmd <|
+        Http.request
+            { method = "POST"
+            , headers =
+                [ Http.header "Authorization" ("Bearer " ++ options.token)
+                ]
+            , url = options.baseUrl ++ "list/" ++ options.body.listId ++ "/item/" ++ options.body.itemId ++ "/toggle"
+            , body = Http.emptyBody
+            , expect = Http.expectWhatever options.onResponse
             , timeout = Nothing
             , tracker = Nothing
             }

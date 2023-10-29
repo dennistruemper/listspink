@@ -18,7 +18,7 @@ import ValidationResult exposing (ValidationResult(..), viewValidationResult)
 import View exposing (View)
 
 
-page : User -> Shared.Model -> Route { listpink : String } -> Page Model Msg
+page : Auth.User -> Shared.Model -> Route { listpink : String } -> Page Model Msg
 page user shared route =
     Page.new
         { init = init user route.params.listpink shared

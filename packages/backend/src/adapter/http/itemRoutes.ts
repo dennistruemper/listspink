@@ -16,6 +16,7 @@ import { Dependencies } from '../../domain/definitions/dependencies';
 import { CreateItemForListUsecase } from '../../domain/usecases/items/createItemForListUsecase';
 import { GetItemUsecase } from '../../domain/usecases/items/getItemUsecase';
 import { GetItemsForListUsecase } from '../../domain/usecases/items/getItemsForListUsecase';
+import { ToggleItemUsecase } from '../../domain/usecases/items/toggleItemUsecase';
 import { UpdateItemUsecase } from '../../domain/usecases/items/updateItemsUsecase';
 import { getUserIdFromRequest } from './expressHelper';
 
@@ -24,6 +25,7 @@ export function addItemRoutes(router: Router, dependencies: Dependencies) {
 	addGetItemDetailsRoute(router, dependencies);
 	addGetItemDetailsForListRoute(router, dependencies);
 	addUpdateItemDetailsRoute(router, dependencies);
+	toggleItemCompleted(router, dependencies);
 }
 
 function addGetItemDetailsRoute(router: Router, dependencies: Dependencies) {
@@ -205,6 +207,58 @@ function addUpdateItemDetailsRoute(router: Router, dependencies: Dependencies) {
 			listId,
 			userId,
 			changes: paredBody.data
+		});
+
+		if (loaded.success === false) {
+			switch (loaded.code) {
+				case UNKNOWN_DATA_SHAPE_CODE:
+					console.error('Error code: ' + loaded.code + ' ' + loaded.message);
+					res.status(500).send('Failed to update item. ErrorCode: ' + loaded.code);
+					return;
+				case NO_ACCESS_CODE:
+					res.status(403).send('User does not have access to this list');
+					return;
+				default:
+					forceExhaust(loaded.code);
+			}
+		}
+
+		const response: UpdateItemResponses = {};
+
+		return res.status(200).send(response);
+	});
+}
+
+function toggleItemCompleted(router: Router, dependencies: Dependencies) {
+	router.post('/list/:listId/item/:itemId/toggle', async (req, res) => {
+		const userId = getUserIdFromRequest(req);
+		if (userId === undefined) {
+			res.status(400).send('No user id in token');
+			return;
+		}
+		const listId = req.params.listId;
+		if (listId === undefined) {
+			res.status(400).send('No list id provided');
+		}
+		const itemId = req.params.itemId;
+		if (listId === undefined) {
+			res.status(400).send('No item id provided');
+		}
+
+		const paredBody = updateItemRequestSchema.safeParse(req.body);
+		if (!paredBody.success) {
+			res.status(400).send(paredBody.error.errors);
+			return;
+		}
+
+		const loaded = await new ToggleItemUsecase(
+			dependencies.itemRepository,
+			dependencies.listRepository
+		).execute({
+			itemId,
+			listId,
+			userId,
+			now: new Date()
 		});
 
 		if (loaded.success === false) {

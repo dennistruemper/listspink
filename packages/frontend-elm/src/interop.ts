@@ -77,6 +77,29 @@ export const onReady = ({ app, env }: { app: App; env: Env }): void => {
 		console.log('Sent message to elm');
 	}
 
+	let currentToken = '';
+	setInterval(async () => {
+		const token = await clerk.session?.getToken();
+		if (!token) {
+			return;
+		}
+
+		if (currentToken !== token) {
+			currentToken = token;
+			if (window.location.href.includes('localhost')) {
+				console.log('Refreshing token');
+			}
+
+			if (app.ports.toElm.send) {
+				app.ports.toElm.send(JSON.stringify({ type: 'TOKEN_UPDATE', newToken: token }));
+			}
+		} else {
+			if (window.location.href.includes('localhost')) {
+				console.log('Token is still valid');
+			}
+		}
+	}, 1000 * 2);
+
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	//@ts-ignore
 	websocket.onmessage = (event) => {
