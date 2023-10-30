@@ -87,7 +87,7 @@ update shared user msg model =
             )
 
         OnGetItemsForList (Ok items) ->
-            ( { model | items = Success items }
+            ( { model | items = Success (orderItems items) }
             , Effect.none
             )
 
@@ -123,6 +123,22 @@ update shared user msg model =
             ( toggleItem model itemId time
             , Effect.none
             )
+
+
+orderItems : List Domain.ItemPink.ItemPink -> List Domain.ItemPink.ItemPink
+orderItems items =
+    List.sortBy
+        (\item ->
+            case item.completed of
+                Just completed ->
+                    completed
+
+                -- show uncompleted items first
+                Nothing ->
+                    "9999-99-99T99:99:99.999Z"
+        )
+        items
+        |> List.reverse
 
 
 toggleItem : Model -> String -> Time.Posix -> Model

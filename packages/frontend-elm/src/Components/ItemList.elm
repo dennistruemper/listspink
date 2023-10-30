@@ -37,6 +37,13 @@ viewItem toggle listId item =
 
         isCompleted =
             Domain.ItemPink.isCompleted item
+
+        lineThrough =
+            if isCompleted then
+                " line-through"
+
+            else
+                ""
     in
     Html.li
         [ class "py-4"
@@ -48,7 +55,7 @@ viewItem toggle listId item =
                 isCompleted
                 (toggle itemId)
             , Html.h3
-                [ class "flex-auto truncate text-sm font-semibold leading-6 text-gray-900"
+                [ class ("flex-auto truncate text-sm font-semibold leading-6 text-gray-900" ++ lineThrough)
                 ]
                 [ Html.text name ]
             , Html.a [ class "text-pink-500", Attr.href (Route.Path.toString (Route.Path.List_Listpink__Item_ItemId__Details { listpink = listId, itemId = itemId })) ] [ viewRightArrow ]
@@ -62,5 +69,18 @@ viewItem toggle listId item =
 
                 Just text ->
                     Html.text text
+            ]
+        , Html.div [ class "text-sm font-light mt-2 flex flex-row justify-between" ]
+            [ Html.div [] [ Html.text "" ] -- TODO: Add created date
+            , Html.div []
+                [ Html.text
+                    (case item.completed of
+                        Nothing ->
+                            ""
+
+                        Just completed ->
+                            "Completed: " ++ String.left 10 completed
+                    )
+                ]
             ]
         ]
