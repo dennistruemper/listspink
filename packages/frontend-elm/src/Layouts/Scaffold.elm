@@ -273,18 +273,18 @@ viewUserMenu model toContentMsg =
                 , Attr.attribute "aria-labelledby" "user-menu-button"
                 , Attr.tabindex -1
                 ]
-                [ Html.a
-                    [ Attr.href "#"
-                    , class "block px-3 py-1 text-sm leading-6 text-gray-900"
-                    , Attr.attribute "role" "menuitem"
-                    , Attr.tabindex -1
-                    , Attr.id "user-menu-item-0"
-                    , onClick <| toContentMsg GoToProfileClicked
-                    ]
-                    [ Html.text "Your profile" ]
-                , case model.user of
+                (case model.user of
                     Just _ ->
-                        Html.a
+                        [ Html.a
+                            [ Attr.href "#"
+                            , class "block px-3 py-1 text-sm leading-6 text-gray-900"
+                            , Attr.attribute "role" "menuitem"
+                            , Attr.tabindex -1
+                            , Attr.id "user-menu-item-0"
+                            , onClick <| toContentMsg GoToProfileClicked
+                            ]
+                            [ Html.text "Your profile" ]
+                        , Html.a
                             [ Attr.href "#"
                             , class "block px-3 py-1 text-sm leading-6 text-gray-900"
                             , Attr.attribute "role" "menuitem"
@@ -293,9 +293,10 @@ viewUserMenu model toContentMsg =
                             , onClick <| toContentMsg SignOutClicked
                             ]
                             [ Html.text "Sign out" ]
+                        ]
 
                     Nothing ->
-                        Html.a
+                        [ Html.a
                             [ Attr.href "#"
                             , class "block px-3 py-1 text-sm leading-6 text-gray-900"
                             , Attr.attribute "role" "menuitem"
@@ -304,7 +305,8 @@ viewUserMenu model toContentMsg =
                             , onClick <| toContentMsg SignInClicked
                             ]
                             [ Html.text "Sign in" ]
-                ]
+                        ]
+                )
 
         False ->
             Html.div [] []
