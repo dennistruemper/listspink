@@ -57,6 +57,7 @@ jobs:
 
       - name: build elm frontend
         run: npm run build-fe-dev
+        working-directory: . # use the root directory
 
       - name: deploy backend
         env:
