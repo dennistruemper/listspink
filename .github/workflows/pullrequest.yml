@@ -29,9 +29,12 @@ jobs:
         uses: actions/setup-node@v4.0.0
         with:
           node-version-file: .nvmrc
+      - name: remove package lock file
+        run: rm -f package-lock.json
+        working-directory: . # use the root directory
       - name: npm install
         if: steps.cache-node_modules.outputs.cache-hit != 'true'
-        run: npm ci
+        run: npm i
         working-directory: . # use the root directory
 
       - name: Get installed Playwright version
