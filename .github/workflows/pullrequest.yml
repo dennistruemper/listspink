@@ -55,6 +55,9 @@ jobs:
         run: npm run test-local
         working-directory: . # use the root directory
 
+      - name: build elm frontend
+        run: npm run build-fe-dev
+
       - name: deploy backend
         env:
           AMPT_API_KEY: ${{ secrets.AMPT_API_KEY }}

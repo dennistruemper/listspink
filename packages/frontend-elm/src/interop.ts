@@ -26,7 +26,7 @@ export const flags = async ({ env }: { env: Record<string, string> }): Promise<{
 		authToken: await clerk.session?.getToken()
 	};
 	console.log('User', userData);
-	const toElm = { user: userData, baseUrl: baseUrl };
+	const toElm = { user: userData, baseUrl: baseUrl, stage: env.STAGE ?? 'unknown' };
 	return toElm;
 };
 

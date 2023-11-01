@@ -14,4 +14,5 @@ type alias Model =
     { lastMessage : String
     , user : Maybe User
     , baseUrl : String
+    , stage : String
     }
