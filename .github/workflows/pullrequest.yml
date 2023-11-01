@@ -71,3 +71,10 @@ jobs:
       - name: run end to end tests
         run: FRONTEND_URL=${{ steps.deploy-backend.outputs.AMPT_URL}} npm run test:e2e
         working-directory: ./packages/frontend
+
+      - name: Archive code coverage results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: e2e test rsults
+          path: packages/frontend/test-results/
