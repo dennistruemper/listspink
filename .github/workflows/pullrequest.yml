@@ -49,7 +49,7 @@ jobs:
           AMPT_API_KEY: ${{ secrets.AMPT_API_KEY }}
         id: backend-integration-test
         run: |
-          npx ampt --skip-update run test --test-stage
+          npx ampt run test --test-stage  --skip-update
 
       - name: deploy backend
         env:
