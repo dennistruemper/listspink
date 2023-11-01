@@ -62,9 +62,12 @@ jobs:
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
+        working-directory: ./packages/frontend
         if: steps.playwright-cache.outputs.cache-hit != 'true'
       - name: Install Playwright Dependencies
         run: npx playwright install-deps
+        working-directory: ./packages/frontend
         if: steps.playwright-cache.outputs.cache-hit != 'true'
       - name: run end to end tests
         run: FRONTENT_URL=${{ steps.deploy-backend.outputs.AMPT_URL}} npm run test:e2e
+        working-directory: ./packages/frontend
