@@ -1,11 +1,15 @@
 {
 	"name": "listspink-frontend-elm",
 	"version": "1.0.0",
-	"description": "> Built with [Elm Land](https://elm.land) 🌈",
+	"description": "Built with [Elm Land](https://elm.land) 🌈",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"watch:css": "npx tailwindcss -i ./tailwind/lists.pink.css -o ./static/lists.pink.css --watch"
+		"watch:css": "npx tailwindcss -i ./tailwind/lists.pink.css -o ./static/lists.pink.css --watch",
+		"build:css": "npx tailwindcss -i ./tailwind/lists.pink.css -o ./static/lists.pink.css",
+		"build:elm:prod": "STAGE=prod elm-land build",
+		"build:elm:dev": "STAGE=dev elm-land build",
+		"build:dev": "rm -rf dist && npm run build:css &&  npm run build:elm:dev",
+		"build:prod": "rm -rf dist && npm run build:css && npm run build:elm:prod"
 	},
 	"author": "",
 	"license": "ISC",
@@ -15,6 +19,6 @@
 	},
 	"devDependencies": {
 		"elm-land": "0.19.4",
-		"tailwindcss": "^3.3.3"
+		"tailwindcss": "3.3.3"
 	}
 }
