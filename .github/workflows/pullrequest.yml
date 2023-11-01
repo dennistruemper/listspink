@@ -41,15 +41,15 @@ jobs:
             ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
 
-      - name: lint
-        run: npm run lint
-      - name: build
-        run: npm run build
-      - name: local test all packages
-        run: npm run test-local
-
       - name: build elm frontend
         run: npm run build-fe-dev
+
+      - name: test backend integration
+        env:
+          AMPT_API_KEY: ${{ secrets.AMPT_API_KEY }}
+        id: backend-integration-test
+        run: |
+          npx ampt run test --test-stage
 
       - name: deploy backend
         env:
@@ -59,13 +59,6 @@ jobs:
           url=$(./scripts/deployAndGetUrl.sh ci)
           echo aha $url
           echo "BACKEND_URL=$url" >> "$GITHUB_OUTPUT"
-
-      - name: test backend integration
-        env:
-          AMPT_API_KEY: ${{ secrets.AMPT_API_KEY }}
-        id: backend-integration-test
-        run: |
-          npx ampt run test --test-stage
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps

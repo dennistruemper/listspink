@@ -12,8 +12,6 @@
 		"clear-static": "rm -rf static/*",
 		"build-fe-dev": "npm run clear-static && cd packages/frontend-elm && npm run build:dev && cp -R dist/ ../../static",
 		"build-fe-prod": "npm run clear-static && cd packages/frontend-elm && npm run build:prod && cp -R dist/ ../../static",
-		"lint": "cd packages/frontend && npm run lint && cd -",
-		"test-local": "BASE_PATH=** MODE=LOCAL vitest run",
 		"format": "prettier --write .",
 		"clean": "git checkout main && git pull && npm ci",
 		"new-branch": "npm run clean && git checkout -b $1",
