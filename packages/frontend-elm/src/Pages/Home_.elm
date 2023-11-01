@@ -167,7 +167,7 @@ view model =
         [ viewActionBarWrapper
             [ viewButton "Create" CreateClicked
             ]
-            [ Html.div [] <|
+            [ Html.div [ class "bg-red-500" ] <|
                 case model.listsLoaded of
                     Api.NotAsked ->
                         [ Html.div [] [] ]
