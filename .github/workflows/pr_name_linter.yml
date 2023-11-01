@@ -12,3 +12,4 @@ jobs:
         with:
           repo-token: '${{ secrets.GITHUB_TOKEN }}'
           title-regex: '^(chore|fix|feat|ci|refactor)!? ?:'
+          on-failed-regex-request-changes: false
