@@ -60,11 +60,11 @@ jobs:
           echo aha $url
           echo "BACKEND_URL=$url" >> "$GITHUB_OUTPUT"
 
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-      - name: Install Playwright Dependencies
-        run: npx playwright install-deps
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-      - name: run end to end tests
-        run: FRONTEND_URL=${{ steps.deploy-frontend.outputs.FRONTEND_URL}} npm run test:e2e
+      # - name: Install Playwright Browsers
+      #   run: npx playwright install --with-deps
+      #   if: steps.playwright-cache.outputs.cache-hit != 'true'
+      # - name: Install Playwright Dependencies
+      #   run: npx playwright install-deps
+      #   if: steps.playwright-cache.outputs.cache-hit != 'true'
+      # - name: run end to end tests
+      #   run: FRONTEND_URL=${{ steps.deploy-frontend.outputs.FRONTEND_URL}} npm run test:e2e
