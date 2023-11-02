@@ -9,6 +9,7 @@ import Layouts exposing (Layout)
 import Page exposing (Page)
 import Route exposing (Route)
 import Shared
+import Shared.Model
 import View exposing (View)
 
 
@@ -18,7 +19,7 @@ page shared route =
         { init = init shared
         , update = update
         , subscriptions = subscriptions
-        , view = view
+        , view = view shared
         }
         |> Page.withLayout toLayout
 
@@ -84,8 +85,8 @@ subscriptions model =
 -- VIEW
 
 
-view : Model -> View Msg
-view model =
+view : Shared.Model -> Model -> View Msg
+view shared model =
     { title = "Pages.Settings"
     , body =
         [ Html.text "Backendversion: "
@@ -101,5 +102,6 @@ view model =
 
             Api.Failure httpErr ->
                 Html.text "Error getting Version"
+        , Html.div [] [ Html.text ("Frontendversion: " ++ shared.stage) ]
         ]
     }

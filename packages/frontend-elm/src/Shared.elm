@@ -28,14 +28,15 @@ import User exposing (User)
 
 
 type alias Flags =
-    { user : Maybe User, baseUrl : String }
+    { user : Maybe User, baseUrl : String, stage : String }
 
 
 decoder : Json.Decode.Decoder Flags
 decoder =
-    Json.Decode.map2 Flags
+    Json.Decode.map3 Flags
         (Json.Decode.maybe (Json.Decode.field "user" userDecoder))
         (Json.Decode.field "baseUrl" Json.Decode.string)
+        (Json.Decode.field "stage" Json.Decode.string)
 
 
 userDecoder =
@@ -73,6 +74,10 @@ init flagsResult route =
     ( { lastMessage = ""
       , user = user
       , baseUrl = baseUrl
+      , stage =
+            flagsResult
+                |> Result.map .stage
+                |> Result.withDefault "dev"
       }
     , Effect.none
     )

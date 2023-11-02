@@ -24,7 +24,7 @@ export async function handleMessageFromElm(data: unknown, clerk: Clerk) {
 			console.log(parsed.data.data);
 			break;
 		case 'signin-redirect':
-			await clerk.redirectToSignIn({});
+			await clerk.redirectToSignIn({ afterSignInUrl: '/' });
 			break;
 		case 'signout':
 			clerk.signOut();

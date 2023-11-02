@@ -8,4 +8,4 @@ urlSandbox.txt
 .svelte-kit
 packages/frontend/test-results/
 
-static
+static/*

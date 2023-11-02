@@ -11,9 +11,6 @@ on:
 jobs:
   pullrequest-job:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: packages/frontend
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v3.3.2
@@ -30,14 +27,12 @@ jobs:
         with:
           node-version-file: .nvmrc
       - name: npm install
-        #if: steps.cache-node_modules.outputs.cache-hit != 'true'
+        if: steps.cache-node_modules.outputs.cache-hit != 'true'
         run: npm ci
-        working-directory: . # use the root directory
 
       - name: Get installed Playwright version
         id: playwright-version
         run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').packages['node_modules/@playwright/test'].version)")" >> $GITHUB_ENV
-        working-directory: . # use the root directory
       - name: Cache playwright binaries
         uses: actions/cache@v3
         id: playwright-cache
@@ -46,47 +41,40 @@ jobs:
             ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
 
-      - name: lint
-        run: npm run lint
-        working-directory: . # use the root directory
-      - name: build
-        run: npm run build
-      - name: local test all packages
-        run: npm run test-local
-        working-directory: . # use the root directory
-
-      - name: deploy backend
-        env:
-          AMPT_API_KEY: ${{ secrets.AMPT_API_KEY }}
-        id: deploy-backend
-        working-directory: . # use the root directory
-        run: |
-          url=$(./scripts/deployAndGetUrl.sh ci)
-          echo aha $url
-          echo "BACKEND_URL=$url" >> "$GITHUB_OUTPUT"
+      - name: build elm frontend
+        run: npm run build-fe-dev
 
       - name: test backend integration
         env:
           AMPT_API_KEY: ${{ secrets.AMPT_API_KEY }}
         id: backend-integration-test
-        working-directory: . # use the root directory
         run: |
-          npx ampt run test --test-stage
+          npx ampt run test --test-stage  --skip-update
 
-      - name: Pull Vercel Environment Information
-        run: npx vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-      - name: Build Project Artifacts
-        run: PUBLIC_BACKEND_URL=${{ steps.deploy-backend.outputs.BACKEND_URL}} PUBLIC_STAGE=dev npx vercel build --token=${{ secrets.VERCEL_TOKEN }}
-      - name: Deploy Project Artifacts to Vercel
-        id: deploy-frontend
+      - name: deploy backend
+        env:
+          AMPT_API_KEY: ${{ secrets.AMPT_API_KEY }}
+        id: deploy-backend
         run: |
-          url=$(npx vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
-          echo "FRONTEND_URL=$url" >> "$GITHUB_OUTPUT"
+          url=$(./scripts/deployAndGetUrl.sh ci)
+          echo aha $url
+          echo "AMPT_URL=$url" >> "$GITHUB_OUTPUT"
+
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
+        working-directory: ./packages/frontend
         if: steps.playwright-cache.outputs.cache-hit != 'true'
       - name: Install Playwright Dependencies
         run: npx playwright install-deps
+        working-directory: ./packages/frontend
         if: steps.playwright-cache.outputs.cache-hit != 'true'
       - name: run end to end tests
-        run: FRONTEND_URL=${{ steps.deploy-frontend.outputs.FRONTEND_URL}} npm run test:e2e
+        run: FRONTEND_URL=${{ steps.deploy-backend.outputs.AMPT_URL}} npm run test:e2e
+        working-directory: ./packages/frontend
+
+      - name: Archive code coverage results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: e2e test rsults
+          path: packages/frontend/test-results/

@@ -8,7 +8,7 @@ export class TestGlobalConstants {
 		if (process.env.CI === 'true') {
 			throw new Error('FRONTEND_URL is not set in CI');
 		}
-		// use latest deplyment if no url value is set in dev setup
-		return 'https://listspink-vercel-rochdigital.vercel.app';
+		// use latest ci deplyment if no url value is set in dev setup
+		return 'https://ci.lists.pink';
 	}
 }
