@@ -7,6 +7,7 @@ env:
 on:
   pull_request:
     branches: [main]
+concurrency: CI-STAGE-USER
 
 jobs:
   pullrequest-job:
