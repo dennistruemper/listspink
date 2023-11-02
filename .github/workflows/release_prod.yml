@@ -31,7 +31,7 @@ jobs:
         run: npm ci
 
       - name: build elm frontend
-        run: npm run build-fe-dev
+        run: npm run build-fe-prod
       - name: deploy backend
         env:
           AMPT_API_KEY: ${{ secrets.AMPT_API_KEY }}
