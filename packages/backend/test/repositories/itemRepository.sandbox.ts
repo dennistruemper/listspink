@@ -1,7 +1,7 @@
 import ksuid from 'ksuid';
 import { describe, expect, it } from 'vitest';
-import { KsuidGenerator } from '../../../shared/src/adapter/idGenerator';
 import { ItemRepositoryAmpt } from '../../src/adapter/ampt/data/itemRepositoryAmpt';
+import { KsuidGenerator } from '../../src/adapter/idGenerator';
 
 describe('ItemRepository', () => {
 	const repository = new ItemRepositoryAmpt(new KsuidGenerator());
