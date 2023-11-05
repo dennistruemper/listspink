@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { Page, expect, test } from '@playwright/test';
 import { TestGlobalConstants } from './testGlobalConstants';
 
 // clerk has bot protection, this test does not work any more. Waiting for support answer hot to handle this
@@ -66,7 +66,7 @@ test('login with new user', async ({ page }) => {
 	expect(page.url()).toContain(TestGlobalConstants.getLatestURL());
 });
 
-async function enterRegistrationCode(page) {
+async function enterRegistrationCode(page: Page) {
 	page;
 	//await page.getByLabel('Digit 1').click();
 	await page.getByLabel('Digit 1').fill('4');

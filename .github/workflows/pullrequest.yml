@@ -63,19 +63,19 @@ jobs:
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-        working-directory: ./packages/frontend
+        working-directory: ./packages/e2e
         if: steps.playwright-cache.outputs.cache-hit != 'true'
       - name: Install Playwright Dependencies
         run: npx playwright install-deps
-        working-directory: ./packages/frontend
+        working-directory: ./packages/e2e
         if: steps.playwright-cache.outputs.cache-hit != 'true'
       - name: run end to end tests
         run: FRONTEND_URL=${{ steps.deploy-backend.outputs.AMPT_URL}} npm run test:e2e
-        working-directory: ./packages/frontend
+        working-directory: ./packages/e2e
 
       - name: Archive code coverage results
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: e2e test rsults
-          path: packages/frontend/test-results/
+          path: packages/e2e/test-results/
