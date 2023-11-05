@@ -1,10 +1,10 @@
+import { Result, UpdateInput, failure, success } from '../../../languageExtension';
 import {
 	NO_ACCESS,
 	NO_ACCESS_CODE,
 	UNKNOWN_DATA_SHAPE
-} from '../../../../../shared/src/definitions/errorCodes';
-import { ItemPink } from '../../../../../shared/src/definitions/itemPink';
-import { Result, UpdateInput, failure, success } from '../../../../../shared/src/languageExtension';
+} from '../../definitions/errorCodes';
+import { ItemPink } from '../../definitions/itemPink';
 import { ItemRepository } from '../../definitions/repositories/itemRepository';
 import { ListRepository } from '../../definitions/repositories/listRepository';
 import { Usecase } from '../usecase';

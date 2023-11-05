@@ -1,5 +1,5 @@
-import { ListPink } from '../../../../../shared/src/definitions/listPink';
-import { Result, failure, success } from '../../../../../shared/src/languageExtension';
+import { Result, failure, success } from '../../../languageExtension';
+import { ListPink } from '../../definitions/listPink';
 import {
 	ConnectToUserErrors,
 	CreateListErrors,

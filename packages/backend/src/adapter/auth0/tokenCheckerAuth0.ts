@@ -1,7 +1,7 @@
 import { Handler } from 'express';
 import { auth } from 'express-oauth2-jwt-bearer';
-import { TokenChecker } from '../../../../shared/src/definitions/tokenChecker';
-import { ConfigRepository } from '../../domain/definitions/repositories/ConfigRepository';
+import { ConfigRepository } from '../../domain/definitions/repositories/configRepository';
+import { TokenChecker } from '../../domain/definitions/tokenChecker';
 
 export class TokenCheckerAuth0 implements TokenChecker {
 	private config: ConfigRepository;

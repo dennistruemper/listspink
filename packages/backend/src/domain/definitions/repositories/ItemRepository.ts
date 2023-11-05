@@ -1,6 +1,6 @@
-import { UNKNOWN_DATA_SHAPE } from '../../../../../shared/src/definitions/errorCodes';
-import { ItemPink } from '../../../../../shared/src/definitions/itemPink';
-import { OptionalID, Result, UpdateInput } from '../../../../../shared/src/languageExtension';
+import { OptionalID, Result, UpdateInput } from '../../../languageExtension';
+import { UNKNOWN_DATA_SHAPE } from '../errorCodes';
+import { ItemPink } from '../itemPink';
 
 export type CreateItemInput = OptionalID<ItemPink>;
 export type GetItemsForListInput = { listId: string };

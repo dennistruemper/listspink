@@ -1,5 +1,5 @@
 import ksuid from 'ksuid';
-import { IdGenerator } from '../../../../../shared/src/definitions/idGenerator';
+import { IdGenerator } from '../../../domain/definitions/idGenerator';
 
 export class KsuidGenerator implements IdGenerator {
 	generate(): string {

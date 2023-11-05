@@ -1,8 +1,8 @@
-import { IdGenerator } from '../../../../shared/src/definitions/idGenerator';
-import { TokenChecker } from '../../../../shared/src/definitions/tokenChecker';
+import { IdGenerator } from './idGenerator';
 import { ConfigRepository } from './repositories/configRepository';
 import { ItemRepository } from './repositories/itemRepository';
 import { ListRepository } from './repositories/listRepository';
+import { TokenChecker } from './tokenChecker';
 
 export interface Dependencies {
 	configRepository: ConfigRepository;

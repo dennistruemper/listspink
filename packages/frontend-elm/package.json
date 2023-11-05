@@ -4,6 +4,7 @@
 	"description": "Built with [Elm Land](https://elm.land) 🌈",
 	"main": "index.js",
 	"scripts": {
+		"dev": "elm-land server",
 		"watch:css": "npx tailwindcss -i ./tailwind/lists.pink.css -o ./static/lists.pink.css --watch",
 		"build:css": "npx tailwindcss -i ./tailwind/lists.pink.css -o ./static/lists.pink.css",
 		"build:elm:prod": "STAGE=prod elm-land build",

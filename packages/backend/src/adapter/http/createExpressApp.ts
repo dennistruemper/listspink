@@ -1,7 +1,7 @@
 import { http } from '@ampt/sdk';
 import cors from 'cors';
 import express, { Express, Handler, Router } from 'express';
-import { VersionResponse } from '../../../../shared/src/definitions/versionRequestResponse';
+import { VersionResponse } from '../../domain/definitions/communication/versionRequestResponse';
 import { Dependencies } from '../../domain/definitions/dependencies';
 import { addItemRoutes } from './itemRoutes';
 import { addListRoutes } from './listRoutes';

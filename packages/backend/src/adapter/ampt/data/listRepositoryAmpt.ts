@@ -2,28 +2,17 @@ import { data, GetBatchResponse } from '@ampt/data';
 import {
 	DATA_MISSING_CODE,
 	UNKNOWN_DATA_SHAPE_CODE
-} from '../../../../../shared/src/definitions/errorCodes';
-import { IdGenerator } from '../../../../../shared/src/definitions/idGenerator';
+} from '../../../domain/definitions/errorCodes';
+import { IdGenerator } from '../../../domain/definitions/idGenerator';
 import {
 	ListPink,
 	ListPinkDetails,
 	listPinkSchema
-} from '../../../../../shared/src/definitions/listPink';
+} from '../../../domain/definitions/listPink';
 import {
 	ListToItemConnection,
 	listToItemConnectionSchema
-} from '../../../../../shared/src/definitions/listToItemConnection';
-import {
-	UserToListConnection,
-	userToListConnectionSchema
-} from '../../../../../shared/src/definitions/userToListConnection';
-import { amptDelimiter, delimiter } from '../../../../../shared/src/globalConstants';
-import {
-	failure,
-	forceExhaust,
-	Result,
-	success
-} from '../../../../../shared/src/languageExtension';
+} from '../../../domain/definitions/listToItemConnection';
 import {
 	ConnectItemToListErrors,
 	ConnectItemToListInput,
@@ -40,6 +29,17 @@ import {
 	UserHasAccessErrors,
 	UserHasAccessInput
 } from '../../../domain/definitions/repositories/listRepository';
+import {
+	UserToListConnection,
+	userToListConnectionSchema
+} from '../../../domain/definitions/userToListConnection';
+import { amptDelimiter, delimiter } from '../../../globalConstants';
+import {
+	failure,
+	forceExhaust,
+	Result,
+	success
+} from '../../../languageExtension';
 import { batchResultSchema } from './batchResultSchema';
 
 const getListsSchema = batchResultSchema(listPinkSchema);

@@ -1,15 +1,12 @@
 import supertest from 'supertest';
 import { describe, expect, it } from 'vitest';
-import { getListDetailsArrayResponseSchema } from '../../../../shared/src/definitions/communication/getListDetailsRequestResponse';
-import {
-	CreateItemRequest,
-	UpdateItemRequest
-} from '../../../../shared/src/definitions/communication/itemRequestResponses';
 import { createApp } from '../../../src/adapter/http/createExpressApp';
 import { Dependencies } from '../../../src/domain/definitions/dependencies';
 import { CreateItemForListUsecase } from '../../../src/domain/usecases/items/createItemForListUsecase';
 
-import { ItemPink } from '../../../../shared/src/definitions/itemPink';
+import { getListDetailsArrayResponseSchema } from '../../../src/domain/definitions/communication/getListDetailsRequestResponse';
+import { CreateItemRequest, UpdateItemRequest } from '../../../src/domain/definitions/communication/itemRequestResponses';
+import { ItemPink } from '../../../src/domain/definitions/itemPink';
 import { createJwtDummy } from '../../util/jwt';
 import { getTestDependencies } from '../testDependencies';
 

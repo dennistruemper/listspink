@@ -1,9 +1,9 @@
 import supertest from 'supertest';
 import { describe, expect, it } from 'vitest';
-import { CreateListRequest } from '../../../../shared/src/definitions/communication/createListRequestResponse';
-import { getListDetailsArrayResponseSchema } from '../../../../shared/src/definitions/communication/getListDetailsRequestResponse';
 import { createApp } from '../../../src/adapter/http/createExpressApp';
 
+import { CreateListRequest } from '../../../src/domain/definitions/communication/createListRequestResponse';
+import { getListDetailsArrayResponseSchema } from '../../../src/domain/definitions/communication/getListDetailsRequestResponse';
 import { createJwtDummy } from '../../util/jwt';
 import { getTestDependencies } from '../testDependencies';
 describe.concurrent('list enppoints', async () => {

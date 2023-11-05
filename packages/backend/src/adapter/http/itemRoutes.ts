@@ -1,23 +1,23 @@
 import { Router } from 'express';
-import { GetListDetailsResponse } from '../../../../shared/src/definitions/communication/getListDetailsRequestResponse';
+import { GetListDetailsResponse } from '../../domain/definitions/communication/getListDetailsRequestResponse';
 import {
 	CreateItemResponse,
 	GetItemsResponse,
 	UpdateItemResponses,
 	createItemRequestSchema,
 	updateItemRequestSchema
-} from '../../../../shared/src/definitions/communication/itemRequestResponses';
+} from '../../domain/definitions/communication/itemRequestResponses';
+import { Dependencies } from '../../domain/definitions/dependencies';
 import {
 	NO_ACCESS_CODE,
 	UNKNOWN_DATA_SHAPE_CODE
-} from '../../../../shared/src/definitions/errorCodes';
-import { forceExhaust } from '../../../../shared/src/languageExtension';
-import { Dependencies } from '../../domain/definitions/dependencies';
+} from '../../domain/definitions/errorCodes';
 import { CreateItemForListUsecase } from '../../domain/usecases/items/createItemForListUsecase';
 import { GetItemUsecase } from '../../domain/usecases/items/getItemUsecase';
 import { GetItemsForListUsecase } from '../../domain/usecases/items/getItemsForListUsecase';
 import { ToggleItemUsecase } from '../../domain/usecases/items/toggleItemUsecase';
 import { UpdateItemUsecase } from '../../domain/usecases/items/updateItemsUsecase';
+import { forceExhaust } from '../../languageExtension';
 import { getUserIdFromRequest } from './expressHelper';
 
 export function addItemRoutes(router: Router, dependencies: Dependencies) {
@@ -206,7 +206,7 @@ function addUpdateItemDetailsRoute(router: Router, dependencies: Dependencies) {
 			itemId,
 			listId,
 			userId,
-			changes: paredBody.data
+			changes: {...paredBody.data, completed: paredBody.data.completed ?? null}
 		});
 
 		if (loaded.success === false) {

@@ -1,18 +1,11 @@
 import { Router } from 'express';
-import {
-	CreateListResponse,
-	createListRequestSchema
-} from '../../../../shared/src/definitions/communication/createListRequestResponse';
-import { GetListDetailsResponse } from '../../../../shared/src/definitions/communication/getListDetailsRequestResponse';
-import {
-	DATA_MISSING_CODE,
-	NO_ACCESS_CODE,
-	UNKNOWN_DATA_SHAPE_CODE
-} from '../../../../shared/src/definitions/errorCodes';
-import { forceExhaust } from '../../../../shared/src/languageExtension';
+import { CreateListResponse, createListRequestSchema } from '../../domain/definitions/communication/createListRequestResponse';
+import { GetListDetailsResponse } from '../../domain/definitions/communication/getListDetailsRequestResponse';
 import { Dependencies } from '../../domain/definitions/dependencies';
+import { DATA_MISSING_CODE, NO_ACCESS_CODE, UNKNOWN_DATA_SHAPE_CODE } from '../../domain/definitions/errorCodes';
 import { CreateListUsecase } from '../../domain/usecases/lists/createListUsecase';
 import { GetListUsecase } from '../../domain/usecases/lists/getListUsecase';
+import { forceExhaust } from '../../languageExtension';
 import { getUserIdFromRequest } from './expressHelper';
 
 export function addListRoutes(router: Router, dependencies: Dependencies) {

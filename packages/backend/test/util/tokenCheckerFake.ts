@@ -1,5 +1,5 @@
 import { Handler } from 'express';
-import { TokenChecker } from '../../../shared/src/definitions/tokenChecker';
+import { TokenChecker } from '../../src/domain/definitions/tokenChecker';
 import { decodeJwt } from './jwt';
 
 export class TokenCheckerFake implements TokenChecker {

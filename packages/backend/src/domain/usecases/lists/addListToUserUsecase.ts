@@ -1,5 +1,5 @@
-import { UNKNOWN_DATA_SHAPE } from '../../../../../shared/src/definitions/errorCodes';
-import { Result, failure, success } from '../../../../../shared/src/languageExtension';
+import { Result, failure, success } from '../../../languageExtension';
+import { UNKNOWN_DATA_SHAPE } from '../../definitions/errorCodes';
 import { ListRepository } from '../../definitions/repositories/listRepository';
 
 import { Usecase } from '../usecase';

@@ -1,12 +1,12 @@
-import { ListPink, ListPinkDetails } from '../../../../../shared/src/definitions/listPink';
-import { ListToItemConnection } from '../../../../../shared/src/definitions/listToItemConnection';
-import { UserToListConnection } from '../../../../../shared/src/definitions/userToListConnection';
-import { OptionalID, Result } from '../../../../../shared/src/languageExtension';
+import { OptionalID, Result } from '../../../languageExtension';
 import {
 	DATA_MISSING,
 	NO_ACCESS,
 	UNKNOWN_DATA_SHAPE
-} from '../../../../../shared/src/definitions/errorCodes';
+} from '../errorCodes';
+import { ListPink, ListPinkDetails } from '../listPink';
+import { ListToItemConnection } from '../listToItemConnection';
+import { UserToListConnection } from '../userToListConnection';
 
 export type CreateListInput = OptionalID<ListPink>;
 export type GetListsByItemIdForUserInput = { itemId: string; userId: string };
