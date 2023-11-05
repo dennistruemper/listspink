@@ -157,8 +157,8 @@ view model =
         [ viewActionBarWrapper
             [ viewButton "Create" CreateClicked
             ]
-            [ viewTextInput { name = "Name", value = Just model.nameInput, placeholder = Just "Buy orange juice", action = NameChanged }
-            , viewTextAreaInput { name = "Description", value = Just model.descriptionInput, placeholder = Just "What I have to do to buy orage juice", action = DescriptionChanged }
+            [ viewTextInput { name = "Name", value = Just model.nameInput, placeholder = Just "Shopping List", action = NameChanged }
+            , viewTextAreaInput { name = "Description", value = Just model.descriptionInput, placeholder = Just "Buy these items when you are in a supermarket", action = DescriptionChanged }
             , viewValidationResult model.validationError
             ]
         ]
