@@ -1,6 +1,6 @@
 import { Handler } from 'express';
-import { TokenChecker } from '../../../../shared/src/definitions/tokenChecker';
 import { ConfigRepository } from '../../domain/definitions/repositories/ConfigRepository';
+import { TokenChecker } from '../../domain/definitions/tokenChecker';
 
 import { ClerkExpressRequireAuth } from '@clerk/clerk-sdk-node';
 
