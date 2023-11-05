@@ -1,5 +1,5 @@
 import { params } from '@ampt/sdk';
-import { ConfigRepository } from '../../domain/definitions/repositories/ConfigRepository';
+import { ConfigRepository } from '../../domain/definitions/repositories/configRepository';
 
 export class ConfigRepositoryAmpt implements ConfigRepository {
 	getAuth0TokenUrl(): Promise<string> {

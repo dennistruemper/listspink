@@ -206,7 +206,7 @@ function addUpdateItemDetailsRoute(router: Router, dependencies: Dependencies) {
 			itemId,
 			listId,
 			userId,
-			changes: paredBody.data
+			changes: {...paredBody.data, completed: paredBody.data.completed ?? null}
 		});
 
 		if (loaded.success === false) {

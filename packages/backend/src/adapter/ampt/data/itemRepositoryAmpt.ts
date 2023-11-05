@@ -1,13 +1,8 @@
 import { data, GetBatchResponse } from '@ampt/data';
-import {
-	UNKNOWN_DATA_SHAPE,
-	UNKNOWN_DATA_SHAPE_CODE
-} from '../../../../../shared/src/definitions/errorCodes';
-import { IdGenerator } from '../../../../../shared/src/definitions/idGenerator';
-import { ItemPink, itemSchema } from '../../../../../shared/src/definitions/itemPink';
-import { listToItemConnectionSchema } from '../../../../../shared/src/definitions/listToItemConnection';
-import { amptDelimiter, delimiter } from '../../../../../shared/src/globalConstants';
-import { failure, Result, success } from '../../../../../shared/src/languageExtension';
+import { UNKNOWN_DATA_SHAPE, UNKNOWN_DATA_SHAPE_CODE } from '../../../domain/definitions/errorCodes';
+import { IdGenerator } from '../../../domain/definitions/idGenerator';
+import { ItemPink, itemSchema } from '../../../domain/definitions/itemPink';
+import { listToItemConnectionSchema } from '../../../domain/definitions/listToItemConnection';
 import {
 	CreateItemErrors,
 	CreateItemInput,
@@ -17,6 +12,8 @@ import {
 	ItemRepository,
 	UpdateItemInput
 } from '../../../domain/definitions/repositories/itemRepository';
+import { amptDelimiter, delimiter } from '../../../globalConstants';
+import { failure, Result, success } from '../../../languageExtension';
 import { batchResultSchema } from './batchResultSchema';
 
 const getItemsSchema = batchResultSchema(itemSchema);

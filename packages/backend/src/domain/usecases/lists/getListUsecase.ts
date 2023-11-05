@@ -1,10 +1,6 @@
-import {
-	NO_ACCESS,
-	NO_ACCESS_CODE,
-	UNKNOWN_DATA_SHAPE
-} from '../../../../../shared/src/definitions/errorCodes';
-import { ListPink } from '../../../../../shared/src/definitions/listPink';
-import { Result, failure, success } from '../../../../../shared/src/languageExtension';
+import { Result, failure, success } from '../../../languageExtension';
+import { NO_ACCESS, NO_ACCESS_CODE, UNKNOWN_DATA_SHAPE } from '../../definitions/errorCodes';
+import { ListPink } from '../../definitions/listPink';
 import { ListRepository } from '../../definitions/repositories/listRepository';
 import { Usecase } from '../usecase';
 

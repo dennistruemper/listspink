@@ -1,8 +1,8 @@
 import { Handler } from 'express';
-import { ConfigRepository } from '../../domain/definitions/repositories/ConfigRepository';
 import { TokenChecker } from '../../domain/definitions/tokenChecker';
 
 import { ClerkExpressRequireAuth } from '@clerk/clerk-sdk-node';
+import { ConfigRepository } from '../../domain/definitions/repositories/configRepository';
 
 export class TokenCheckerClerk implements TokenChecker {
 	private config: ConfigRepository;
@@ -17,7 +17,7 @@ export class TokenCheckerClerk implements TokenChecker {
 		}
 
 		const checkJwt = ClerkExpressRequireAuth({
-			apiUrl: await this.config.getClerkApi()
+			//apiUrl: await this.config.getClerkApi() TODO remove this?
 		});
 
 		return checkJwt;
