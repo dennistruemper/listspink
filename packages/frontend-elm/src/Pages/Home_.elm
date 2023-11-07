@@ -183,6 +183,9 @@ view model =
 
                     Api.Failure error ->
                         [ Html.text "Error loading lists" ]
+
+                    Api.FailureWithDetails error ->
+                        [ Html.text "Error loading lists" ]
             ]
         ]
     }

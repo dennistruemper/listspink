@@ -258,6 +258,9 @@ view model =
                 Failure _ ->
                     Html.text "Error"
 
+                FailureWithDetails _ ->
+                    Html.text "Error"
+
                 Success items ->
                     case items of
                         [] ->

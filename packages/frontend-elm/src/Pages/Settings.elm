@@ -102,6 +102,9 @@ view shared model =
 
             Api.Failure httpErr ->
                 Html.text "Error getting Version"
+
+            Api.FailureWithDetails error ->
+                Html.text "Error getting Version"
         , Html.div [] [ Html.text ("Frontendversion: " ++ shared.stage) ]
         ]
     }

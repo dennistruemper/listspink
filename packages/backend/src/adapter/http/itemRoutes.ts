@@ -213,7 +213,7 @@ function addUpdateItemDetailsRoute(router: Router, dependencies: Dependencies) {
 			switch (loaded.code) {
 				case UNKNOWN_DATA_SHAPE_CODE:
 					console.error('Error code: ' + loaded.code + ' ' + loaded.message);
-					res.status(500).send('Failed to update item. ErrorCode: ' + loaded.code);
+					res.status(400).send('Failed to update item. ErrorCode: ' + loaded.code + ' ' + loaded.message);
 					return;
 				case NO_ACCESS_CODE:
 					res.status(403).send('User does not have access to this list');
@@ -223,7 +223,7 @@ function addUpdateItemDetailsRoute(router: Router, dependencies: Dependencies) {
 			}
 		}
 
-		const response: UpdateItemResponses = {};
+		const response: UpdateItemResponses = loaded.value;
 
 		return res.status(200).send(response);
 	});
@@ -275,7 +275,7 @@ function toggleItemCompleted(router: Router, dependencies: Dependencies) {
 			}
 		}
 
-		const response: UpdateItemResponses = {};
+		const response = {};
 
 		return res.status(200).send(response);
 	});

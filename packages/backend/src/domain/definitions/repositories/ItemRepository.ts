@@ -19,5 +19,5 @@ export interface ItemRepository {
 	getItem(id: string): Promise<Result<ItemPink | undefined, GetItemErrors>>;
 	getAllItems(): Promise<Result<ItemPink[], GetAllItemsErrors>>;
 	getItemsForList(input: GetItemsForListInput): Promise<Result<ItemPink[], GetItemsForListErrors>>;
-	update(update: UpdateItemInput): Promise<Result<void, UNKNOWN_DATA_SHAPE>>;
+	update(update: UpdateItemInput): Promise<Result<ItemPink, UNKNOWN_DATA_SHAPE>>;
 }

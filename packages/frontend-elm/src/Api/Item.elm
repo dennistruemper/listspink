@@ -1,8 +1,9 @@
-module Api.Item exposing (CreateItemPink, ToggleItemPink, createItem, getItemsForList, toggleItem)
+module Api.Item exposing (CreateItemPink, ToggleItemPink, createItem, getItemById, getItemsForList, toggleItem, updateItem)
 
 import Domain.ItemPink exposing (ItemPink)
 import Effect exposing (Effect)
 import Http
+import Http.Detailed
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode exposing (Value)
 
@@ -26,6 +27,23 @@ getItemsForList options =
             , url = options.baseUrl ++ "list/" ++ options.listId ++ "/items"
             , body = Http.emptyBody
             , expect = Http.expectJson options.onResponse (Decode.list itemDecoder)
+            , timeout = Nothing
+            , tracker = Nothing
+            }
+
+
+getItemById : { onResponse : Result Http.Error ItemPink -> msg, baseUrl : String, token : String, itemId : String } -> Effect msg
+getItemById options =
+    Effect.sendCmd <|
+        Http.request
+            { method = "GET"
+            , headers =
+                [ Http.header "Content-Type" "application/json"
+                , Http.header "Authorization" ("Bearer " ++ options.token)
+                ]
+            , url = options.baseUrl ++ "item/" ++ options.itemId
+            , body = Http.emptyBody
+            , expect = Http.expectJson options.onResponse itemDecoder
             , timeout = Nothing
             , tracker = Nothing
             }
@@ -87,6 +105,49 @@ toggleItem options =
             , url = options.baseUrl ++ "list/" ++ options.body.listId ++ "/item/" ++ options.body.itemId ++ "/toggle"
             , body = Http.emptyBody
             , expect = Http.expectWhatever options.onResponse
+            , timeout = Nothing
+            , tracker = Nothing
+            }
+
+
+type alias UpdateItemBody =
+    { listId : String
+    , itemId : String
+    , name : Maybe String
+    , description : Maybe String
+    }
+
+
+updateItem : { onResponse : Result (Http.Detailed.Error String) ( Http.Metadata, ItemPink ) -> msg, baseUrl : String, token : String, body : UpdateItemBody } -> Effect msg
+updateItem options =
+    Effect.sendCmd <|
+        Http.request
+            { method = "PUT"
+            , headers =
+                [ Http.header "Authorization" ("Bearer " ++ options.token)
+                ]
+            , url = options.baseUrl ++ "list/" ++ options.body.listId ++ "/item/" ++ options.body.itemId
+            , body =
+                Http.jsonBody
+                    (Encode.object
+                        ([]
+                            ++ (case options.body.name of
+                                    Just name ->
+                                        [ ( "name", Encode.string name ) ]
+
+                                    Nothing ->
+                                        []
+                               )
+                            ++ (case options.body.description of
+                                    Just description ->
+                                        [ ( "description", Encode.string description ) ]
+
+                                    Nothing ->
+                                        []
+                               )
+                        )
+                    )
+            , expect = Http.Detailed.expectJson options.onResponse itemDecoder
             , timeout = Nothing
             , tracker = Nothing
             }
