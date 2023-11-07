@@ -11,6 +11,7 @@ import Html
 import Html.Attributes as Attr exposing (class)
 import Html.Events as Events
 import Http
+import Http.Detailed
 import Layouts
 import Page exposing (Page)
 import Route exposing (Route)
@@ -69,7 +70,7 @@ type Msg
     = NameChanged String
     | DescriptionChanged String
     | CreateClicked
-    | CreateListResponseReceived (Result Http.Error ListPink)
+    | CreateListResponseReceived (Result (Http.Detailed.Error String) ( Http.Metadata, ListPink ))
 
 
 update : Msg -> Model -> ( Model, Effect Msg )

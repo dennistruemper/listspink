@@ -2,7 +2,8 @@ import { Result, UpdateInput, failure, success } from '../../../languageExtensio
 import {
 	NO_ACCESS,
 	NO_ACCESS_CODE,
-	UNKNOWN_DATA_SHAPE
+	UNKNOWN_DATA_SHAPE,
+	UNKNOWN_DATA_SHAPE_CODE
 } from '../../definitions/errorCodes';
 import { ItemPink } from '../../definitions/itemPink';
 import { ItemRepository } from '../../definitions/repositories/itemRepository';
@@ -16,9 +17,8 @@ export interface UpdateItemInput {
 	changes: UpdateInput<Omit<ItemPink, 'id'>>;
 }
 
-export type UpdateItemOutput = {
-	//
-};
+export type UpdateItemOutput = ItemPink
+;
 
 type Errors = UNKNOWN_DATA_SHAPE | NO_ACCESS;
 
@@ -39,12 +39,18 @@ export class UpdateItemUsecase implements Usecase<UpdateItemInput, UpdateItemOut
 		if (hasAccessResult.value === false)
 			return failure('User does not have access to this list', NO_ACCESS_CODE);
 
+		if (data.changes?.name === '') {
+			console.log('data.changes', data.changes);
+			return failure('Name cannot be empty', UNKNOWN_DATA_SHAPE_CODE);
+		}
+
 		const updateResult = await this.itemRepository.update({
 			itemId: data.itemId,
 			updatedFields: data.changes
 		});
-		if (updateResult.success === false) return failure(updateResult.message, updateResult.code);
+		if (updateResult.success === false) {
+			return failure(updateResult.message, updateResult.code);}
 
-		return success({});
+		return success(updateResult.value);
 	}
 }

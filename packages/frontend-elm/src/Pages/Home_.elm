@@ -14,6 +14,7 @@ import Html
 import Html.Attributes as Attr exposing (class)
 import Html.Events exposing (onClick)
 import Http
+import Http.Detailed
 import Layouts exposing (Layout)
 import Page exposing (Page)
 import Result exposing (Result)
@@ -78,7 +79,7 @@ type Msg
     = NoOp
     | SignInClicked
     | SignOutClicked
-    | ListsResponded (Result Http.Error (List ListPink))
+    | ListsResponded (Result (Http.Detailed.Error String) ( Http.Metadata, List ListPink ))
     | CreateClicked
     | NavigateClicked { path : Route.Path.Path, query : Dict.Dict String String }
 
@@ -101,14 +102,14 @@ update msg model =
             , Effect.signOut
             )
 
-        ListsResponded (Ok lists) ->
+        ListsResponded (Ok ( metadata, lists )) ->
             ( { model | listsLoaded = Api.Success lists }
             , Effect.none
             )
 
         -- TODO handle error
         ListsResponded (Err error) ->
-            ( { model | listsLoaded = Api.Failure error }
+            ( { model | listsLoaded = Api.FailureWithDetails error }
             , Effect.none
             )
 
@@ -181,7 +182,7 @@ view model =
                             ]
                         ]
 
-                    Api.Failure error ->
+                    Api.FailureWithDetails error ->
                         [ Html.text "Error loading lists" ]
             ]
         ]

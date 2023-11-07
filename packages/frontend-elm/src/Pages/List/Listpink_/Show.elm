@@ -12,6 +12,7 @@ import Effect exposing (Effect)
 import Html
 import Html.Attributes exposing (class)
 import Http
+import Http.Detailed
 import Layouts
 import Page exposing (Page)
 import Route exposing (Route)
@@ -71,10 +72,10 @@ init user shared listId () =
 
 type Msg
     = NoOp
-    | OnGetItemsForList (Result Http.Error (List Domain.ItemPink.ItemPink))
+    | OnGetItemsForList (Result (Http.Detailed.Error String) ( Http.Metadata, List Domain.ItemPink.ItemPink ))
     | CreateItemPinkClicked String
     | ItemPinkCompletedToggled String
-    | OnToggleItemPink (Result Http.Error ())
+    | OnToggleItemPink (Result (Http.Detailed.Error String) ( Http.Metadata, String ))
     | ItemCompleted String Time.Posix
 
 
@@ -86,13 +87,13 @@ update shared user msg model =
             , Effect.none
             )
 
-        OnGetItemsForList (Ok items) ->
+        OnGetItemsForList (Ok ( metadata, items )) ->
             ( { model | items = Success (orderItems items) }
             , Effect.none
             )
 
         OnGetItemsForList (Err error) ->
-            ( { model | items = Failure error }
+            ( { model | items = FailureWithDetails error }
             , Effect.none
             )
 
@@ -109,7 +110,7 @@ update shared user msg model =
                 ]
             )
 
-        OnToggleItemPink (Ok ()) ->
+        OnToggleItemPink (Ok ( metadata, response )) ->
             ( model
             , Effect.none
             )
@@ -255,7 +256,7 @@ view model =
                 Loading ->
                     Html.text "Loading..."
 
-                Failure _ ->
+                FailureWithDetails _ ->
                     Html.text "Error"
 
                 Success items ->

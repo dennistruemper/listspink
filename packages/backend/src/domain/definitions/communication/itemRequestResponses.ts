@@ -27,6 +27,12 @@ export const updateItemRequestSchema = z.object({
 	completed: z.string().nullish()
 });
 
+export const updateItemResponseSchema = z.object({
+	id: z.string(),
+	name: z.string(),
+	description: z.string().optional()
+});
+
 export type UpdateItemRequest = z.infer<typeof updateItemRequestSchema>;
-export const updateItemResponseSchema = z.object({});
+
 export type UpdateItemResponses = z.infer<typeof updateItemResponseSchema>;

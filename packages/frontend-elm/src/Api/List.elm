@@ -3,6 +3,7 @@ module Api.List exposing (CreateListPink, createList, getLists)
 import Domain.ListPink exposing (ListPink)
 import Effect exposing (Effect)
 import Http
+import Http.Detailed
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode exposing (Value)
 
@@ -13,7 +14,7 @@ type alias CreateListPink =
     }
 
 
-getLists : { onResponse : Result Http.Error (List ListPink) -> msg, baseUrl : String, token : String } -> Effect msg
+getLists : { onResponse : Result (Http.Detailed.Error String) ( Http.Metadata, List ListPink ) -> msg, baseUrl : String, token : String } -> Effect msg
 getLists options =
     Effect.sendCmd <|
         Http.request
@@ -24,7 +25,7 @@ getLists options =
                 ]
             , url = options.baseUrl ++ "list"
             , body = Http.emptyBody
-            , expect = Http.expectJson options.onResponse (Decode.list listDecoder)
+            , expect = Http.Detailed.expectJson options.onResponse (Decode.list listDecoder)
             , timeout = Nothing
             , tracker = Nothing
             }
@@ -38,7 +39,7 @@ listDecoder =
         (Decode.maybe (Decode.field "description" Decode.string))
 
 
-createList : { onResponse : Result Http.Error ListPink -> msg, baseUrl : String, token : String, body : CreateListPink } -> Effect msg
+createList : { onResponse : Result (Http.Detailed.Error String) ( Http.Metadata, ListPink ) -> msg, baseUrl : String, token : String, body : CreateListPink } -> Effect msg
 createList options =
     Effect.sendCmd <|
         Http.request
@@ -62,7 +63,7 @@ createList options =
                                )
                         )
                     )
-            , expect = Http.expectJson options.onResponse listDecoder
+            , expect = Http.Detailed.expectJson options.onResponse listDecoder
             , timeout = Nothing
             , tracker = Nothing
             }

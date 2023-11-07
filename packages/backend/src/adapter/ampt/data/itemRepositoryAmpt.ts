@@ -107,9 +107,10 @@ export class ItemRepositoryAmpt implements ItemRepository {
 		);
 	}
 
-	async update(update: UpdateItemInput): Promise<Result<void, UNKNOWN_DATA_SHAPE>> {
+	async update(update: UpdateItemInput): Promise<Result<ItemPink, UNKNOWN_DATA_SHAPE>> {
 		const key = this.storageId(update.itemId);
 		const result = await data.set(key, update.updatedFields, {});
+
 
 		if (result === undefined) {
 			return failure('No Result from data source', UNKNOWN_DATA_SHAPE_CODE);
@@ -118,9 +119,20 @@ export class ItemRepositoryAmpt implements ItemRepository {
 		// load dependent items and update too
 		const dependents = await data.get(`DEPENDS_ON_ITEM#${update.itemId}:*`, { label: 'label1' });
 		dependents.items.forEach(async (item) => {
-			await data.set(item.key, update.updatedFields);
+			const updateData = {
+				itemName: update.updatedFields?.name,
+				itemDescription: update.updatedFields?.description
+			}
+			await data.set(item.key, updateData);
 		});
+		const parsed = itemSchema.optional().safeParse(result);
 
-		return success(undefined);
+		if(parsed.success === false ) {
+			return failure(parsed.error.message, UNKNOWN_DATA_SHAPE_CODE)
+		} else if ( parsed.data === undefined){
+			return failure('No Result from data source', UNKNOWN_DATA_SHAPE_CODE);
+		}
+
+		return success(parsed.data);
 	}
 }

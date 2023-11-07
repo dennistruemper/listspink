@@ -10,6 +10,7 @@ import Domain.ItemPink exposing (ItemPink)
 import Effect exposing (Effect)
 import Html
 import Http
+import Http.Detailed
 import Layouts
 import Page exposing (Page)
 import Route exposing (Route)
@@ -72,7 +73,7 @@ type Msg
     | NameChanged String
     | DescriptionChanged String
     | CreateClicked
-    | CreateItemResponseReceived (Result Http.Error ItemPink)
+    | CreateItemResponseReceived (Result (Http.Detailed.Error String) ( Http.Metadata, ItemPink ))
     | BackClicked
 
 
