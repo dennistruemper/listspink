@@ -39,7 +39,8 @@ export class UpdateItemUsecase implements Usecase<UpdateItemInput, UpdateItemOut
 		if (hasAccessResult.value === false)
 			return failure('User does not have access to this list', NO_ACCESS_CODE);
 
-		if (data.changes?.name === undefined || data.changes.name === '') {
+		if (data.changes?.name === '') {
+			console.log('data.changes', data.changes);
 			return failure('Name cannot be empty', UNKNOWN_DATA_SHAPE_CODE);
 		}
 
