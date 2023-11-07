@@ -5,6 +5,7 @@ import Api.Version
 import Effect exposing (Effect)
 import Html
 import Http
+import Http.Detailed
 import Layouts exposing (Layout)
 import Page exposing (Page)
 import Route exposing (Route)
@@ -55,19 +56,19 @@ init shared () =
 
 
 type Msg
-    = VersionResponded (Result Http.Error String)
+    = VersionResponded (Result (Http.Detailed.Error String) ( Http.Metadata, String ))
 
 
 update : Msg -> Model -> ( Model, Effect Msg )
 update msg model =
     case msg of
-        VersionResponded (Ok backendVersion) ->
+        VersionResponded (Ok ( metadata, backendVersion )) ->
             ( { model | backendVersion = Api.Success backendVersion }
             , Effect.none
             )
 
         VersionResponded (Err httpErr) ->
-            ( { model | backendVersion = Api.Failure httpErr }
+            ( { model | backendVersion = Api.FailureWithDetails httpErr }
             , Effect.none
             )
 
@@ -99,9 +100,6 @@ view shared model =
 
             Api.Success backendVersion ->
                 Html.text backendVersion
-
-            Api.Failure httpErr ->
-                Html.text "Error getting Version"
 
             Api.FailureWithDetails error ->
                 Html.text "Error getting Version"

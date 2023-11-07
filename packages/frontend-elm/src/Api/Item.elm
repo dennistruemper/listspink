@@ -15,7 +15,7 @@ type alias CreateItemPink =
     }
 
 
-getItemsForList : { onResponse : Result Http.Error (List ItemPink) -> msg, baseUrl : String, token : String, listId : String } -> Effect msg
+getItemsForList : { onResponse : Result (Http.Detailed.Error String) ( Http.Metadata, List ItemPink ) -> msg, baseUrl : String, token : String, listId : String } -> Effect msg
 getItemsForList options =
     Effect.sendCmd <|
         Http.request
@@ -26,13 +26,13 @@ getItemsForList options =
                 ]
             , url = options.baseUrl ++ "list/" ++ options.listId ++ "/items"
             , body = Http.emptyBody
-            , expect = Http.expectJson options.onResponse (Decode.list itemDecoder)
+            , expect = Http.Detailed.expectJson options.onResponse (Decode.list itemDecoder)
             , timeout = Nothing
             , tracker = Nothing
             }
 
 
-getItemById : { onResponse : Result Http.Error ItemPink -> msg, baseUrl : String, token : String, itemId : String } -> Effect msg
+getItemById : { onResponse : Result (Http.Detailed.Error String) ( Http.Metadata, ItemPink ) -> msg, baseUrl : String, token : String, itemId : String } -> Effect msg
 getItemById options =
     Effect.sendCmd <|
         Http.request
@@ -43,7 +43,7 @@ getItemById options =
                 ]
             , url = options.baseUrl ++ "item/" ++ options.itemId
             , body = Http.emptyBody
-            , expect = Http.expectJson options.onResponse itemDecoder
+            , expect = Http.Detailed.expectJson options.onResponse itemDecoder
             , timeout = Nothing
             , tracker = Nothing
             }
@@ -58,7 +58,7 @@ itemDecoder =
         (Decode.maybe (Decode.field "completed" Decode.string))
 
 
-createItem : { onResponse : Result Http.Error ItemPink -> msg, baseUrl : String, token : String, body : CreateItemPink } -> Effect msg
+createItem : { onResponse : Result (Http.Detailed.Error String) ( Http.Metadata, ItemPink ) -> msg, baseUrl : String, token : String, body : CreateItemPink } -> Effect msg
 createItem options =
     Effect.sendCmd <|
         Http.request
@@ -82,7 +82,7 @@ createItem options =
                                )
                         )
                     )
-            , expect = Http.expectJson options.onResponse itemDecoder
+            , expect = Http.Detailed.expectJson options.onResponse itemDecoder
             , timeout = Nothing
             , tracker = Nothing
             }
@@ -94,7 +94,7 @@ type alias ToggleItemPink =
     }
 
 
-toggleItem : { onResponse : Result Http.Error () -> msg, baseUrl : String, token : String, body : ToggleItemPink } -> Effect msg
+toggleItem : { onResponse : Result (Http.Detailed.Error String) ( Http.Metadata, String ) -> msg, baseUrl : String, token : String, body : ToggleItemPink } -> Effect msg
 toggleItem options =
     Effect.sendCmd <|
         Http.request
@@ -104,7 +104,7 @@ toggleItem options =
                 ]
             , url = options.baseUrl ++ "list/" ++ options.body.listId ++ "/item/" ++ options.body.itemId ++ "/toggle"
             , body = Http.emptyBody
-            , expect = Http.expectWhatever options.onResponse
+            , expect = Http.Detailed.expectString options.onResponse
             , timeout = Nothing
             , tracker = Nothing
             }

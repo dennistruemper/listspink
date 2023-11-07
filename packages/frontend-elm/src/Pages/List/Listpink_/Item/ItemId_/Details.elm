@@ -43,9 +43,6 @@ toLayout itemId model =
                 Api.Loading ->
                     "Loading..."
 
-                Api.Failure _ ->
-                    itemId
-
                 Api.FailureWithDetails _ ->
                     itemId
 
@@ -93,7 +90,7 @@ type Msg
     | SaveClicked
     | NameChanged String
     | DescriptionChanged String
-    | GotItem (Result Http.Error ItemPink)
+    | GotItem (Result (Http.Detailed.Error String) ( Http.Metadata, ItemPink ))
     | GotItemUpdated (Result (Http.Detailed.Error String) ( Http.Metadata, ItemPink ))
 
 
@@ -136,11 +133,11 @@ update shared user msg model =
         DescriptionChanged description ->
             ( { model | descriptionInput = description }, Effect.none )
 
-        GotItem (Ok item) ->
+        GotItem (Ok ( metadata, item )) ->
             ( { model | loadedItem = Api.Success item, nameInput = item.name, descriptionInput = Maybe.withDefault "" item.description }, Effect.none )
 
         GotItem (Err error) ->
-            ( { model | loadedItem = Api.Failure error }, Effect.none )
+            ( { model | loadedItem = Api.FailureWithDetails error }, Effect.none )
 
         GotItemUpdated (Ok ( metadata, item )) ->
             ( { model | loadedItem = Api.Success item }, Effect.none )
@@ -179,9 +176,6 @@ view model =
 
                 Api.Success item ->
                     viewLoaded model
-
-                Api.Failure error ->
-                    [ viewError model (Api.httpErrorToHumanReadable error) ]
 
                 Api.FailureWithDetails message ->
                     [ viewErrorDetails model message ]
