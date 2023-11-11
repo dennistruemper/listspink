@@ -6,6 +6,7 @@ type alias ItemPink =
     , name : String
     , description : Maybe String
     , completed : Maybe String
+    , priority : Int
     }
 
 

@@ -15,6 +15,7 @@ export interface CreateItemInput {
 	itemDescription?: string;
 	listId: string;
 	extraListIds?: string[];
+	priority: number;
 }
 
 export type CreateItemOutput = {
@@ -34,7 +35,8 @@ export class CreateItemForListUsecase
 	async execute(data: CreateItemInput): Promise<Result<CreateItemOutput, Errors>> {
 		const created = await this.itemRepository.create({
 			name: data.itemName,
-			description: data.itemDescription
+			description: data.itemDescription,
+			priority: data.priority
 		});
 		if (created.success === false) {
 			return failure('Item not created', created.code);
@@ -54,7 +56,8 @@ export class CreateItemForListUsecase
 			listId: data.listId,
 			itemId: created.value.id,
 			itemName: data.itemName,
-			itemDescription: data.itemDescription
+			itemDescription: data.itemDescription,
+			priority: data.priority
 		});
 
 		if (connectResult.success === false)

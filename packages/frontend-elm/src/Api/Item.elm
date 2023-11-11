@@ -12,6 +12,7 @@ type alias CreateItemPink =
     { name : String
     , description : Maybe String
     , listId : String
+    , priority : Int
     }
 
 
@@ -51,11 +52,22 @@ getItemById options =
 
 itemDecoder : Decoder ItemPink
 itemDecoder =
-    Decode.map4 ItemPink
+    Decode.map5 (\id name description completed priority -> { id = id, name = name, description = description, completed = completed, priority = priority })
         (Decode.field "id" Decode.string)
         (Decode.field "name" Decode.string)
         (Decode.maybe (Decode.field "description" Decode.string))
         (Decode.maybe (Decode.field "completed" Decode.string))
+        (Decode.maybe (Decode.field "priority" Decode.int)
+            |> Decode.andThen
+                (\priority ->
+                    case priority of
+                        Just value ->
+                            Decode.succeed value
+
+                        Nothing ->
+                            Decode.succeed 0
+                )
+        )
 
 
 createItem : { onResponse : Result (Http.Detailed.Error String) ( Http.Metadata, ItemPink ) -> msg, baseUrl : String, token : String, body : CreateItemPink } -> Effect msg
@@ -72,6 +84,7 @@ createItem options =
                     (Encode.object
                         ([ ( "name", Encode.string options.body.name )
                          , ( "listId", Encode.string options.body.listId )
+                         , ( "priority", Encode.int options.body.priority )
                          ]
                             ++ (case options.body.description of
                                     Just description ->
@@ -115,6 +128,7 @@ type alias UpdateItemBody =
     , itemId : String
     , name : Maybe String
     , description : Maybe String
+    , priority : Int
     }
 
 
@@ -145,6 +159,7 @@ updateItem options =
                                     Nothing ->
                                         []
                                )
+                            ++ [ ( "priority", Encode.int options.body.priority ) ]
                         )
                     )
             , expect = Http.Detailed.expectJson options.onResponse itemDecoder

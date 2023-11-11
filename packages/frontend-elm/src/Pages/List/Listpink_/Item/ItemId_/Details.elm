@@ -5,6 +5,7 @@ import Api.Item
 import Auth
 import Components.ActionBarWrapper exposing (viewActionBarWrapper)
 import Components.Button exposing (viewButton)
+import Components.Dropdown exposing (ExactOneSelection(..), viewDropdown)
 import Components.LoadingSpinner exposing (viewLoadingSpinner)
 import Components.TextInput exposing (viewTextAreaInput, viewTextInput)
 import Domain.ItemPink exposing (ItemPink)
@@ -15,6 +16,7 @@ import Http
 import Http.Detailed
 import Layouts
 import Page exposing (Page)
+import Priority
 import Route exposing (Route)
 import Shared
 import ValidationResult exposing (ValidationResult(..), viewValidationResult)
@@ -65,6 +67,7 @@ type alias Model =
     , validationError : ValidationResult
     , listId : String
     , itemId : String
+    , priority : Int
     }
 
 
@@ -76,6 +79,7 @@ init shared route user () =
       , validationError = VNothing
       , listId = route.params.listpink
       , itemId = route.params.itemId
+      , priority = 0
       }
     , Api.Item.getItemById { baseUrl = shared.baseUrl, token = user.authToken, itemId = route.params.itemId, onResponse = GotItem }
     )
@@ -89,6 +93,7 @@ type Msg
     = BackClicked
     | SaveClicked
     | NameChanged String
+    | PriorityChanged String
     | DescriptionChanged String
     | GotItem (Result (Http.Detailed.Error String) ( Http.Metadata, ItemPink ))
     | GotItemUpdated (Result (Http.Detailed.Error String) ( Http.Metadata, ItemPink ))
@@ -121,6 +126,7 @@ update shared user msg model =
 
                         else
                             Just model.descriptionInput
+                    , priority = model.priority
                     , listId = model.listId
                     , itemId = model.itemId
                     }
@@ -130,17 +136,27 @@ update shared user msg model =
         NameChanged name ->
             ( { model | nameInput = name }, Effect.none )
 
+        PriorityChanged priority ->
+            ( { model | priority = Priority.priorityFromString priority }, Effect.none )
+
         DescriptionChanged description ->
             ( { model | descriptionInput = description }, Effect.none )
 
         GotItem (Ok ( metadata, item )) ->
-            ( { model | loadedItem = Api.Success item, nameInput = item.name, descriptionInput = Maybe.withDefault "" item.description }, Effect.none )
+            ( { model
+                | loadedItem = Api.Success item
+                , nameInput = item.name
+                , descriptionInput = Maybe.withDefault "" item.description
+                , priority = item.priority
+              }
+            , Effect.none
+            )
 
         GotItem (Err error) ->
             ( { model | loadedItem = Api.FailureWithDetails error }, Effect.none )
 
         GotItemUpdated (Ok ( metadata, item )) ->
-            ( { model | loadedItem = Api.Success item }, Effect.none )
+            ( { model | loadedItem = Api.Success item }, Effect.navigateBack )
 
         GotItemUpdated (Err message) ->
             ( { model | loadedItem = Api.FailureWithDetails message }, Effect.none )
@@ -188,6 +204,13 @@ viewLoaded : Model -> List (Html Msg)
 viewLoaded model =
     [ viewTextInput { name = "Name", value = Just model.nameInput, placeholder = Just "Buy orange juice", action = NameChanged }
     , viewTextAreaInput { name = "Description", value = Just model.descriptionInput, placeholder = Just "What I have to do to buy orage juice", action = DescriptionChanged }
+    , viewDropdown
+        { id = "priority"
+        , name = "Priority"
+        , variants = Priority.priorityToSelectedList model.priority
+        , valueToString = String.fromInt
+        , selectedMsg = PriorityChanged
+        }
     , viewValidationResult model.validationError
     ]
 

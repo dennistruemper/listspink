@@ -5,6 +5,7 @@ import Auth exposing (User)
 import Browser.Navigation as Navigation
 import Components.ActionBarWrapper exposing (viewActionBarWrapper)
 import Components.Button exposing (viewButton)
+import Components.Dropdown exposing (viewDropdown)
 import Components.TextInput exposing (viewTextAreaInput, viewTextInput)
 import Domain.ItemPink exposing (ItemPink)
 import Effect exposing (Effect)
@@ -13,6 +14,7 @@ import Http
 import Http.Detailed
 import Layouts
 import Page exposing (Page)
+import Priority
 import Route exposing (Route)
 import Shared
 import ValidationResult exposing (ValidationResult(..), viewValidationResult)
@@ -48,6 +50,7 @@ type alias Model =
     , listId : String
     , baseUrl : String
     , user : User
+    , priority : Int
     }
 
 
@@ -59,6 +62,7 @@ init user listId shared () =
       , listId = listId
       , baseUrl = shared.baseUrl
       , user = user
+      , priority = 0
       }
     , Effect.none
     )
@@ -71,6 +75,7 @@ init user listId shared () =
 type Msg
     = NoOp
     | NameChanged String
+    | PriorityChanged String
     | DescriptionChanged String
     | CreateClicked
     | CreateItemResponseReceived (Result (Http.Detailed.Error String) ( Http.Metadata, ItemPink ))
@@ -90,6 +95,9 @@ update msg model =
             , Effect.none
             )
 
+        PriorityChanged priority ->
+            ( { model | priority = Priority.priorityFromString priority }, Effect.none )
+
         DescriptionChanged description ->
             ( { model | descriptionInput = description } |> validateForm
             , Effect.none
@@ -108,6 +116,7 @@ update msg model =
                     , body =
                         { name = validatedModel.nameInput
                         , listId = validatedModel.listId
+                        , priority = model.priority
                         , description =
                             case validatedModel.descriptionInput of
                                 "" ->
@@ -126,7 +135,7 @@ update msg model =
                 )
 
         CreateItemResponseReceived (Ok item) ->
-            ( { model | nameInput = "", descriptionInput = "", validationError = VSuccess ("Item " ++ model.nameInput ++ " created successfully") }
+            ( { model | nameInput = "", descriptionInput = "", priority = 0, validationError = VSuccess ("Item " ++ model.nameInput ++ " created successfully") }
             , Effect.none
             )
 
@@ -174,6 +183,13 @@ view model =
             ]
             [ viewTextInput { name = "Name", value = Just model.nameInput, placeholder = Just "Buy orange juice", action = NameChanged }
             , viewTextAreaInput { name = "Description", value = Just model.descriptionInput, placeholder = Just "What I have to do to buy orage juice", action = DescriptionChanged }
+            , viewDropdown
+                { id = "priority"
+                , name = "Priority"
+                , variants = Priority.priorityToSelectedList model.priority
+                , valueToString = String.fromInt
+                , selectedMsg = PriorityChanged
+                }
             , viewValidationResult model.validationError
             ]
         ]

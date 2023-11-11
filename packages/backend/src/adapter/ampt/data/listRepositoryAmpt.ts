@@ -187,8 +187,10 @@ export class ListRepositoryAmpt implements ListRepository {
 			itemId: input.itemId,
 			itemName: input.itemName,
 			itemDescription: input.itemDescription,
-			itemCompleted: input.itemCompleted
+			itemCompleted: input.itemCompleted,
+			priority: input.priority
 		};
+
 
 		const label1key = `DEPENDS_ON_ITEM${delimiter}${input.itemId}${amptDelimiter}LIST${delimiter}${input.listId}`;
 

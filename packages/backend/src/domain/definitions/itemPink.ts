@@ -4,7 +4,8 @@ export const itemSchema = z.object({
 	id: z.string(),
 	name: z.string(),
 	description: z.string().optional(),
-	completed: z.string().datetime({ offset: false }).optional()
+	completed: z.string().datetime({ offset: false }).optional(),
+	priority: z.number().optional()
 });
 
 export type ItemPink = z.infer<typeof itemSchema>;
