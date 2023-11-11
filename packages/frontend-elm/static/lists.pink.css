@@ -1474,6 +1474,12 @@ select {
   transition-timing-function: linear;
 }
 
+/* fix heading in detail summary is next to arrow and not in next line. */
+
+details summary > *{
+  display: inline;
+}
+
 .placeholder\:text-gray-500::-moz-placeholder {
   --tw-text-opacity: 1;
   color: rgb(107 114 128 / var(--tw-text-opacity));

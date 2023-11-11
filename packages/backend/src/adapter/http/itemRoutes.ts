@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { GetListDetailsResponse } from '../../domain/definitions/communication/getListDetailsRequestResponse';
+import { GetItemDetailsResponse } from '../../domain/definitions/communication/getItemDetailsRequestResponse';
 import {
 	CreateItemResponse,
 	GetItemsResponse,
@@ -72,7 +72,8 @@ function addGetItemDetailsRoute(router: Router, dependencies: Dependencies) {
 			name: loaded.value.item.name,
 			id: loaded.value.item.id,
 			description: loaded.value.item.description,
-			completed: loaded.value.item.completed
+			completed: loaded.value.item.completed,
+			priority: loaded.value.item.priority ?? 0
 		};
 
 		return res.status(200).send(response);
@@ -103,7 +104,8 @@ function addCreateItemForListRoute(router: Router, dependencies: Dependencies) {
 			itemName: data.name,
 			itemDescription: data.description,
 			listId: data.listId,
-			extraListIds: data.extraListIds
+			extraListIds: data.extraListIds,
+			priority: data.priority
 		});
 
 		if (created.success === false) {
@@ -125,7 +127,8 @@ function addCreateItemForListRoute(router: Router, dependencies: Dependencies) {
 			id: item.id,
 			name: item.name,
 			description: item.description,
-			listId: data.listId
+			listId: data.listId,
+			priority: item.priority ?? 0
 		};
 
 		return res.status(200).send(result);
@@ -166,11 +169,12 @@ function addGetItemDetailsForListRoute(router: Router, dependencies: Dependencie
 			}
 		}
 
-		const response: GetListDetailsResponse[] = loaded.value.items.map((list) => ({
-			id: list.id,
-			name: list.name,
-			description: list.description,
-			completed: list.completed
+		const response: GetItemDetailsResponse[] = loaded.value.items.map((item) => ({
+			id: item.id,
+			name: item.name,
+			description: item.description,
+			completed: item.completed,
+			priority: item.priority ?? 0
 		}));
 
 		return res.status(200).send(response);
@@ -206,7 +210,7 @@ function addUpdateItemDetailsRoute(router: Router, dependencies: Dependencies) {
 			itemId,
 			listId,
 			userId,
-			changes: {...paredBody.data, completed: paredBody.data.completed ?? null}
+			changes: {...paredBody.data, completed: paredBody.data.completed ?? null, priority: paredBody.data.priority}
 		});
 
 		if (loaded.success === false) {

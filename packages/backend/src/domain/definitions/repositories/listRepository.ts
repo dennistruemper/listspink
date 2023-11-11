@@ -18,6 +18,7 @@ export type ConnectItemToListInput = {
 	itemName: string;
 	itemDescription?: string;
 	itemCompleted?: string;
+	priority: number
 };
 
 export type CreateListErrors = UNKNOWN_DATA_SHAPE;

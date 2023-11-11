@@ -4,7 +4,8 @@ export const createItemRequestSchema = z.object({
 	listId: z.string(),
 	extraListIds: z.array(z.string()).optional(),
 	name: z.string(),
-	description: z.string().optional()
+	description: z.string().optional(),
+	priority: z.number().default(0)
 });
 export type CreateItemRequest = z.infer<typeof createItemRequestSchema>;
 
@@ -15,7 +16,8 @@ export const getItemResponseSchema = z.object({
 	name: z.string(),
 	description: z.string().optional(),
 	id: z.string(),
-	completed: z.string().optional()
+	completed: z.string().optional(),
+	priority: z.number().default(0)
 });
 export type GetItemsResponse = z.infer<typeof getItemResponseSchema>;
 
@@ -24,7 +26,8 @@ export const getItemsResponseSchema = getItemResponseSchema.array();
 export const updateItemRequestSchema = z.object({
 	name: z.string().nullish(),
 	description: z.string().nullish(),
-	completed: z.string().nullish()
+	completed: z.string().nullish(),
+	priority: z.number().default(0)
 });
 
 export const updateItemResponseSchema = z.object({

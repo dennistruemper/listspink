@@ -6,20 +6,85 @@ import Components.Icons.RightArrow exposing (viewRightArrow)
 import Domain.ItemPink exposing (ItemPink)
 import Html exposing (Html)
 import Html.Attributes as Attr exposing (class)
+import Priority
 import Route.Path exposing (Path)
+import Set
 
 
 viewItemList : String -> List ItemPink -> (String -> msg) -> Html msg
 viewItemList listId items itemToggleMsg =
-    Html.div [ class "bg-pink-50  rounded-lg shadow flex justify-center px-2" ]
-        [ Html.ul
+    let
+        itemsDone =
+            List.filter (\item -> Domain.ItemPink.isCompleted item) items
+
+        itemsUndone =
+            List.filter (\item -> not (Domain.ItemPink.isCompleted item)) items
+
+        priorityClasses =
+            List.map .priority itemsUndone |> Set.fromList |> Set.toList |> List.sort |> List.reverse
+
+        priorityClassesCount =
+            List.length priorityClasses
+    in
+    Html.div [ class "bg-pink-50  rounded-lg shadow flex flex-col items-center px-2" ]
+        [ Html.div [ class "divide-y divide-pink-200 w-full max-w-2xl" ] (List.map (\prioClass -> viewPrioClassBlock prioClass itemToggleMsg listId itemsUndone) priorityClasses)
+        , Html.ul
             [ Attr.attribute "role" "list"
             , class "w-full max-w-2xl divide-y divide-pink-200"
             ]
-            (List.map
-                (\item -> viewItem itemToggleMsg listId item)
-                items
-            )
+            [ viewDetailWrapper
+                "Completed"
+                ((itemsUndone |> List.length) == 0 && (itemsDone |> List.length) > 0)
+                (Html.div []
+                    (List.map
+                        (\item -> viewItem itemToggleMsg listId item)
+                        itemsDone
+                    )
+                )
+            ]
+        ]
+
+
+viewDetailWrapper : String -> Bool -> Html msg -> Html msg
+viewDetailWrapper summary isOpen details =
+    let
+        openAttr =
+            if isOpen then
+                [ Attr.attribute "open" "", class "z-40" ]
+
+            else
+                [ class "z-40" ]
+    in
+    Html.details openAttr
+        ([ Html.summary [ class "bg-pink-100 text-center sticky top-0 rounded-full" ]
+            [ Html.div [ class " flex-auto truncate text-sm font-semibold leading-6 text-gray-900" ] [ Html.text summary ] ]
+         ]
+            ++ [ details ]
+        )
+
+
+viewPrioClassBlock : Int -> (String -> msg) -> String -> List ItemPink -> Html msg
+viewPrioClassBlock prioClass itemToggleMsg listId items =
+    let
+        prioClassItems =
+            List.filter (\item -> item.priority == prioClass) items
+    in
+    Html.div
+        []
+        [ --priorityClassHeading (Priority.priorityToString prioClass)
+          Html.ul
+            [ Attr.attribute "role" "list"
+            , class "divide-y divide-pink-200"
+            ]
+            [ viewDetailWrapper (Priority.priorityToString prioClass)
+                (prioClass >= 0)
+                (Html.div []
+                    (List.map
+                        (\item -> viewItem itemToggleMsg listId item)
+                        prioClassItems
+                    )
+                )
+            ]
         ]
 
 

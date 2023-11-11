@@ -101,7 +101,8 @@ export class ItemRepositoryAmpt implements ItemRepository {
 					id: item.value.itemId,
 					name: item.value.itemName,
 					description: item.value.itemDescription,
-					completed: item.value.completed
+					completed: item.value.completed,
+					priority: item.value.priority
 				};
 			})
 		);
@@ -120,8 +121,18 @@ export class ItemRepositoryAmpt implements ItemRepository {
 		const dependents = await data.get(`DEPENDS_ON_ITEM#${update.itemId}:*`, { label: 'label1' });
 		dependents.items.forEach(async (item) => {
 			const updateData = {
-				itemName: update.updatedFields?.name,
-				itemDescription: update.updatedFields?.description
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				itemName: update.updatedFields?.name ?? item.value.itemName,
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				itemDescription: update.updatedFields?.description ?? item.value.itemDescription,
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				priority: update.updatedFields?.priority ?? item.value.priority,
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				completed: update.updatedFields?.completed ?? item.value.completed
 			}
 			await data.set(item.key, updateData);
 		});
