@@ -32,19 +32,24 @@ page user shared route =
                 |> Maybe.withDefault route.params.listpink
     in
     Page.new
-        { init = init user shared route.params.listpink
+        { init = init user shared route.params.listpink name
         , update = update shared user
         , subscriptions = subscriptions
         , view = view
         }
-        |> Page.withLayout (toLayout name)
+        |> Page.withLayout toLayout
 
 
-toLayout : String -> Model -> Layouts.Layout Msg
-toLayout name model =
+toLayout : Model -> Layouts.Layout Msg
+toLayout model =
     Layouts.Scaffold
-        { title = "List: " ++ name
+        { title = getTitle model
         }
+
+
+getTitle : Model -> String
+getTitle model =
+    "List: " ++ model.name
 
 
 
@@ -54,13 +59,15 @@ toLayout name model =
 type alias Model =
     { listId : String
     , items : Data (List Domain.ItemPink.ItemPink)
+    , name : String
     }
 
 
-init : Auth.User -> Shared.Model -> String -> () -> ( Model, Effect Msg )
-init user shared listId () =
+init : Auth.User -> Shared.Model -> String -> String -> () -> ( Model, Effect Msg )
+init user shared listId name () =
     ( { listId = listId
       , items = Loading
+      , name = name
       }
     , Api.Item.getItemsForList { listId = listId, baseUrl = shared.baseUrl, token = user.authToken, onResponse = OnGetItemsForList }
     )
@@ -246,7 +253,7 @@ subscriptions model =
 
 view : Model -> View Msg
 view model =
-    { title = "Pages.List.Listpink_.Show"
+    { title = getTitle model
     , body =
         [ viewActionBarWrapper [ viewButton "Create" (CreateItemPinkClicked model.listId) ]
             [ case model.items of

@@ -36,24 +36,25 @@ page user shared route =
 
 toLayout : String -> Model -> Layouts.Layout Msg
 toLayout itemId model =
-    let
-        itemName =
-            case model.loadedItem of
-                Api.NotAsked ->
-                    itemId
-
-                Api.Loading ->
-                    "Loading..."
-
-                Api.FailureWithDetails _ ->
-                    itemId
-
-                Api.Success item ->
-                    item.name
-    in
     Layouts.Scaffold
-        { title = "Item Details: " ++ itemName
+        { title = "Details: " ++ getTitle model
         }
+
+
+getTitle : Model -> String
+getTitle model =
+    case model.loadedItem of
+        Api.NotAsked ->
+            "Details"
+
+        Api.Loading ->
+            "Details"
+
+        Api.FailureWithDetails _ ->
+            "Error"
+
+        Api.Success item ->
+            item.name
 
 
 
@@ -177,7 +178,7 @@ subscriptions model =
 
 view : Model -> View Msg
 view model =
-    { title = "Pages.List.Listpink_.Item.ItemId_.Details"
+    { title = getTitle model
     , body =
         [ viewActionBarWrapper
             [ viewButton "Back" BackClicked

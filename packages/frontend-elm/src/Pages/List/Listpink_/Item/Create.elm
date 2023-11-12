@@ -35,8 +35,13 @@ page user shared route =
 toLayout : Model -> Layouts.Layout Msg
 toLayout model =
     Layouts.Scaffold
-        { title = "Create Item"
+        { title = getTitle
         }
+
+
+getTitle : String
+getTitle =
+    "Create Item"
 
 
 
@@ -175,7 +180,7 @@ subscriptions model =
 
 view : Model -> View Msg
 view model =
-    { title = "Pages.List.Listpink_.Item.Create"
+    { title = getTitle
     , body =
         [ viewActionBarWrapper
             [ viewButton "Back" BackClicked

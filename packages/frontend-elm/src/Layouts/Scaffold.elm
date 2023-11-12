@@ -323,7 +323,7 @@ viewMobileSidebar : Model -> List (Html.Html contentMsg) -> (Msg -> contentMsg) 
 viewMobileSidebar model menuItems toContentMsg =
     Html.div
         [ class <|
-            "relative z-50 lg:hidden "
+            "relative z-[1000] lg:hidden "
                 ++ (case model.isMobileSidebarOpen of
                         True ->
                             ""
@@ -492,7 +492,7 @@ viewTitle props =
         [ class "flex-1 flex justify-center items-center"
         ]
         [ Html.h1
-            [ class "text-xl font-bold text-gray-900"
+            [ class "text-xl font-bold text-gray-900 line-clamp-1"
             ]
             [ Html.text props.title ]
         ]

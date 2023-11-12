@@ -25,7 +25,12 @@ page shared route =
 toLayout : Model -> Layouts.Layout Msg
 toLayout model =
     Layouts.Scaffold
-        { title = "Sign in" }
+        { title = getTitle }
+
+
+getTitle : String
+getTitle =
+    "Sign in"
 
 
 
@@ -90,6 +95,6 @@ view shared model =
                 Nothing ->
                     viewButton "Sign in" SignInClicked
     in
-    { title = "Pages.SignIn"
+    { title = getTitle
     , body = []
     }

@@ -28,8 +28,13 @@ page shared route =
 toLayout : Model -> Layouts.Layout Msg
 toLayout model =
     Layouts.Scaffold
-        { title = "Settings"
+        { title = getTitle
         }
+
+
+getTitle : String
+getTitle =
+    "Settings"
 
 
 
@@ -88,7 +93,7 @@ subscriptions model =
 
 view : Shared.Model -> Model -> View Msg
 view shared model =
-    { title = "Pages.Settings"
+    { title = getTitle
     , body =
         [ Html.text "Backendversion: "
         , case model.backendVersion of

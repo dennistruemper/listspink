@@ -42,8 +42,13 @@ page user shared route =
 toLayout : Model -> Layouts.Layout Msg
 toLayout model =
     Layouts.Scaffold
-        { title = "Lists Pink"
+        { title = getTitle
         }
+
+
+getTitle : String
+getTitle =
+    "Your Pink Lists"
 
 
 
@@ -163,7 +168,7 @@ viewLists lists =
 
 view : Model -> View Msg
 view model =
-    { title = "Pages.Home_"
+    { title = getTitle
     , body =
         [ viewActionBarWrapper
             [ viewButton "Create" CreateClicked
