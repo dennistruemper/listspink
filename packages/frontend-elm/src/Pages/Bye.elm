@@ -26,7 +26,7 @@ page shared route =
 toLayout : Model -> Layouts.Layout Msg
 toLayout model =
     Layouts.Scaffold
-        { title = "" }
+        { title = "Bye" }
 
 
 
@@ -76,6 +76,6 @@ subscriptions model =
 
 view : Model -> View Msg
 view model =
-    { title = "Pages.Bye"
+    { title = "Bye"
     , body = [ Html.text "See you next time!" ]
     }

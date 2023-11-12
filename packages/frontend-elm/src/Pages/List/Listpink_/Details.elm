@@ -1,9 +1,10 @@
 module Pages.List.Listpink_.Details exposing (Model, Msg, page)
 
 import Effect exposing (Effect)
-import Route exposing (Route)
 import Html
+import Layouts
 import Page exposing (Page)
+import Route exposing (Route)
 import Shared
 import View exposing (View)
 
@@ -16,6 +17,19 @@ page shared route =
         , subscriptions = subscriptions
         , view = view
         }
+        |> Page.withLayout toLayout
+
+
+toLayout : Model -> Layouts.Layout Msg
+toLayout model =
+    Layouts.Scaffold
+        { title = getTitle
+        }
+
+
+getTitle : String
+getTitle =
+    "Details"
 
 
 
@@ -65,6 +79,6 @@ subscriptions model =
 
 view : Model -> View Msg
 view model =
-    { title = "Pages.List.Listpink_.Details"
-    , body = [ Html.text "/list/:listpink/details" ]
+    { title = getTitle
+    , body = [ Html.text "Under construction" ]
     }
