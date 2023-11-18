@@ -17,6 +17,7 @@ import Layouts
 import Page exposing (Page)
 import Priority
 import Route exposing (Route)
+import Route.Path
 import Shared
 import ValidationResult exposing (ValidationResult(..), viewValidationResult)
 import View exposing (View)
@@ -30,14 +31,15 @@ page user shared route =
         , subscriptions = subscriptions
         , view = view
         }
-        |> Page.withLayout toLayout
+        |> Page.withLayout (toLayout route.path)
 
 
-toLayout : Model -> Layouts.Layout Msg
-toLayout model =
+{-| Use the sidebar layout on this page
+-}
+toLayout : Route.Path.Path -> Model -> Layouts.Layout Msg
+toLayout path model =
     Layouts.Scaffold
-        { title = getTitle
-        }
+        { title = getTitle, path = path }
 
 
 getTitle : String

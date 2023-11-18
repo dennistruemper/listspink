@@ -37,14 +37,15 @@ page user shared route =
         , subscriptions = subscriptions
         , view = view
         }
-        |> Page.withLayout toLayout
+        |> Page.withLayout (toLayout route.path)
 
 
-toLayout : Model -> Layouts.Layout Msg
-toLayout model =
+{-| Use the sidebar layout on this page
+-}
+toLayout : Route.Path.Path -> Model -> Layouts.Layout Msg
+toLayout path model =
     Layouts.Scaffold
-        { title = getTitle model
-        }
+        { title = getTitle model, path = path }
 
 
 getTitle : Model -> String

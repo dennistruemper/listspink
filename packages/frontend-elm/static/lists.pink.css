@@ -1559,6 +1559,11 @@ details summary > *{
   background-color: rgb(244 114 182 / var(--tw-bg-opacity));
 }
 
+.hover\:bg-pink-200:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(251 207 232 / var(--tw-bg-opacity));
+}
+
 .hover\:text-black:hover {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
