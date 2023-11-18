@@ -12,6 +12,7 @@ module Http.Detailed exposing
     , responseToJsonRecord
     , responseToString
     , responseToStringRecord
+    , toUserString
     )
 
 import Http
@@ -25,6 +26,25 @@ type Error body
     | NetworkError
     | BadStatus Http.Metadata body
     | BadBody Http.Metadata body String
+
+
+toUserString : Error body -> String
+toUserString err =
+    case err of
+        BadUrl url ->
+            "Bad URL: " ++ url
+
+        Timeout ->
+            "Timeout"
+
+        NetworkError ->
+            "Network error"
+
+        BadStatus metadata body ->
+            "Bad status: " ++ (metadata.statusCode |> String.fromInt) ++ " " ++ metadata.url
+
+        BadBody metadata body msg ->
+            "Bad body: " ++ msg ++ " " ++ metadata.url
 
 
 expectString : (Result (Error String) ( Http.Metadata, String ) -> msg) -> Http.Expect msg
