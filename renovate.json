@@ -7,6 +7,17 @@
 	"labels": ["dependencies"],
 	"packageRules": [
 		{
+			"matchPackageNames": ["vite"],
+			"allowedVersions": ["<5.0.0"],
+			"comment": "needs node 20"
+		},
+		{
+			"matchPackageNames": ["node"],
+			"extends": ["schedule:monthly"],
+			"allowedVersions": ["<20.0.0"] ,
+			"comment": "Node.js 20 is not supported by Ampt yet"
+		},
+		{
 			"matchPackageNames": ["aws-sdk"],
 			"extends": ["schedule:monthly"]
 		},
