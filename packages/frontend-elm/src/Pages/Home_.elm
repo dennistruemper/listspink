@@ -4,7 +4,7 @@ import Api exposing (Data)
 import Api.List
 import Auth
 import Components.ActionBarWrapper exposing (viewActionBarWrapper)
-import Components.Button exposing (viewButton)
+import Components.Button
 import Components.Card exposing (viewListPinkCard)
 import Components.Grid exposing (viewGrid)
 import Dict
@@ -171,7 +171,7 @@ view model =
     { title = getTitle
     , body =
         [ viewActionBarWrapper
-            [ viewButton "Create" CreateClicked
+            [ Components.Button.button { label = "Create", onClick = CreateClicked } |> Components.Button.view
             ]
             [ Html.div [] <|
                 case model.listsLoaded of

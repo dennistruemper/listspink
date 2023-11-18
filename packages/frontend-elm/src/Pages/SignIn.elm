@@ -1,6 +1,6 @@
 module Pages.SignIn exposing (Model, Msg, page)
 
-import Components.Button exposing (viewButton)
+import Components.Button
 import Effect exposing (Effect)
 import Html
 import Layouts
@@ -93,7 +93,7 @@ view shared model =
                     Html.text ("Hello, " ++ getUserName user)
 
                 Nothing ->
-                    viewButton "Sign in" SignInClicked
+                    Components.Button.button { label = "Sign in", onClick = SignInClicked } |> Components.Button.view
     in
     { title = getTitle
     , body = []

@@ -4,7 +4,7 @@ import Api exposing (Data(..))
 import Api.Item exposing (ToggleItemPink)
 import Auth
 import Components.ActionBarWrapper exposing (viewActionBarWrapper)
-import Components.Button exposing (viewButton)
+import Components.Button
 import Components.ItemList exposing (viewItemList)
 import Dict
 import Domain.ItemPink
@@ -255,7 +255,7 @@ view : Model -> View Msg
 view model =
     { title = getTitle model
     , body =
-        [ viewActionBarWrapper [ viewButton "Create" (CreateItemPinkClicked model.listId) ]
+        [ viewActionBarWrapper [ Components.Button.button { label = "Create", onClick = CreateItemPinkClicked model.listId } |> Components.Button.view ]
             [ case model.items of
                 NotAsked ->
                     Html.text "Waiting..."

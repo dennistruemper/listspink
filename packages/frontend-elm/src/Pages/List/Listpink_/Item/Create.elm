@@ -5,7 +5,7 @@ import Api.Item
 import Auth exposing (User)
 import Browser.Navigation as Navigation
 import Components.ActionBarWrapper exposing (viewActionBarWrapper)
-import Components.Button exposing (viewButton)
+import Components.Button
 import Components.Dropdown exposing (viewDropdown)
 import Components.TextInput exposing (viewTextAreaInput, viewTextInput)
 import Domain.ItemPink exposing (ItemPink)
@@ -196,7 +196,7 @@ view model =
     { title = getTitle
     , body =
         [ viewActionBarWrapper
-            [ viewButton "Back" BackClicked
+            [ Components.Button.button { label = "Back", onClick = BackClicked } |> Components.Button.view
             , createButton
             ]
             [ viewTextInput { name = "Name", value = Just model.nameInput, placeholder = Just "Buy orange juice", action = NameChanged }

@@ -3,7 +3,7 @@ module Pages.List.Create exposing (Model, Msg, page)
 import Api.List
 import Auth
 import Components.ActionBarWrapper exposing (viewActionBarWrapper)
-import Components.Button exposing (viewButton)
+import Components.Button
 import Components.TextInput exposing (viewTextAreaInput, viewTextInput)
 import Domain.ListPink exposing (ListPink)
 import Effect exposing (Effect)
@@ -161,7 +161,7 @@ view model =
     { title = getTitle
     , body =
         [ viewActionBarWrapper
-            [ viewButton "Create" CreateClicked
+            [ Components.Button.button { label = "Create", onClick = CreateClicked } |> Components.Button.view
             ]
             [ viewTextInput { name = "Name", value = Just model.nameInput, placeholder = Just "Shopping List", action = NameChanged }
             , viewTextAreaInput { name = "Description", value = Just model.descriptionInput, placeholder = Just "Buy these items when you are in a supermarket", action = DescriptionChanged }
