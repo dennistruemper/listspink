@@ -190,26 +190,8 @@ view : Model -> View Msg
 view model =
     let
         createButton =
-            case model.createResponse of
-                Api.Loading ->
-                    Components.Button.button { label = "Creating...", onClick = NoOp }
-                        |> Components.Button.withState Components.Button.Loading
-                        |> Components.Button.view
-
-                Api.FailureWithDetails _ ->
-                    Components.Button.button { label = "Create", onClick = CreateClicked }
-                        |> Components.Button.withState Components.Button.Error
-                        |> Components.Button.view
-
-                Api.Success _ ->
-                    Components.Button.button { label = "Create", onClick = CreateClicked }
-                        |> Components.Button.withState Components.Button.Success
-                        |> Components.Button.view
-
-                Api.NotAsked ->
-                    Components.Button.button { label = "Create", onClick = CreateClicked }
-                        |> Components.Button.withState Components.Button.Default
-                        |> Components.Button.view
+            Components.Button.button { label = "Create", onClick = CreateClicked }
+                |> Components.Button.viewAsStatusButton { requestStatus = model.createResponse, loadingOnClick = NoOp }
     in
     { title = getTitle
     , body =

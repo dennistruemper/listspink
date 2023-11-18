@@ -17,7 +17,7 @@ viewValidationResult validationResult =
             Html.text ""
 
         VSuccess message ->
-            Html.div [ class "text-green-500" ] [ Html.text message ]
+            Html.div [ class "text-emerald-400" ] [ Html.text message ]
 
         VError message ->
             Html.div [ class "text-red-500" ] [ Html.text message ]

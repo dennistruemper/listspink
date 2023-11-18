@@ -1,5 +1,6 @@
-module Components.Button exposing (State(..), button, view, viewButton, withEnabled, withState)
+module Components.Button exposing (State(..), button, view, viewAsStatusButton, viewButton, withEnabled, withState)
 
+import Api
 import Components.LoadingSpinner
 import Html exposing (Html, button, text)
 import Html.Attributes exposing (class)
@@ -72,6 +73,36 @@ withEnabled enabled options =
 withState : State -> ButtonOptions msg -> ButtonOptions msg
 withState state options =
     { options | state = state }
+
+
+withOnClick : msg -> ButtonOptions msg -> ButtonOptions msg
+withOnClick msg options =
+    { options | onClick = msg }
+
+
+viewAsStatusButton : { loadingOnClick : msg, requestStatus : Api.Data a } -> ButtonOptions msg -> Html msg
+viewAsStatusButton statusOptions options =
+    case statusOptions.requestStatus of
+        Api.Loading ->
+            options
+                |> withOnClick statusOptions.loadingOnClick
+                |> withState Loading
+                |> view
+
+        Api.FailureWithDetails _ ->
+            options
+                |> withState Error
+                |> view
+
+        Api.Success _ ->
+            options
+                |> withState Success
+                |> view
+
+        Api.NotAsked ->
+            options
+                |> withState Default
+                |> view
 
 
 view : ButtonOptions msg -> Html msg
