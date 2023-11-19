@@ -1,10 +1,11 @@
 module Pages.List.Listpink_.Item.Create exposing (Model, Msg, page)
 
+import Api
 import Api.Item
 import Auth exposing (User)
 import Browser.Navigation as Navigation
 import Components.ActionBarWrapper exposing (viewActionBarWrapper)
-import Components.Button exposing (viewButton)
+import Components.Button
 import Components.Dropdown exposing (viewDropdown)
 import Components.TextInput exposing (viewTextAreaInput, viewTextInput)
 import Domain.ItemPink exposing (ItemPink)
@@ -16,6 +17,7 @@ import Layouts
 import Page exposing (Page)
 import Priority
 import Route exposing (Route)
+import Route.Path
 import Shared
 import ValidationResult exposing (ValidationResult(..), viewValidationResult)
 import View exposing (View)
@@ -29,14 +31,15 @@ page user shared route =
         , subscriptions = subscriptions
         , view = view
         }
-        |> Page.withLayout toLayout
+        |> Page.withLayout (toLayout route.path)
 
 
-toLayout : Model -> Layouts.Layout Msg
-toLayout model =
+{-| Use the sidebar layout on this page
+-}
+toLayout : Route.Path.Path -> Model -> Layouts.Layout Msg
+toLayout path model =
     Layouts.Scaffold
-        { title = getTitle
-        }
+        { title = getTitle, path = path }
 
 
 getTitle : String
@@ -52,6 +55,7 @@ type alias Model =
     { nameInput : String
     , descriptionInput : String
     , validationError : ValidationResult
+    , createResponse : Api.Data ItemPink
     , listId : String
     , baseUrl : String
     , user : User
@@ -64,6 +68,7 @@ init user listId shared () =
     ( { nameInput = ""
       , descriptionInput = ""
       , validationError = VNothing
+      , createResponse = Api.NotAsked
       , listId = listId
       , baseUrl = shared.baseUrl
       , user = user
@@ -114,7 +119,9 @@ update msg model =
                     validateForm model
             in
             if validatedModel.validationError == VNothing then
-                ( validatedModel
+                ( { validatedModel
+                    | createResponse = Api.Loading
+                  }
                 , Api.Item.createItem
                     { baseUrl = validatedModel.baseUrl
                     , token = validatedModel.user.authToken
@@ -139,13 +146,16 @@ update msg model =
                 , Effect.none
                 )
 
-        CreateItemResponseReceived (Ok item) ->
-            ( { model | nameInput = "", descriptionInput = "", priority = 0, validationError = VSuccess ("Item " ++ model.nameInput ++ " created successfully") }
+        CreateItemResponseReceived (Ok ( metadata, item )) ->
+            ( { model | createResponse = Api.Success item, nameInput = "", descriptionInput = "", priority = 0, validationError = VSuccess ("Item " ++ model.nameInput ++ " created successfully") }
             , Effect.none
             )
 
         CreateItemResponseReceived (Err error) ->
-            ( model
+            ( { model
+                | createResponse = Api.FailureWithDetails error
+                , validationError = VError ("Item " ++ model.nameInput ++ " not created. Error: " ++ Http.Detailed.toUserString error)
+              }
             , Effect.none
             )
 
@@ -159,10 +169,10 @@ validateForm : Model -> Model
 validateForm model =
     case model.nameInput of
         "" ->
-            { model | validationError = VError "Name has to be set" }
+            { model | validationError = VError "Name has to be set", createResponse = Api.NotAsked }
 
         _ ->
-            { model | validationError = VNothing }
+            { model | validationError = VNothing, createResponse = Api.NotAsked }
 
 
 
@@ -180,11 +190,16 @@ subscriptions model =
 
 view : Model -> View Msg
 view model =
+    let
+        createButton =
+            Components.Button.button { label = "Create", onClick = CreateClicked }
+                |> Components.Button.viewAsStatusButton { requestStatus = model.createResponse, loadingOnClick = NoOp }
+    in
     { title = getTitle
     , body =
         [ viewActionBarWrapper
-            [ viewButton "Back" BackClicked
-            , viewButton "Create" CreateClicked
+            [ Components.Button.button { label = "Back", onClick = BackClicked } |> Components.Button.view
+            , createButton
             ]
             [ viewTextInput { name = "Name", value = Just model.nameInput, placeholder = Just "Buy orange juice", action = NameChanged }
             , viewTextAreaInput { name = "Description", value = Just model.descriptionInput, placeholder = Just "What I have to do to buy orage juice", action = DescriptionChanged }

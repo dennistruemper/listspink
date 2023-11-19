@@ -4,7 +4,7 @@ import Api exposing (Data(..))
 import Api.Item exposing (ToggleItemPink)
 import Auth
 import Components.ActionBarWrapper exposing (viewActionBarWrapper)
-import Components.Button exposing (viewButton)
+import Components.Button
 import Components.ItemList exposing (viewItemList)
 import Dict
 import Domain.ItemPink
@@ -37,14 +37,15 @@ page user shared route =
         , subscriptions = subscriptions
         , view = view
         }
-        |> Page.withLayout toLayout
+        |> Page.withLayout (toLayout route.path)
 
 
-toLayout : Model -> Layouts.Layout Msg
-toLayout model =
+{-| Use the sidebar layout on this page
+-}
+toLayout : Route.Path.Path -> Model -> Layouts.Layout Msg
+toLayout path model =
     Layouts.Scaffold
-        { title = getTitle model
-        }
+        { title = getTitle model, path = path }
 
 
 getTitle : Model -> String
@@ -255,7 +256,7 @@ view : Model -> View Msg
 view model =
     { title = getTitle model
     , body =
-        [ viewActionBarWrapper [ viewButton "Create" (CreateItemPinkClicked model.listId) ]
+        [ viewActionBarWrapper [ Components.Button.button { label = "Create", onClick = CreateItemPinkClicked model.listId } |> Components.Button.view ]
             [ case model.items of
                 NotAsked ->
                     Html.text "Waiting..."

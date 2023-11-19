@@ -3,7 +3,7 @@ module Pages.List.Create exposing (Model, Msg, page)
 import Api.List
 import Auth
 import Components.ActionBarWrapper exposing (viewActionBarWrapper)
-import Components.Button exposing (viewButton)
+import Components.Button
 import Components.TextInput exposing (viewTextAreaInput, viewTextInput)
 import Domain.ListPink exposing (ListPink)
 import Effect exposing (Effect)
@@ -15,6 +15,7 @@ import Http.Detailed
 import Layouts
 import Page exposing (Page)
 import Route exposing (Route)
+import Route.Path
 import Shared
 import ValidationResult exposing (ValidationResult(..), viewValidationResult)
 import View exposing (View)
@@ -28,13 +29,15 @@ page user shared route =
         , subscriptions = subscriptions
         , view = view
         }
-        |> Page.withLayout toLayout
+        |> Page.withLayout (toLayout route.path)
 
 
-toLayout : Model -> Layouts.Layout Msg
-toLayout model =
+{-| Use the sidebar layout on this page
+-}
+toLayout : Route.Path.Path -> Model -> Layouts.Layout Msg
+toLayout path model =
     Layouts.Scaffold
-        { title = getTitle }
+        { title = getTitle, path = path }
 
 
 getTitle : String
@@ -161,7 +164,7 @@ view model =
     { title = getTitle
     , body =
         [ viewActionBarWrapper
-            [ viewButton "Create" CreateClicked
+            [ Components.Button.button { label = "Create", onClick = CreateClicked } |> Components.Button.view
             ]
             [ viewTextInput { name = "Name", value = Just model.nameInput, placeholder = Just "Shopping List", action = NameChanged }
             , viewTextAreaInput { name = "Description", value = Just model.descriptionInput, placeholder = Just "Buy these items when you are in a supermarket", action = DescriptionChanged }

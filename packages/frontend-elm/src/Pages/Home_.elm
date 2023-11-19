@@ -4,7 +4,7 @@ import Api exposing (Data)
 import Api.List
 import Auth
 import Components.ActionBarWrapper exposing (viewActionBarWrapper)
-import Components.Button exposing (viewButton)
+import Components.Button
 import Components.Card exposing (viewListPinkCard)
 import Components.Grid exposing (viewGrid)
 import Dict
@@ -36,14 +36,15 @@ page user shared route =
         , subscriptions = subscriptions
         , view = view
         }
-        |> Page.withLayout toLayout
+        |> Page.withLayout (toLayout route.path)
 
 
-toLayout : Model -> Layouts.Layout Msg
-toLayout model =
+{-| Use the sidebar layout on this page
+-}
+toLayout : Route.Path.Path -> Model -> Layouts.Layout Msg
+toLayout path model =
     Layouts.Scaffold
-        { title = getTitle
-        }
+        { title = getTitle, path = path }
 
 
 getTitle : String
@@ -171,7 +172,7 @@ view model =
     { title = getTitle
     , body =
         [ viewActionBarWrapper
-            [ viewButton "Create" CreateClicked
+            [ Components.Button.button { label = "Create", onClick = CreateClicked } |> Components.Button.view
             ]
             [ Html.div [] <|
                 case model.listsLoaded of

@@ -4,7 +4,7 @@ import Api
 import Api.Item
 import Auth
 import Components.ActionBarWrapper exposing (viewActionBarWrapper)
-import Components.Button exposing (viewButton)
+import Components.Button
 import Components.Dropdown exposing (ExactOneSelection(..), viewDropdown)
 import Components.LoadingSpinner exposing (viewLoadingSpinner)
 import Components.TextInput exposing (viewTextAreaInput, viewTextInput)
@@ -18,6 +18,7 @@ import Layouts
 import Page exposing (Page)
 import Priority
 import Route exposing (Route)
+import Route.Path
 import Shared
 import ValidationResult exposing (ValidationResult(..), viewValidationResult)
 import View exposing (View)
@@ -31,14 +32,15 @@ page user shared route =
         , subscriptions = subscriptions
         , view = view
         }
-        |> Page.withLayout (toLayout route.params.itemId)
+        |> Page.withLayout (toLayout route.path)
 
 
-toLayout : String -> Model -> Layouts.Layout Msg
-toLayout itemId model =
+{-| Use the sidebar layout on this page
+-}
+toLayout : Route.Path.Path -> Model -> Layouts.Layout Msg
+toLayout path model =
     Layouts.Scaffold
-        { title = "Details: " ++ getTitle model
-        }
+        { title = getTitle model, path = path }
 
 
 getTitle : Model -> String
@@ -181,8 +183,8 @@ view model =
     { title = getTitle model
     , body =
         [ viewActionBarWrapper
-            [ viewButton "Back" BackClicked
-            , viewButton "Save" SaveClicked
+            [ Components.Button.button { label = "Back", onClick = BackClicked } |> Components.Button.view
+            , Components.Button.button { label = "Save", onClick = SaveClicked } |> Components.Button.view
             ]
             (case model.loadedItem of
                 Api.NotAsked ->

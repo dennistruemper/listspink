@@ -6,6 +6,7 @@ import Html
 import Layouts
 import Page exposing (Page)
 import Route exposing (Route)
+import Route.Path
 import Shared
 import View exposing (View)
 
@@ -18,15 +19,15 @@ page shared route =
         , subscriptions = subscriptions
         , view = view
         }
-        |> Page.withLayout toLayout
+        |> Page.withLayout (toLayout route.path)
 
 
 {-| Use the sidebar layout on this page
 -}
-toLayout : Model -> Layouts.Layout Msg
-toLayout model =
+toLayout : Route.Path.Path -> Model -> Layouts.Layout Msg
+toLayout path model =
     Layouts.Scaffold
-        { title = "Bye" }
+        { title = "Bye", path = path }
 
 
 

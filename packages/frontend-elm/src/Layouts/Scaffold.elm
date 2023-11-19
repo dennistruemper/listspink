@@ -17,14 +17,14 @@ import View exposing (View)
 
 
 type alias Props =
-    { title : String }
+    { title : String, path : Route.Path.Path }
 
 
 layout : Props -> Shared.Model -> Route () -> Layout () Model Msg contentMsg
 layout props shared route =
     Layout.new
-        { init = init shared
-        , update = update
+        { init = init shared props.path
+        , update = update props.path
         , view = view props
         , subscriptions = subscriptions
         }
@@ -38,14 +38,16 @@ type alias Model =
     { isMobileSidebarOpen : Bool
     , isUserMenuOpen : Bool
     , user : Maybe User.User
+    , path : Route.Path.Path
     }
 
 
-init : Shared.Model -> () -> ( Model, Effect Msg )
-init shared _ =
+init : Shared.Model -> Route.Path.Path -> () -> ( Model, Effect Msg )
+init shared path _ =
     ( { isMobileSidebarOpen = False
       , isUserMenuOpen = False
       , user = shared.user
+      , path = path
       }
     , Effect.none
     )
@@ -65,8 +67,12 @@ type Msg
     | NavigateTo Route.Path.Path
 
 
-update : Msg -> Model -> ( Model, Effect Msg )
-update msg model =
+update : Route.Path.Path -> Msg -> Model -> ( Model, Effect Msg )
+update path msg modelWithOldRoute =
+    let
+        model =
+            { modelWithOldRoute | path = path }
+    in
     case msg of
         SidebarCloseClicked ->
             ( { model | isMobileSidebarOpen = False }
@@ -97,8 +103,8 @@ update msg model =
         SignInClicked ->
             ( { model | isUserMenuOpen = False }, Effect.redirectToSignIn )
 
-        NavigateTo path ->
-            ( { model | isMobileSidebarOpen = False }, Effect.pushRoute { path = path, query = Dict.empty, hash = Nothing } )
+        NavigateTo newPath ->
+            ( { model | isMobileSidebarOpen = False }, Effect.pushRoute { path = newPath, query = Dict.empty, hash = Nothing } )
 
 
 subscriptions : Model -> Sub Msg
@@ -170,8 +176,8 @@ viewSettingsIcon =
         ]
 
 
-viewMenuItem : String -> Html.Html msg -> (Msg -> msg) -> Route.Path.Path -> Html.Html msg
-viewMenuItem text icon toContentMsg path =
+viewInactiveMenuItem : String -> Html.Html msg -> (Msg -> msg) -> Route.Path.Path -> Html.Html msg
+viewInactiveMenuItem text icon toContentMsg path =
     Html.li []
         [ Html.div
             [ onClick (NavigateTo path |> toContentMsg)
@@ -183,10 +189,11 @@ viewMenuItem text icon toContentMsg path =
         ]
 
 
-viewActiveMenuItem text icon =
+viewActiveMenuItem : String -> Html.Html msg -> (Msg -> msg) -> Route.Path.Path -> Html.Html msg
+viewActiveMenuItem text icon toContentMsg path =
     Html.li []
-        [ Html.a
-            [ Attr.href "#"
+        [ Html.div
+            [ onClick (NavigateTo path |> toContentMsg)
             , class "bg-pink-100 text-black group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
             ]
             [ icon
@@ -312,15 +319,39 @@ viewUserMenu model toContentMsg =
             Html.div [] []
 
 
-viewMenuItems : (Msg -> contentMsg) -> List (Html.Html contentMsg)
-viewMenuItems toContentMsg =
-    [ viewActiveMenuItem "Dashboard" viewHomeIcon
-    , viewMenuItem "Team" viewTeamIcon toContentMsg Route.Path.Home_
+menuItemData : List { text : String, icon : Html.Html msg, path : Route.Path.Path }
+menuItemData =
+    [ { text = "Dashboard", icon = viewHomeIcon, path = Route.Path.Home_ }
+
+    --, { text = "Settings", icon = viewSettingsIcon, path = Route.Path.Settings }
     ]
 
 
-viewMobileSidebar : Model -> List (Html.Html contentMsg) -> (Msg -> contentMsg) -> Html.Html contentMsg
-viewMobileSidebar model menuItems toContentMsg =
+viewMenuItem : Route.Path.Path -> String -> Html.Html msg -> (Msg -> msg) -> Route.Path.Path -> Html.Html msg
+viewMenuItem propsPath text icon toContentMsg path =
+    if path == propsPath then
+        viewActiveMenuItem text icon toContentMsg path
+
+    else
+        viewInactiveMenuItem text icon toContentMsg path
+
+
+viewMenuItems : Model -> Props -> (Msg -> contentMsg) -> List (Html.Html contentMsg)
+viewMenuItems model props toContentMsg =
+    List.map
+        (\{ text, icon, path } ->
+            viewMenuItem
+                props.path
+                text
+                icon
+                toContentMsg
+                path
+        )
+        menuItemData
+
+
+viewMobileSidebar : Model -> Props -> List (Html.Html contentMsg) -> (Msg -> contentMsg) -> Html.Html contentMsg
+viewMobileSidebar model props menuItems toContentMsg =
     Html.div
         [ class <|
             "relative z-[1000] lg:hidden "
@@ -421,7 +452,7 @@ viewMobileSidebar model menuItems toContentMsg =
                             , Html.li
                                 [ class "mt-auto"
                                 ]
-                                [ viewMenuItem "Settings" viewSettingsIcon toContentMsg Route.Path.Settings
+                                [ viewMenuItem props.path "Settings" viewSettingsIcon toContentMsg Route.Path.Settings
                                 ]
                             ]
                         ]
@@ -431,8 +462,8 @@ viewMobileSidebar model menuItems toContentMsg =
         ]
 
 
-viewDesktopSidebar : Model -> List (Html.Html contentMsg) -> (Msg -> contentMsg) -> Html.Html contentMsg
-viewDesktopSidebar mode menuItems toContentMsg =
+viewDesktopSidebar : Model -> Props -> List (Html.Html contentMsg) -> (Msg -> contentMsg) -> Html.Html contentMsg
+viewDesktopSidebar mode props menuItems toContentMsg =
     Html.div
         [ class "hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col"
         ]
@@ -466,7 +497,7 @@ viewDesktopSidebar mode menuItems toContentMsg =
                     , Html.li
                         [ class "mt-auto"
                         ]
-                        [ viewMenuItem "Settings" viewSettingsIcon toContentMsg Route.Path.Settings
+                        [ viewMenuItem props.path "Settings" viewSettingsIcon toContentMsg Route.Path.Settings
                         ]
                     ]
                 ]
@@ -505,8 +536,8 @@ view props { toContentMsg, model, content } =
         [ Html.div
             [ class "flex overflow-hidden"
             ]
-            [ viewMobileSidebar model (viewMenuItems toContentMsg) toContentMsg
-            , viewDesktopSidebar model (viewMenuItems toContentMsg) toContentMsg
+            [ viewMobileSidebar model props (viewMenuItems model props toContentMsg) toContentMsg
+            , viewDesktopSidebar model props (viewMenuItems model props toContentMsg) toContentMsg
             , Html.div
                 [ class "lg:pl-72 flex flex-col h-screen w-0 flex-1 overflow-hidden"
                 ]
