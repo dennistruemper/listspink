@@ -24,8 +24,8 @@ layout : Props -> Shared.Model -> Route () -> Layout () Model Msg contentMsg
 layout props shared route =
     Layout.new
         { init = init shared props.path
-        , update = update props.path
-        , view = view props
+        , update = update props.path shared
+        , view = view props shared.user
         , subscriptions = subscriptions
         }
 
@@ -37,7 +37,6 @@ layout props shared route =
 type alias Model =
     { isMobileSidebarOpen : Bool
     , isUserMenuOpen : Bool
-    , user : Maybe User.User
     , path : Route.Path.Path
     }
 
@@ -46,7 +45,6 @@ init : Shared.Model -> Route.Path.Path -> () -> ( Model, Effect Msg )
 init shared path _ =
     ( { isMobileSidebarOpen = False
       , isUserMenuOpen = False
-      , user = shared.user
       , path = path
       }
     , Effect.none
@@ -67,8 +65,8 @@ type Msg
     | NavigateTo Route.Path.Path
 
 
-update : Route.Path.Path -> Msg -> Model -> ( Model, Effect Msg )
-update path msg modelWithOldRoute =
+update : Route.Path.Path -> Shared.Model -> Msg -> Model -> ( Model, Effect Msg )
+update path shared msg modelWithOldRoute =
     let
         model =
             { modelWithOldRoute | path = path }
@@ -90,7 +88,7 @@ update path msg modelWithOldRoute =
             )
 
         SignOutClicked ->
-            ( { model | user = Nothing, isUserMenuOpen = False }
+            ( { model | isUserMenuOpen = False }
             , Effect.batch
                 [ Effect.signOut
                 , Effect.pushRoute { path = Route.Path.Bye, query = Dict.empty, hash = Nothing }
@@ -211,19 +209,19 @@ viewSeparator =
         []
 
 
-viewUserMenuButton : Model -> (Msg -> contentMsg) -> Html.Html contentMsg
-viewUserMenuButton model toContentMsg =
+viewUserMenuButton : Model -> Maybe User.User -> (Msg -> contentMsg) -> Html.Html contentMsg
+viewUserMenuButton model user toContentMsg =
     let
         image : String
         image =
-            model.user
+            user
                 |> Maybe.andThen .image
                 |> Maybe.withDefault "./logo.png"
 
         userName : String
         userName =
-            model.user
-                |> Maybe.map (\user -> User.getUserName user)
+            user
+                |> Maybe.map (\u -> User.getUserName u)
                 |> Maybe.withDefault "Unknown User"
     in
     Html.button
@@ -269,8 +267,8 @@ viewUserMenuButton model toContentMsg =
         ]
 
 
-viewUserMenu : Model -> (Msg -> contentMsg) -> Html.Html contentMsg
-viewUserMenu model toContentMsg =
+viewUserMenu : Model -> Maybe User.User -> (Msg -> contentMsg) -> Html.Html contentMsg
+viewUserMenu model user toContentMsg =
     case model.isUserMenuOpen of
         True ->
             Html.div
@@ -280,7 +278,7 @@ viewUserMenu model toContentMsg =
                 , Attr.attribute "aria-labelledby" "user-menu-button"
                 , Attr.tabindex -1
                 ]
-                (case model.user of
+                (case user of
                     Just _ ->
                         [ Html.a
                             [ Attr.href "#"
@@ -529,8 +527,8 @@ viewTitle props =
         ]
 
 
-view : Props -> { toContentMsg : Msg -> contentMsg, content : View contentMsg, model : Model } -> View contentMsg
-view props { toContentMsg, model, content } =
+view : Props -> Maybe User.User -> { toContentMsg : Msg -> contentMsg, content : View contentMsg, model : Model } -> View contentMsg
+view props user { toContentMsg, model, content } =
     { title = content.title
     , body =
         [ Html.div
@@ -581,8 +579,8 @@ view props { toContentMsg, model, content } =
                               Html.div
                                 [ class "relative"
                                 ]
-                                [ viewUserMenuButton model toContentMsg
-                                , viewUserMenu model toContentMsg
+                                [ viewUserMenuButton model user toContentMsg
+                                , viewUserMenu model user toContentMsg
                                 ]
                             ]
                         ]

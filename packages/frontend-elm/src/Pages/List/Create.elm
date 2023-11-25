@@ -26,7 +26,7 @@ page : Auth.User -> Shared.Model -> Route () -> Page Model Msg
 page user shared route =
     Page.new
         { init = init user shared
-        , update = update
+        , update = update user
         , subscriptions = subscriptions
         , view = view
         }
@@ -55,7 +55,6 @@ type alias Model =
     , descriptionInput : String
     , validationError : ValidationResult
     , createResponse : Api.Data ListPink
-    , user : Auth.User
     , baseUrl : String
     }
 
@@ -66,7 +65,6 @@ init user shared () =
       , descriptionInput = ""
       , validationError = VNothing
       , createResponse = Api.NotAsked
-      , user = user
       , baseUrl = shared.baseUrl
       }
     , Effect.none
@@ -84,8 +82,8 @@ type Msg
     | CreateListResponseReceived (Result (Http.Detailed.Error String) ( Http.Metadata, ListPink ))
 
 
-update : Msg -> Model -> ( Model, Effect Msg )
-update msg model =
+update : Auth.User -> Msg -> Model -> ( Model, Effect Msg )
+update user msg model =
     case msg of
         NameChanged name ->
             ( { model | nameInput = name } |> validateForm
@@ -106,7 +104,7 @@ update msg model =
                 ( { validatedModel | createResponse = Api.Loading }
                 , Api.List.createList
                     { baseUrl = validatedModel.baseUrl
-                    , token = validatedModel.user.authToken
+                    , token = user.authToken
                     , body =
                         { name = validatedModel.nameInput
                         , description =
