@@ -4,7 +4,7 @@ import Api
 import Components.LoadingSpinner
 import Html exposing (Html, button, text)
 import Html.Attributes exposing (class)
-import Html.Events exposing (onClick)
+import Html.Events
 
 
 type alias ButtonOptions msg =
@@ -70,12 +70,11 @@ withOnClick msg options =
     { options | onClick = msg }
 
 
-viewAsStatusButton : { loadingOnClick : msg, requestStatus : Api.Data a } -> ButtonOptions msg -> Html msg
+viewAsStatusButton : { requestStatus : Api.Data a } -> ButtonOptions msg -> Html msg
 viewAsStatusButton statusOptions options =
     case statusOptions.requestStatus of
         Api.Loading ->
             options
-                |> withOnClick statusOptions.loadingOnClick
                 |> withState Loading
                 |> view
 
@@ -125,10 +124,18 @@ view options =
 
             else
                 not options.enabled
+
+        onClickExtension =
+            if options.state == Loading then
+                []
+
+            else
+                [ Html.Events.onClick options.onClick ]
     in
     Html.button
-        [ class ("rounded-lg px-4 py-2 flex items-center " ++ color)
-        , Html.Attributes.disabled disabled
-        , onClick options.onClick
-        ]
+        ([ class ("rounded-lg px-4 py-2 flex items-center " ++ color)
+         , Html.Attributes.disabled disabled
+         ]
+            ++ onClickExtension
+        )
         content
