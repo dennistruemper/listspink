@@ -3,6 +3,7 @@ import { ItemRepositoryAmpt } from './adapter/ampt/data/itemRepositoryAmpt';
 import { ListRepositoryAmpt } from './adapter/ampt/data/listRepositoryAmpt';
 import { TokenCheckerClerk } from './adapter/clerk/tokenCheckerClerk';
 
+import { UserRepositoryAmpt } from './adapter/ampt/data/userRepositoryAmpt';
 import { KsuidGenerator } from './adapter/ampt/util/ksuidGenerator';
 import { Dependencies } from './domain/definitions/dependencies';
 
@@ -24,12 +25,14 @@ function devDependencies(): Dependencies {
 	const tokenChecker = new TokenCheckerClerk(configRepository);
 	const listRepository = new ListRepositoryAmpt(idGenerator);
 	const itemRepository = new ItemRepositoryAmpt(idGenerator);
+	const userRepository = new UserRepositoryAmpt();
 	return {
 		configRepository,
 		idGenerator,
 		tokenChecker,
 		itemRepository,
-		listRepository
+		listRepository,
+		userRepository
 	};
 }
 
@@ -40,12 +43,14 @@ function betaDependencies(): Dependencies {
 	const tokenChecker = new TokenCheckerClerk(configRepository);
 	const listRepository = new ListRepositoryAmpt(idGenerator);
 	const itemRepository = new ItemRepositoryAmpt(idGenerator);
+	const userRepository = new UserRepositoryAmpt();
 	return {
 		configRepository,
 		idGenerator,
 		tokenChecker,
 		itemRepository,
-		listRepository
+		listRepository,
+		userRepository
 	};
 }
 
@@ -56,11 +61,13 @@ function prodDependencies(): Dependencies {
 	const tokenChecker = new TokenCheckerClerk(configRepository);
 	const listRepository = new ListRepositoryAmpt(idGenerator);
 	const itemRepository = new ItemRepositoryAmpt(idGenerator);
+	const userRepository = new UserRepositoryAmpt();
 	return {
 		configRepository,
 		idGenerator,
 		tokenChecker,
 		itemRepository,
-		listRepository
+		listRepository,
+		userRepository
 	};
 }

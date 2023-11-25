@@ -1,9 +1,5 @@
 import { OptionalID, Result } from '../../../languageExtension';
-import {
-	DATA_MISSING,
-	NO_ACCESS,
-	UNKNOWN_DATA_SHAPE
-} from '../errorCodes';
+import { DATA_MISSING, NO_ACCESS, UNKNOWN_DATA_SHAPE } from '../errorCodes';
 import { ListPink, ListPinkDetails } from '../listPink';
 import { ListToItemConnection } from '../listToItemConnection';
 import { UserToListConnection } from '../userToListConnection';
@@ -18,7 +14,7 @@ export type ConnectItemToListInput = {
 	itemName: string;
 	itemDescription?: string;
 	itemCompleted?: string;
-	priority: number
+	priority: number;
 };
 
 export type CreateListErrors = UNKNOWN_DATA_SHAPE;

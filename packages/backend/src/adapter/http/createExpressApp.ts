@@ -5,6 +5,7 @@ import { VersionResponse } from '../../domain/definitions/communication/versionR
 import { Dependencies } from '../../domain/definitions/dependencies';
 import { addItemRoutes } from './itemRoutes';
 import { addListRoutes } from './listRoutes';
+import { addWebhookRoutes } from './webhookRoutes';
 
 export async function createApp(dependencies: Dependencies): Promise<Express> {
 	const authHandler: Handler = await dependencies.tokenChecker.getHandler();
@@ -43,6 +44,7 @@ function addPublicRoutes(router: Router, dependencies: Dependencies) {
 		const result: VersionResponse = { version: 'v0.0.1' };
 		return res.status(200).send(result);
 	});
+	addWebhookRoutes(router, dependencies);
 }
 
 function addPrivateRoutes(router: Router, dependencies: Dependencies) {

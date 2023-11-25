@@ -3,6 +3,6 @@
 @tailwind utilities;
 
 /* fix heading in detail summary is next to arrow and not in next line. */
-details summary > *{
-    display: inline;
-  }
+details summary > * {
+	display: inline;
+}

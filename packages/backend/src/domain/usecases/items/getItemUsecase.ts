@@ -1,9 +1,5 @@
 import { Result, failure, success } from '../../../languageExtension';
-import {
-	NO_ACCESS,
-	NO_ACCESS_CODE,
-	UNKNOWN_DATA_SHAPE
-} from '../../definitions/errorCodes';
+import { NO_ACCESS, NO_ACCESS_CODE, UNKNOWN_DATA_SHAPE } from '../../definitions/errorCodes';
 import { ItemPink } from '../../definitions/itemPink';
 import { ItemRepository } from '../../definitions/repositories/itemRepository';
 import { ListRepository } from '../../definitions/repositories/listRepository';

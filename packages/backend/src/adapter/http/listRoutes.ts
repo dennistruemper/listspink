@@ -1,8 +1,15 @@
 import { Router } from 'express';
-import { CreateListResponse, createListRequestSchema } from '../../domain/definitions/communication/createListRequestResponse';
+import {
+	CreateListResponse,
+	createListRequestSchema
+} from '../../domain/definitions/communication/createListRequestResponse';
 import { GetListDetailsResponse } from '../../domain/definitions/communication/getListDetailsRequestResponse';
 import { Dependencies } from '../../domain/definitions/dependencies';
-import { DATA_MISSING_CODE, NO_ACCESS_CODE, UNKNOWN_DATA_SHAPE_CODE } from '../../domain/definitions/errorCodes';
+import {
+	DATA_MISSING_CODE,
+	NO_ACCESS_CODE,
+	UNKNOWN_DATA_SHAPE_CODE
+} from '../../domain/definitions/errorCodes';
 import { CreateListUsecase } from '../../domain/usecases/lists/createListUsecase';
 import { GetListUsecase } from '../../domain/usecases/lists/getListUsecase';
 import { forceExhaust } from '../../languageExtension';

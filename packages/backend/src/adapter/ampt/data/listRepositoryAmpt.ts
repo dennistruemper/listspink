@@ -1,14 +1,7 @@
 import { data, GetBatchResponse } from '@ampt/data';
-import {
-	DATA_MISSING_CODE,
-	UNKNOWN_DATA_SHAPE_CODE
-} from '../../../domain/definitions/errorCodes';
+import { DATA_MISSING_CODE, UNKNOWN_DATA_SHAPE_CODE } from '../../../domain/definitions/errorCodes';
 import { IdGenerator } from '../../../domain/definitions/idGenerator';
-import {
-	ListPink,
-	ListPinkDetails,
-	listPinkSchema
-} from '../../../domain/definitions/listPink';
+import { ListPink, ListPinkDetails, listPinkSchema } from '../../../domain/definitions/listPink';
 import {
 	ListToItemConnection,
 	listToItemConnectionSchema
@@ -34,12 +27,7 @@ import {
 	userToListConnectionSchema
 } from '../../../domain/definitions/userToListConnection';
 import { amptDelimiter, delimiter } from '../../../globalConstants';
-import {
-	failure,
-	forceExhaust,
-	Result,
-	success
-} from '../../../languageExtension';
+import { failure, forceExhaust, Result, success } from '../../../languageExtension';
 import { batchResultSchema } from './batchResultSchema';
 
 const getListsSchema = batchResultSchema(listPinkSchema);
@@ -190,7 +178,6 @@ export class ListRepositoryAmpt implements ListRepository {
 			itemCompleted: input.itemCompleted,
 			priority: input.priority
 		};
-
 
 		const label1key = `DEPENDS_ON_ITEM${delimiter}${input.itemId}${amptDelimiter}LIST${delimiter}${input.listId}`;
 

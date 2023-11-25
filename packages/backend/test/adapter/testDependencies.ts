@@ -1,6 +1,7 @@
 import { ConfigRepositoryAmpt } from '../../src/adapter/ampt/configRepositoryAmpt';
 import { ItemRepositoryAmpt } from '../../src/adapter/ampt/data/itemRepositoryAmpt';
 import { ListRepositoryAmpt } from '../../src/adapter/ampt/data/listRepositoryAmpt';
+import { UserRepositoryAmpt } from '../../src/adapter/ampt/data/userRepositoryAmpt';
 import { KsuidGenerator } from '../../src/adapter/ampt/util/ksuidGenerator';
 import { Dependencies } from '../../src/domain/definitions/dependencies';
 import { TokenCheckerFake } from '../util/tokenCheckerFake';
@@ -20,11 +21,13 @@ function integrationDependencies(): Dependencies {
 	const tokenChecker = new TokenCheckerFake();
 	const listRepository = new ListRepositoryAmpt(idGenerator);
 	const itemRepository = new ItemRepositoryAmpt(idGenerator);
+	const userRepository = new UserRepositoryAmpt();
 	return {
 		configRepository,
 		idGenerator,
 		tokenChecker,
 		itemRepository,
-		listRepository
+		listRepository,
+		userRepository
 	};
 }

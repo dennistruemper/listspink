@@ -14,7 +14,7 @@
 		{
 			"matchPackageNames": ["node"],
 			"extends": ["schedule:monthly"],
-			"allowedVersions": ["<20.0.0"] ,
+			"allowedVersions": ["<20.0.0"],
 			"description": "Node.js 20 is not supported by Ampt yet"
 		},
 		{
