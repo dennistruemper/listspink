@@ -8,10 +8,7 @@ import {
 	updateItemRequestSchema
 } from '../../domain/definitions/communication/itemRequestResponses';
 import { Dependencies } from '../../domain/definitions/dependencies';
-import {
-	NO_ACCESS_CODE,
-	UNKNOWN_DATA_SHAPE_CODE
-} from '../../domain/definitions/errorCodes';
+import { NO_ACCESS_CODE, UNKNOWN_DATA_SHAPE_CODE } from '../../domain/definitions/errorCodes';
 import { CreateItemForListUsecase } from '../../domain/usecases/items/createItemForListUsecase';
 import { GetItemUsecase } from '../../domain/usecases/items/getItemUsecase';
 import { GetItemsForListUsecase } from '../../domain/usecases/items/getItemsForListUsecase';
@@ -210,14 +207,20 @@ function addUpdateItemDetailsRoute(router: Router, dependencies: Dependencies) {
 			itemId,
 			listId,
 			userId,
-			changes: {...paredBody.data, completed: paredBody.data.completed ?? null, priority: paredBody.data.priority}
+			changes: {
+				...paredBody.data,
+				completed: paredBody.data.completed ?? null,
+				priority: paredBody.data.priority
+			}
 		});
 
 		if (loaded.success === false) {
 			switch (loaded.code) {
 				case UNKNOWN_DATA_SHAPE_CODE:
 					console.error('Error code: ' + loaded.code + ' ' + loaded.message);
-					res.status(400).send('Failed to update item. ErrorCode: ' + loaded.code + ' ' + loaded.message);
+					res
+						.status(400)
+						.send('Failed to update item. ErrorCode: ' + loaded.code + ' ' + loaded.message);
 					return;
 				case NO_ACCESS_CODE:
 					res.status(403).send('User does not have access to this list');

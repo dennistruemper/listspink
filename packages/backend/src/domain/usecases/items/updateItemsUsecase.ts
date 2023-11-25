@@ -17,8 +17,7 @@ export interface UpdateItemInput {
 	changes: UpdateInput<Omit<ItemPink, 'id'>>;
 }
 
-export type UpdateItemOutput = ItemPink
-;
+export type UpdateItemOutput = ItemPink;
 
 type Errors = UNKNOWN_DATA_SHAPE | NO_ACCESS;
 
@@ -49,7 +48,8 @@ export class UpdateItemUsecase implements Usecase<UpdateItemInput, UpdateItemOut
 			updatedFields: data.changes
 		});
 		if (updateResult.success === false) {
-			return failure(updateResult.message, updateResult.code);}
+			return failure(updateResult.message, updateResult.code);
+		}
 
 		return success(updateResult.value);
 	}

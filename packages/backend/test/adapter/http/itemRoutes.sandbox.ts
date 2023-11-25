@@ -5,7 +5,10 @@ import { Dependencies } from '../../../src/domain/definitions/dependencies';
 import { CreateItemForListUsecase } from '../../../src/domain/usecases/items/createItemForListUsecase';
 
 import { getListDetailsArrayResponseSchema } from '../../../src/domain/definitions/communication/getListDetailsRequestResponse';
-import { CreateItemRequest, UpdateItemRequest } from '../../../src/domain/definitions/communication/itemRequestResponses';
+import {
+	CreateItemRequest,
+	UpdateItemRequest
+} from '../../../src/domain/definitions/communication/itemRequestResponses';
 import { ItemPink } from '../../../src/domain/definitions/itemPink';
 import { createJwtDummy } from '../../util/jwt';
 import { getTestDependencies } from '../testDependencies';

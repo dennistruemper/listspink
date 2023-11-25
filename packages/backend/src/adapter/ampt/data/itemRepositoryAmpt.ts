@@ -1,5 +1,8 @@
 import { data, GetBatchResponse } from '@ampt/data';
-import { UNKNOWN_DATA_SHAPE, UNKNOWN_DATA_SHAPE_CODE } from '../../../domain/definitions/errorCodes';
+import {
+	UNKNOWN_DATA_SHAPE,
+	UNKNOWN_DATA_SHAPE_CODE
+} from '../../../domain/definitions/errorCodes';
 import { IdGenerator } from '../../../domain/definitions/idGenerator';
 import { ItemPink, itemSchema } from '../../../domain/definitions/itemPink';
 import { listToItemConnectionSchema } from '../../../domain/definitions/listToItemConnection';
@@ -112,7 +115,6 @@ export class ItemRepositoryAmpt implements ItemRepository {
 		const key = this.storageId(update.itemId);
 		const result = await data.set(key, update.updatedFields, {});
 
-
 		if (result === undefined) {
 			return failure('No Result from data source', UNKNOWN_DATA_SHAPE_CODE);
 		}
@@ -133,14 +135,14 @@ export class ItemRepositoryAmpt implements ItemRepository {
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
 				completed: update.updatedFields?.completed ?? item.value.completed
-			}
+			};
 			await data.set(item.key, updateData);
 		});
 		const parsed = itemSchema.optional().safeParse(result);
 
-		if(parsed.success === false ) {
-			return failure(parsed.error.message, UNKNOWN_DATA_SHAPE_CODE)
-		} else if ( parsed.data === undefined){
+		if (parsed.success === false) {
+			return failure(parsed.error.message, UNKNOWN_DATA_SHAPE_CODE);
+		} else if (parsed.data === undefined) {
 			return failure('No Result from data source', UNKNOWN_DATA_SHAPE_CODE);
 		}
 
