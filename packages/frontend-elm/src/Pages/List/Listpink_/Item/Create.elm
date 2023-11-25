@@ -27,7 +27,7 @@ page : Auth.User -> Shared.Model -> Route { listpink : String } -> Page Model Ms
 page user shared route =
     Page.new
         { init = init user route.params.listpink shared
-        , update = update
+        , update = update user
         , subscriptions = subscriptions
         , view = view
         }
@@ -58,7 +58,6 @@ type alias Model =
     , createResponse : Api.Data ItemPink
     , listId : String
     , baseUrl : String
-    , user : User
     , priority : Int
     }
 
@@ -71,7 +70,6 @@ init user listId shared () =
       , createResponse = Api.NotAsked
       , listId = listId
       , baseUrl = shared.baseUrl
-      , user = user
       , priority = 0
       }
     , Effect.none
@@ -91,8 +89,8 @@ type Msg
     | BackClicked
 
 
-update : Msg -> Model -> ( Model, Effect Msg )
-update msg model =
+update : Auth.User -> Msg -> Model -> ( Model, Effect Msg )
+update user msg model =
     case msg of
         NameChanged name ->
             ( { model | nameInput = name } |> validateForm
@@ -118,7 +116,7 @@ update msg model =
                   }
                 , Api.Item.createItem
                     { baseUrl = validatedModel.baseUrl
-                    , token = validatedModel.user.authToken
+                    , token = user.authToken
                     , body =
                         { name = validatedModel.nameInput
                         , listId = validatedModel.listId

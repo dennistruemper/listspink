@@ -32,7 +32,7 @@ page : Auth.User -> Shared.Model -> Route () -> Page Model Msg
 page user shared route =
     Page.new
         { init = init user shared
-        , update = update
+        , update = update user
         , subscriptions = subscriptions
         , view = view
         }
@@ -58,7 +58,6 @@ getTitle =
 
 type alias Model =
     { userName : String
-    , user : User
     , baseUrl : String
     , lists : List ListPink
     , listsLoaded : Data (List ListPink)
@@ -68,7 +67,6 @@ type alias Model =
 init : Auth.User -> Shared.Model -> () -> ( Model, Effect Msg )
 init user shared () =
     ( { userName = getUserName user
-      , user = user
       , baseUrl = shared.baseUrl
       , lists = [ ListPink "list-id" "Pink List" Nothing, ListPink "list-id-2" "Pinker List" Nothing ]
       , listsLoaded = Api.Loading
@@ -90,8 +88,8 @@ type Msg
     | NavigateClicked { path : Route.Path.Path, query : Dict.Dict String String }
 
 
-update : Msg -> Model -> ( Model, Effect Msg )
-update msg model =
+update : Auth.User -> Msg -> Model -> ( Model, Effect Msg )
+update user msg model =
     case msg of
         NoOp ->
             ( model
