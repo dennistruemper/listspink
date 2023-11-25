@@ -83,8 +83,7 @@ init user listId shared () =
 
 
 type Msg
-    = NoOp
-    | NameChanged String
+    = NameChanged String
     | PriorityChanged String
     | DescriptionChanged String
     | CreateClicked
@@ -95,11 +94,6 @@ type Msg
 update : Msg -> Model -> ( Model, Effect Msg )
 update msg model =
     case msg of
-        NoOp ->
-            ( model
-            , Effect.none
-            )
-
         NameChanged name ->
             ( { model | nameInput = name } |> validateForm
             , Effect.none
@@ -193,7 +187,7 @@ view model =
     let
         createButton =
             Components.Button.button { label = "Create", onClick = CreateClicked }
-                |> Components.Button.viewAsStatusButton { requestStatus = model.createResponse, loadingOnClick = NoOp }
+                |> Components.Button.viewAsStatusButton { requestStatus = model.createResponse }
     in
     { title = getTitle
     , body =

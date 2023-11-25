@@ -1,5 +1,6 @@
 module Pages.List.Create exposing (Model, Msg, page)
 
+import Api
 import Api.List
 import Auth
 import Components.ActionBarWrapper exposing (viewActionBarWrapper)
@@ -53,6 +54,7 @@ type alias Model =
     { nameInput : String
     , descriptionInput : String
     , validationError : ValidationResult
+    , createResponse : Api.Data ListPink
     , user : Auth.User
     , baseUrl : String
     }
@@ -63,6 +65,7 @@ init user shared () =
     ( { nameInput = ""
       , descriptionInput = ""
       , validationError = VNothing
+      , createResponse = Api.NotAsked
       , user = user
       , baseUrl = shared.baseUrl
       }
@@ -100,7 +103,7 @@ update msg model =
                     validateForm model
             in
             if validatedModel.validationError == VNothing then
-                ( validatedModel
+                ( { validatedModel | createResponse = Api.Loading }
                 , Api.List.createList
                     { baseUrl = validatedModel.baseUrl
                     , token = validatedModel.user.authToken
@@ -125,13 +128,13 @@ update msg model =
 
         CreateListResponseReceived result ->
             case result of
-                Ok list ->
-                    ( { model | nameInput = "", descriptionInput = "", validationError = VSuccess ("List " ++ model.nameInput ++ " created successfully") }
+                Ok ( metadata, list ) ->
+                    ( { model | createResponse = Api.Success list, nameInput = "", descriptionInput = "", validationError = VSuccess ("List " ++ model.nameInput ++ " created successfully") }
                     , Effect.none
                     )
 
                 Err error ->
-                    ( model
+                    ( { model | createResponse = Api.FailureWithDetails error }
                     , Effect.none
                     )
 
@@ -140,10 +143,10 @@ validateForm : Model -> Model
 validateForm model =
     case model.nameInput of
         "" ->
-            { model | validationError = VError "Name has to be set" }
+            { model | createResponse = Api.NotAsked, validationError = VError "Name has to be set" }
 
         _ ->
-            { model | validationError = VNothing }
+            { model | createResponse = Api.NotAsked, validationError = VNothing }
 
 
 
@@ -161,10 +164,15 @@ subscriptions model =
 
 view : Model -> View Msg
 view model =
+    let
+        createButton =
+            Components.Button.button { label = "Create", onClick = CreateClicked }
+                |> Components.Button.viewAsStatusButton { requestStatus = model.createResponse }
+    in
     { title = getTitle
     , body =
         [ viewActionBarWrapper
-            [ Components.Button.button { label = "Create", onClick = CreateClicked } |> Components.Button.view
+            [ createButton
             ]
             [ viewTextInput { name = "Name", value = Just model.nameInput, placeholder = Just "Shopping List", action = NameChanged }
             , viewTextAreaInput { name = "Description", value = Just model.descriptionInput, placeholder = Just "Buy these items when you are in a supermarket", action = DescriptionChanged }
