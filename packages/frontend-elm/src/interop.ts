@@ -4,7 +4,7 @@ import { handleMessageFromElm } from '../fromElm';
 let clerk: Clerk;
 
 // This returns the flags passed into your Elm application
-export const flags = async ({ env }: { env: Record<string, string> }): Promise<{ user: any }> => {
+export const flags = async ({ env }: { env: Env }): Promise<Flags> => {
 	console.log('Flags', JSON.stringify(env, null, 2));
 	const clerkPublicKey =
 		env.STAGE === 'prod'
@@ -13,6 +13,7 @@ export const flags = async ({ env }: { env: Record<string, string> }): Promise<{
 	const baseUrl = normalizeBaseUrl(env.BASE_URL);
 	console.log('Clerk PK', clerkPublicKey);
 	clerk = new Clerk(clerkPublicKey);
+
 	await clerk.load({});
 	console.log('Clerk is ready: ', clerk.session);
 	const user = clerk.session?.user;
@@ -30,6 +31,38 @@ export const flags = async ({ env }: { env: Record<string, string> }): Promise<{
 	return toElm;
 };
 
+interface Env {
+	BASE_URL?: string;
+	STAGE?: string;
+}
+
+interface App {
+	ports: {
+		toElm: {
+			send: (data: unknown) => void;
+		};
+		fromElm: {
+			subscribe: (send: (data: unknown) => unknown) => void;
+		};
+	};
+}
+
+interface UserData {
+	userName?: string | null;
+	fistName?: string | null;
+	lastName?: string | null;
+	email?: string;
+	id?: string;
+	image?: string;
+	authToken?: string | null;
+}
+
+interface Flags {
+	user: UserData;
+	baseUrl: string;
+	stage: string;
+}
+
 function normalizeBaseUrl(baseUrl?: string): string {
 	if (!baseUrl) {
 		return '/api/';
@@ -39,22 +72,6 @@ function normalizeBaseUrl(baseUrl?: string): string {
 		return baseUrl + 'api/';
 	}
 	return baseUrl + '/api/';
-}
-
-interface Env {
-	BASE_URL?: string;
-	STAGE?: string;
-}
-
-interface App {
-	ports: {
-		toElm: {
-			send?: (data: unknown) => void;
-		};
-		fromElm: {
-			subscribe?: (send: (data: unknown) => unknown) => void;
-		};
-	};
 }
 
 let websocket: WebSocket;
@@ -72,10 +89,10 @@ export const onReady = ({ app, env }: { app: App; env: Env }): void => {
 	console.log('Connected to Ampt WS', baseUrl);
 
 	console.log('Sending message to elm', app.ports);
-	if (app.ports.toElm.send) {
-		app.ports.toElm.send('Hello to Elm');
-		console.log('Sent message to elm');
-	}
+	//if (app.ports.toElm.send) {
+	app.ports.toElm.send('Hello to Elm');
+	console.log('Sent message to elm');
+	//}
 
 	let currentToken = '';
 	setInterval(async () => {
@@ -90,9 +107,9 @@ export const onReady = ({ app, env }: { app: App; env: Env }): void => {
 				console.log('Refreshing token');
 			}
 
-			if (app.ports.toElm.send) {
-				app.ports.toElm.send(JSON.stringify({ type: 'TOKEN_UPDATE', newToken: token }));
-			}
+			//if (app.ports.toElm.send) {
+			app.ports.toElm.send(JSON.stringify({ type: 'TOKEN_UPDATE', newToken: token }));
+			//}
 		} else {
 			if (window.location.href.includes('localhost')) {
 				console.log('Token is still valid');
@@ -105,7 +122,8 @@ export const onReady = ({ app, env }: { app: App; env: Env }): void => {
 	websocket.onmessage = (event) => {
 		console.log('Received message', event.data);
 
-		if (app.ports.toElm.send) app.ports.toElm.send(event.data);
+		//if (app.ports.toElm.send)
+		app.ports.toElm.send(event.data);
 	};
 
 	if (app.ports.fromElm.subscribe) {
