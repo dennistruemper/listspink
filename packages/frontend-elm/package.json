@@ -15,7 +15,7 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"@clerk/clerk-js": "4.68.0",
+		"@clerk/clerk-js": "4.68.1",
 		"zod": "3.22.2"
 	},
 	"devDependencies": {
