@@ -10,7 +10,6 @@ import {
 	UpdateItemRequest
 } from '../../../src/domain/definitions/communication/itemRequestResponses';
 import { ItemPink } from '../../../src/domain/definitions/itemPink';
-import { createListPink } from '../../../src/domain/definitions/listPink';
 import { createJwtDummy } from '../../util/jwt';
 import { getTestDependencies } from '../testDependencies';
 
@@ -192,13 +191,12 @@ describe.concurrent('item enppoints', async () => {
 
 		it('should not work for unconnected listId', async () => {
 			const { userId, listId } = await createListAndConnectToUser(dependencies);
-			const unconnectedList = await createListPink('dummy', () =>
-				dependencies.idGenerator.generate()
-			);
+			const unconnectedList = await createListAndUser(dependencies);
+
 			const body: CreateItemRequest = {
 				description: 'testDescription',
 				name: '123',
-				listId: unconnectedList.id,
+				listId: unconnectedList.listId,
 				priority: 0
 			};
 			const result = await supertest(app)
