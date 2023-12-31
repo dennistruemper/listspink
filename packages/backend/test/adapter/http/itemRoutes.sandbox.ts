@@ -16,7 +16,13 @@ import { getTestDependencies } from '../testDependencies';
 async function createListAndUser(
 	dependencies: Dependencies
 ): Promise<{ userId: string; listId: string }> {
-	const userId = 'USER' + dependencies.idGenerator.generate();
+	const user = await dependencies.userRepository.createUser({
+		displayName: `dummy-${dependencies.idGenerator.generate()}`
+	});
+
+	if (user.success === false) throw new Error('User creation failed');
+
+	const userId = user.value.id;
 	const listResult = await dependencies.listRepository.create({
 		itemIds: [],
 		name: 'dummy item',
@@ -68,7 +74,8 @@ async function createListAndItemsWithConnectionsToUser(input: {
 			itemName: 'item name ' + i,
 			listId,
 			userId,
-			itemDescription: 'test description ' + i
+			itemDescription: 'test description ' + i,
+			priority: 0
 		});
 
 		if (createResult.success === false) throw new Error('Item creation failed');
@@ -92,6 +99,7 @@ describe.concurrent('item enppoints', async () => {
 			const { userId, itemId } = await createListAndItemWithConnectionsToUser({
 				dependencies
 			});
+
 			const result = await supertest(app)
 				.get(`/api/item/${itemId}`)
 				.set('Authorization', 'Bearer ' + createJwtDummy(userId))
@@ -125,7 +133,7 @@ describe.concurrent('item enppoints', async () => {
 		});
 
 		it('should not work for unconnected user', async () => {
-			const userId = 'USER' + dependencies.idGenerator.generate();
+			const userId = dependencies.idGenerator.generate();
 			const created = await dependencies.listRepository.create({
 				name: 'testName',
 				description: 'testDescription',
@@ -154,7 +162,11 @@ describe.concurrent('item enppoints', async () => {
 
 		it('should get an error without name', async () => {
 			type CreateItemRequestWithout = Omit<CreateItemRequest, 'name'>;
-			const body: CreateItemRequestWithout = { description: 'testDescription', listId: '123' };
+			const body: CreateItemRequestWithout = {
+				description: 'testDescription',
+				listId: '123',
+				priority: 0
+			};
 			const result = await supertest(app)
 				.post('/api/item')
 				.set('Authorization', 'Bearer ' + createJwtDummy('UserId123'))
@@ -164,7 +176,11 @@ describe.concurrent('item enppoints', async () => {
 		});
 		it('should get an error without listId', async () => {
 			type CreateItemRequestWithout = Omit<CreateItemRequest, 'listId'>;
-			const body: CreateItemRequestWithout = { description: 'testDescription', name: '123' };
+			const body: CreateItemRequestWithout = {
+				description: 'testDescription',
+				name: '123',
+				priority: 0
+			};
 			const result = await supertest(app)
 				.post('/api/item')
 				.set('Authorization', 'Bearer ' + createJwtDummy('UserId123'))
@@ -175,11 +191,13 @@ describe.concurrent('item enppoints', async () => {
 
 		it('should not work for unconnected listId', async () => {
 			const { userId, listId } = await createListAndConnectToUser(dependencies);
+			const unconnectedList = await createListAndUser(dependencies);
 
 			const body: CreateItemRequest = {
 				description: 'testDescription',
 				name: '123',
-				listId: listId + 'jibberish'
+				listId: unconnectedList.listId,
+				priority: 0
 			};
 			const result = await supertest(app)
 				.post('/api/item')
@@ -193,11 +211,12 @@ describe.concurrent('item enppoints', async () => {
 			const body: CreateItemRequest = {
 				description: 'testDescription',
 				name: '123',
-				listId: listId
+				listId: listId,
+				priority: 0
 			};
 			const result = await supertest(app)
 				.post('/api/item')
-				.set('Authorization', 'Bearer ' + createJwtDummy(userId + 'jibberish'))
+				.set('Authorization', 'Bearer ' + createJwtDummy(dependencies.idGenerator.generate()))
 				.send(body)
 				.expect(403);
 		});
@@ -207,6 +226,7 @@ describe.concurrent('item enppoints', async () => {
 			const body: CreateItemRequest = {
 				description: 'testDescription',
 				name: '123',
+				priority: 0,
 				listId: listId
 			};
 			const result = await supertest(app)
@@ -230,7 +250,7 @@ describe.concurrent('item enppoints', async () => {
 			});
 
 			const completedTime = new Date().toISOString();
-			const body: UpdateItemRequest = { completed: completedTime };
+			const body: UpdateItemRequest = { completed: completedTime, priority: 0 };
 
 			const result = await supertest(app)
 				.put(`/api/list/${listId}/item/${itemId}`)

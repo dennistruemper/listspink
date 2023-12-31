@@ -9,7 +9,7 @@
 		"dev": "run-pty % npm run dev-be % npm run dev-fe % npm run dev-test-unit % npm run dev-css % zsh ",
 		"dev-be": "ampt --skip-update",
 		"dev-fe": "export BASE_URL=$(./scripts/getSandboxUrl.sh) && export STAGE=beta && cd packages/frontend-elm && npm run dev",
-		"dev-test": "npx ampt run test-all-watch --test-stage",
+		"dev-test": "npx ampt run test-all-watch",
 		"dev-css": "cd packages/frontend-elm && npm run watch:css",
 		"dev-test-unit": "MODE=LOCAL BASE_PATH=./packages/backend npx vitest",
 		"clear-static": "rm -rf static/*",
@@ -21,16 +21,21 @@
 		"rebase": "git stash && git checkout main && git pull && git checkout - && git rebase main && git stash apply",
 		"ampt:test": "BASE_PATH=packages/backend MODE=SANDBOX vitest run",
 		"ampt:test-all": "BASE_PATH=packages/backend MODE=ALL vitest run",
-		"ampt:test-all-watch": "BASE_PATH=packages/backend MODE=ALL vitest"
+		"ampt:test-all-watch": "BASE_PATH=packages/backend MODE=ALL vitest",
+		"ampt:migrate": "ampt-sql migrate",
+		"ampt:migrate-up": "ampt-sql migrate --up",
+		"ampt:migrate-down": "ampt-sql migrate --down"
 	},
 	"dependencies": {
 		"@ampt/data": "1.0.11",
 		"@ampt/sdk": "1.0.8",
+		"@ampt/sql": "1.0.1",
 		"@clerk/clerk-sdk-node": "4.13.3",
 		"cors": "2.8.5",
 		"express": "4.18.2",
 		"express-oauth2-jwt-bearer": "1.6.0",
 		"ksuid": "3.0.0",
+		"kysely": "0.26.3",
 		"zod": "3.22.4"
 	},
 	"ampt": {

@@ -1,10 +1,11 @@
 import { ConfigRepositoryAmpt } from './adapter/ampt/configRepositoryAmpt';
-import { ItemRepositoryAmpt } from './adapter/ampt/data/itemRepositoryAmpt';
-import { ListRepositoryAmpt } from './adapter/ampt/data/listRepositoryAmpt';
 import { TokenCheckerClerk } from './adapter/clerk/tokenCheckerClerk';
 
-import { UserRepositoryAmpt } from './adapter/ampt/data/userRepositoryAmpt';
+import { ItemRepositoryAmptSql } from './adapter/ampt/sql/itemRepositoryAmptSql';
+import { ListRepositoryAmptSql } from './adapter/ampt/sql/listRepositoryAmptSql';
+import { UserRepositoryAmptSql } from './adapter/ampt/sql/userRepositoryAmptSql';
 import { KsuidGenerator } from './adapter/ampt/util/ksuidGenerator';
+import { UuidGenerator } from './adapter/ampt/util/uuidGenerator';
 import { Dependencies } from './domain/definitions/dependencies';
 
 export function getProdDependencies(stage: string): Dependencies {
@@ -21,11 +22,11 @@ export function getProdDependencies(stage: string): Dependencies {
 function devDependencies(): Dependencies {
 	console.log('devDependencies loaded');
 	const configRepository = new ConfigRepositoryAmpt();
-	const idGenerator = new KsuidGenerator();
+	const idGenerator = new UuidGenerator();
 	const tokenChecker = new TokenCheckerClerk(configRepository);
-	const listRepository = new ListRepositoryAmpt(idGenerator);
-	const itemRepository = new ItemRepositoryAmpt(idGenerator);
-	const userRepository = new UserRepositoryAmpt();
+	const listRepository = new ListRepositoryAmptSql();
+	const itemRepository = new ItemRepositoryAmptSql();
+	const userRepository = new UserRepositoryAmptSql();
 	return {
 		configRepository,
 		idGenerator,
@@ -41,9 +42,9 @@ function betaDependencies(): Dependencies {
 	const configRepository = new ConfigRepositoryAmpt();
 	const idGenerator = new KsuidGenerator();
 	const tokenChecker = new TokenCheckerClerk(configRepository);
-	const listRepository = new ListRepositoryAmpt(idGenerator);
-	const itemRepository = new ItemRepositoryAmpt(idGenerator);
-	const userRepository = new UserRepositoryAmpt();
+	const listRepository = new ListRepositoryAmptSql();
+	const itemRepository = new ItemRepositoryAmptSql();
+	const userRepository = new UserRepositoryAmptSql();
 	return {
 		configRepository,
 		idGenerator,
@@ -59,9 +60,9 @@ function prodDependencies(): Dependencies {
 	const configRepository = new ConfigRepositoryAmpt();
 	const idGenerator = new KsuidGenerator();
 	const tokenChecker = new TokenCheckerClerk(configRepository);
-	const listRepository = new ListRepositoryAmpt(idGenerator);
-	const itemRepository = new ItemRepositoryAmpt(idGenerator);
-	const userRepository = new UserRepositoryAmpt();
+	const listRepository = new ListRepositoryAmptSql();
+	const itemRepository = new ItemRepositoryAmptSql();
+	const userRepository = new UserRepositoryAmptSql();
 	return {
 		configRepository,
 		idGenerator,

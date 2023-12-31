@@ -11,11 +11,14 @@ describe.concurrent('list enppoints', async () => {
 	const app = await createApp(dependencies);
 
 	describe('list endpoint api/list/:listId GET', async () => {
+		const user = await dependencies.userRepository.createUser({ displayName: 'test' });
 		it('should get a 401 without authorization', async () => {
 			await supertest(app).get('/api/list/some-id').expect(401);
 		});
 
 		it('should work for connected user', async () => {
+			if (user.success === false) throw new Error('User creation failed');
+
 			const created = await dependencies.listRepository.create({
 				name: 'testName',
 				description: 'testDescription',
@@ -25,20 +28,22 @@ describe.concurrent('list enppoints', async () => {
 
 			const connected = await dependencies.listRepository.connectToUser({
 				listId: created.value.id,
-				userId: 'UserId123'
+				userId: user.value.id
 			});
 
 			if (connected.success === false) throw new Error('List connection failed');
 
 			const result = await supertest(app)
 				.get(`/api/list/${created.value.id}`)
-				.set('Authorization', 'Bearer ' + createJwtDummy('UserId123'))
+				.set('Authorization', 'Bearer ' + createJwtDummy(user.value.id))
 				.expect(200);
 			expect(result.text).toContain('name":"testName');
 			expect(result.text).toContain('description":"testDescription');
 		});
 
 		it('should not work for unconnected user', async () => {
+			if (user.success === false) throw new Error('User creation failed');
+
 			const created = await dependencies.listRepository.create({
 				name: 'testName',
 				description: 'testDescription',
@@ -48,18 +53,22 @@ describe.concurrent('list enppoints', async () => {
 
 			await supertest(app)
 				.get(`/api/list/${created.value.id}`)
-				.set('Authorization', 'Bearer ' + createJwtDummy('UserId123'))
+				.set('Authorization', 'Bearer ' + createJwtDummy(user.value.id))
 				.expect(403);
 		});
 	});
 
 	describe('list endpoint api/list GET', async () => {
+		const user = await dependencies.userRepository.createUser({ displayName: 'test' });
+
 		it('should get a 401 without authorization', async () => {
 			await supertest(app).get('/api/list').expect(401);
 		});
 
 		it('should work for connected user', async () => {
-			const userId = 'USER' + dependencies.idGenerator.generate();
+			if (user.success === false) throw new Error('User creation failed');
+
+			const userId = user.value.id;
 			const created = await dependencies.listRepository.create({
 				name: 'testName',
 				description: 'testDescription',
@@ -90,7 +99,9 @@ describe.concurrent('list enppoints', async () => {
 		});
 
 		it('should not work for unconnected user', async () => {
-			const userId = 'USER' + dependencies.idGenerator.generate();
+			if (user.success === false) throw new Error('User creation failed');
+
+			const userId = user.value.id;
 			const created = await dependencies.listRepository.create({
 				name: 'testName',
 				description: 'testDescription',
@@ -106,6 +117,8 @@ describe.concurrent('list enppoints', async () => {
 	});
 
 	describe('list endpoint api/list POST', async () => {
+		const user = await dependencies.userRepository.createUser({ displayName: 'test' });
+
 		it('should get a 401 without authorization', async () => {
 			await supertest(app).post('/api/list').expect(401);
 		});
@@ -118,20 +131,24 @@ describe.concurrent('list enppoints', async () => {
 		});
 
 		it('should get an error without name', async () => {
+			if (user.success === false) throw new Error('User creation failed');
+
 			type CreateListRequestWithutName = Omit<CreateListRequest, 'name'>;
 			const body: CreateListRequestWithutName = { description: 'testDescription', itemIds: [] };
 			const result = await supertest(app)
 				.post('/api/list')
-				.set('Authorization', 'Bearer ' + createJwtDummy('UserId123'))
+				.set('Authorization', 'Bearer ' + createJwtDummy(user.value.id))
 				.send(body)
 				.expect(400);
 			expect(result.text).toContain('name');
 		});
 
 		it('should work', async () => {
+			if (user.success === false) throw new Error('User creation failed');
+
 			const result = await supertest(app)
 				.post('/api/list')
-				.set('Authorization', 'Bearer ' + createJwtDummy('UserId123'))
+				.set('Authorization', 'Bearer ' + createJwtDummy(user.value.id))
 				.send({ name: 'testName', description: 'testDescription', itemIds: [] })
 				.expect(200);
 			expect(result.text).toContain('name":"testName');

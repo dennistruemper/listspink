@@ -3,8 +3,8 @@ export const listToItemConnectionSchema = z.object({
 	itemId: z.string(),
 	listId: z.string(),
 	itemName: z.string(),
-	itemDescription: z.string().optional(),
-	itemCompleted: z.string().optional(),
+	itemDescription: z.string().nullable(),
+	itemCompleted: z.string().nullable(),
 	completed: z.string().optional(),
 	priority: z.number().default(0)
 });

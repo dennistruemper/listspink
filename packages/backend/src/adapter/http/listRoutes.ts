@@ -85,7 +85,8 @@ function addCreateListForUserRoute(router: Router, dependencies: Dependencies) {
 
 		const created = await new CreateListUsecase(dependencies.listRepository).execute({
 			...data,
-			userId
+			userId,
+			description: data.description ?? null
 		});
 
 		if (created.success === false) {
@@ -106,7 +107,7 @@ function addCreateListForUserRoute(router: Router, dependencies: Dependencies) {
 		const result: CreateListResponse = {
 			id: list.id,
 			name: list.name,
-			description: list.description,
+			description: list.description ?? undefined,
 			itemIds: []
 		};
 

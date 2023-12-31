@@ -10,7 +10,7 @@ import { Usecase } from '../usecase';
 export interface CreateListInput {
 	userId: string;
 	name: string;
-	description?: string;
+	description: string | null;
 }
 
 export type CreateListOutput = {

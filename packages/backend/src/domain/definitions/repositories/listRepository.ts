@@ -11,10 +11,6 @@ export type UserHasAccessInput = { listId: string; userId: string };
 export type ConnectItemToListInput = {
 	listId: string;
 	itemId: string;
-	itemName: string;
-	itemDescription?: string;
-	itemCompleted?: string;
-	priority: number;
 };
 
 export type CreateListErrors = UNKNOWN_DATA_SHAPE;

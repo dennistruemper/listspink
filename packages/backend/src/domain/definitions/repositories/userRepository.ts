@@ -1,8 +1,8 @@
-import { Result } from '../../../languageExtension';
+import { OptionalID, Result } from '../../../languageExtension';
 import { DATA_MISSING, UNKNOWN_DATA_SHAPE } from '../errorCodes';
 import { User } from '../user';
 
-export type CreateUserInput = User;
+export type CreateUserInput = OptionalID<User>;
 export type UpdateUserInput = User;
 
 export type GetUserErrors = UNKNOWN_DATA_SHAPE | DATA_MISSING;
