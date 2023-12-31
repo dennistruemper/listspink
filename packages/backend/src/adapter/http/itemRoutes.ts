@@ -169,7 +169,7 @@ function addGetItemDetailsForListRoute(router: Router, dependencies: Dependencie
 		const response: GetItemDetailsResponse[] = loaded.value.items.map((item) => ({
 			id: item.id,
 			name: item.name,
-			description: item.description,
+			description: item.description ?? undefined,
 			completed: item.completed,
 			priority: item.priority ?? 0
 		}));

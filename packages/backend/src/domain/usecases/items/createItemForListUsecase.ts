@@ -8,7 +8,7 @@ import { Usecase } from '../usecase';
 export interface CreateItemInput {
 	userId: string;
 	itemName: string;
-	itemDescription?: string;
+	itemDescription: string | null;
 	listId: string;
 	extraListIds?: string[];
 	priority: number;
@@ -29,15 +29,6 @@ export class CreateItemForListUsecase
 	) {}
 
 	async execute(data: CreateItemInput): Promise<Result<CreateItemOutput, Errors>> {
-		const created = await this.itemRepository.create({
-			name: data.itemName,
-			description: data.itemDescription,
-			priority: data.priority
-		});
-		if (created.success === false) {
-			return failure('Item not created', created.code);
-		}
-
 		const hasAccessResult = await this.listRepository.userHasAccess({
 			listId: data.listId,
 			userId: data.userId
@@ -48,12 +39,20 @@ export class CreateItemForListUsecase
 		if (hasAccessResult.value === false)
 			return failure('User does not have access to list', NO_ACCESS_CODE);
 
+		const created = await this.itemRepository.create({
+			name: data.itemName,
+			description: data.itemDescription ?? null,
+			priority: data.priority,
+			completed: null,
+			listId: data.listId
+		});
+		if (created.success === false) {
+			return failure('Item not created', created.code);
+		}
+
 		const connectResult = await this.listRepository.connectItemToList({
 			listId: data.listId,
-			itemId: created.value.id,
-			itemName: data.itemName,
-			itemDescription: data.itemDescription,
-			priority: data.priority
+			itemId: created.value.id
 		});
 
 		if (connectResult.success === false)

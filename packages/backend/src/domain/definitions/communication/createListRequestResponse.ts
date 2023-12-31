@@ -13,7 +13,7 @@ export type CreateListResponse = z.infer<typeof createListResponseSchema>;
 export const getListsResponseSchema = z
 	.object({
 		name: z.string(),
-		description: z.string().optional(),
+		description: z.string().nullable(),
 		id: z.string(),
 		itemIds: z.string().array().default([])
 	})

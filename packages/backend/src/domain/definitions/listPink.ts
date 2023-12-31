@@ -2,24 +2,18 @@ import { z } from 'zod';
 
 export const listPinkDetailsSchema = z.object({
 	name: z.string(),
-	description: z.string().optional(),
+	description: z.string().nullable(),
 	id: z.string()
 });
 export type ListPinkDetails = z.infer<typeof listPinkDetailsSchema>;
 
 export const listPinkSchema = z.object({
 	name: z.string(),
-	description: z.string().optional(),
+	description: z.string().nullable(),
 	id: z.string(),
 	itemIds: z.string().array().default([])
 });
 
-export type ListPink = z.infer<typeof listPinkSchema>;
+export const listsPinkSchema = z.array(listPinkSchema);
 
-export function createListPink(name: string, uuidGenerator: () => string): ListPink {
-	return {
-		id: uuidGenerator(),
-		name: name,
-		itemIds: []
-	};
-}
+export type ListPink = z.infer<typeof listPinkSchema>;

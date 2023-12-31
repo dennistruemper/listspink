@@ -2,7 +2,7 @@ import z from 'zod';
 
 export const getListDetailsResponseSchema = z.object({
 	name: z.string(),
-	description: z.string().optional(),
+	description: z.string().nullable(),
 	id: z.string()
 });
 
