@@ -8,3 +8,5 @@ urlSandbox.txt
 packages/frontend/test-results/
 
 static/*
+
+kysely.env
