@@ -249,8 +249,8 @@ describe.concurrent('item enppoints', async () => {
 				dependencies
 			});
 
-			const completedTime = new Date().toISOString();
-			const body: UpdateItemRequest = { completed: completedTime, priority: 0 };
+			const completedTime = new Date();
+			const body: UpdateItemRequest = { completed: completedTime.toISOString(), priority: 0 };
 
 			const result = await supertest(app)
 				.put(`/api/list/${listId}/item/${itemId}`)

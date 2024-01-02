@@ -23,9 +23,7 @@ export class ItemRepositoryAmptSql implements ItemRepository {
 			return success(undefined);
 		}
 
-		result.completed = result.completed
-			? new Date(result.completed).toISOString()
-			: result.completed;
+		result.completed = result.completed ? new Date(result.completed) : result.completed;
 
 		const parsed = itemSchema.optional().safeParse(result);
 
@@ -117,9 +115,7 @@ export class ItemRepositoryAmptSql implements ItemRepository {
 			return failure('No Result from data source', UNKNOWN_DATA_SHAPE_CODE);
 		}
 
-		result.completed = result.completed
-			? new Date(result.completed).toISOString()
-			: result.completed;
+		result.completed = result.completed ? new Date(result.completed) : result.completed;
 
 		const parsed = itemSchema.optional().safeParse(result);
 

@@ -4,7 +4,7 @@ export const itemSchema = z.object({
 	id: z.string(),
 	name: z.string(),
 	description: z.string().nullable(),
-	completed: z.string().datetime({ offset: false }).nullable(),
+	completed: z.date().nullable(),
 	priority: z.number().optional(),
 	listId: z.string()
 });
