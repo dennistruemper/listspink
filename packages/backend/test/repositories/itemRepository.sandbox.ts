@@ -101,7 +101,7 @@ describe('ItemRepository', () => {
 			if (itemResult.success === false)
 				throw new Error('Could not create item: ' + itemResult.message);
 
-			const completedValue = new Date().toISOString();
+			const completedValue = new Date();
 
 			const updatedResult = await repository.update({
 				itemId: itemResult.value.id,
