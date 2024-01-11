@@ -40,6 +40,7 @@
 		"zod": "3.22.4"
 	},
 	"ampt": {
+		"buildRuntime": "nodejs20",
 		"app": "lists-pink-backend",
 		"org": "dennistruemper269889"
 	},
