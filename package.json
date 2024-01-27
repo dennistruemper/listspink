@@ -45,7 +45,7 @@
 		"org": "dennistruemper269889"
 	},
 	"devDependencies": {
-		"@ampt/cli": "1.0.32",
+		"@ampt/cli": "1.0.33",
 		"@types/bun": "1.0.0",
 		"@types/express": "4.17.21",
 		"@types/node": "20.10.6",
