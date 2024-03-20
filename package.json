@@ -57,7 +57,7 @@
 		"kysely-codegen": "0.14.1",
 		"pg": "8.11.3",
 		"prettier": "3.2.5",
-		"run-pty": "4.1.0",
+		"run-pty": "5.0.0",
 		"supertest": "6.3.4",
 		"vite": "5.1.6",
 		"vitest": "1.4.0"
