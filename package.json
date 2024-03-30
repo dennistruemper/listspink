@@ -55,7 +55,7 @@
 		"eslint-config-prettier": "8.10.0",
 		"jsonwebtoken": "9.0.2",
 		"kysely-codegen": "0.14.1",
-		"pg": "8.11.3",
+		"pg": "8.11.4",
 		"prettier": "3.2.5",
 		"run-pty": "5.0.0",
 		"supertest": "6.3.4",
