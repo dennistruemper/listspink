@@ -29,7 +29,7 @@
 	},
 	"dependencies": {
 		"@ampt/data": "1.0.20",
-		"@ampt/sdk": "1.0.14",
+		"@ampt/sdk": "1.0.15",
 		"@ampt/sql": "1.0.1",
 		"@clerk/clerk-sdk-node": "4.13.15",
 		"cors": "2.8.5",
