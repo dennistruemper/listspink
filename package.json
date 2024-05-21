@@ -31,7 +31,7 @@
 		"@ampt/data": "1.0.21",
 		"@ampt/sdk": "1.0.15",
 		"@ampt/sql": "1.0.1",
-		"@clerk/clerk-sdk-node": "4.13.16",
+		"@clerk/clerk-sdk-node": "4.13.17",
 		"cors": "2.8.5",
 		"express": "4.19.2",
 		"express-oauth2-jwt-bearer": "1.6.0",
