@@ -19,7 +19,7 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - uses: jorelali/setup-elm@v5
+      - uses: jorelali/setup-elm@v6
         with:
           elm-version: 0.19.1
       - name: Use Node.js
