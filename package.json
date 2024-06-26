@@ -28,7 +28,7 @@
 		"ampt:generate": "./scripts/generateDbTypes.sh"
 	},
 	"dependencies": {
-		"@ampt/data": "1.0.23",
+		"@ampt/data": "1.0.24",
 		"@ampt/sdk": "1.0.16",
 		"@ampt/sql": "1.0.1",
 		"@clerk/clerk-sdk-node": "4.13.20",
