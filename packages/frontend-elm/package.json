@@ -19,7 +19,7 @@
 		"zod": "3.23.8"
 	},
 	"devDependencies": {
-		"@types/web": "0.0.152",
+		"@types/web": "0.0.159",
 		"elm-land": "0.19.5",
 		"tailwindcss": "3.4.10"
 	}
